@@ -1,0 +1,17 @@
+
+<div class="user_comment_image"><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%></div>
+<!--<div class="dialog2">
+</div> make compliant for crappy browsers-->
+<div class="new_comment">
+<div class="micro_top">
+		<span class="user"><%=link_to current_user.name, current_user%><span class="posted"> commented:</span></span>
+	</div>
+		<%=form_for(@comment,remote: true) do |f|%>
+		<%=f.text_area :body, :class=>"comment_form_content", :placeholder => current_user.name+" says...."%>
+		<%=f.hidden_field :micropost_id, :value=> @micropost.id%>
+		<%=f.submit "comment", class: "btn btn-custom comment_button"%>
+		<%end%>
+		<span class="med_container">
+		<span class="meds">1</span>
+		</span>
+</div>

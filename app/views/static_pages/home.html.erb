@@ -1,0 +1,21 @@
+<%provide(:controller,'static_pages')%>
+<%provide(:title,'See what\'s popular on the internet')%>
+<!-- Micropost feed-->
+
+		<%= render 'shared/feed'%>
+<% if signed_in?%>
+<section id="sidebar">
+	<section class="user_header">
+<span class="user_preview"><%= image_tag(current_user.image_url, :width => 35, :height => 35, :title => current_user.name)%></span>
+	<h1 class="name"><%=current_user.name%></h1>
+	</section>
+	<!-- uhh put in the user page show action><section class="name"><%= render 'shared/user_info'%></section>-->
+	<section class="user_info"><%= render 'shared/stats'%></section>
+		<a id="submit_post"class="btn btn-custom" href="/submit">post</a>
+</section>
+
+	<%else%>
+	<div class="right hero-unit">
+		<h2>Welcome to Meddler</h2>
+	</div>
+<%end%>

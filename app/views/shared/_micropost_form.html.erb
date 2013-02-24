@@ -1,0 +1,18 @@
+<span class="url_message"><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img")%><p></p></span>
+<div class="title_message"><img src=""><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img1")%><p></p></div>
+<span class="previewslider_wrapper">
+</span>
+<%= form_for(@micropost) do |f|%>
+
+		<%= render 'shared/error_messages', object: f.object%>
+		<h1 id="micropost_form_title">Link Post</h1>
+		<%=f.label :url%>
+		<%=f.text_field :urls, value: "", id: "preview_url"%>
+		<%=f.label :title%>
+		<%=f.text_field :title, class: "form_title"%>
+		<%=f.hidden_field :medtype, :value=>"link_post"%>
+
+		<%= f.submit "Submit",class: "btn btn-large btn-primary"%>
+		<%= link_to "image upload?",submit3_path,class:"btn btn-large btn-success",id: "link_post2"%>
+		<%= link_to "self post?",submit2_path,class:"btn btn-large btn-warning",id: "link_post"%>
+		<%end%>

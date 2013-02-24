@@ -1,0 +1,40 @@
+// Place all the styles related to the Sessions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+input, textarea, select, .uneditable-input {
+	display:block;
+border: 1px solid #bbb;
+width: 100%;
+padding: 10px;
+￼height: auto;
+ margin-bottom: 15px;
+font-size:15px;
+-moz-border-radius:5px;
+-webkit-border-radius:5px;
+border-radius:5px;
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+}
+/*
+#error_explanation{
+color: #EC3535;
+}
+#error_explanation ul 
+{
+list-style: none;
+margin: 0 0 18px 0;
+}
+
+.alert-success{
+	width:auto;
+	color:#01C504;
+	font-size:25px;
+	font-weight:bold;
+	background-color:#5BFD7E;
+	padding:15px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	height:30px;
+}*/

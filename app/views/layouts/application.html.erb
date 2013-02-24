@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%=yield(:title)%></title>
+
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+<%= render 'layouts/shim'%>
+</head>
+<body>
+<%=render 'layouts/header'%>
+<div class="container">
+	<% flash.each do |key, value|%>
+	<div class= "alert alert-<%= key%>"><%= value%></div>
+	<%end%>
+<%= yield %>
+<%= javascript_include_tag "static_pages" %>
+<%= javascript_include_tag "jquery.filedrop" %>
+<%= javascript_include_tag "scripts" %>
+</div>
+<%= debug(params) if Rails.env.development?%>
+<%= render 'layouts/footer'%>
+</body>
+</html>

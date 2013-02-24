@@ -1,0 +1,23 @@
+<%provide(:title,'Submit your post')%>
+<section class="micropost_form alone dropbox">
+<%= form_for(@micropost) do |f|%>
+	<div class="field">
+		<%= render 'shared/error_messages', object: f.object%>
+		<h1 id="micropost_form_upload_title">Upload a picture</h1>
+		
+		 
+		<%=f.label :title%>
+		<%=f.text_field :title%>
+		<%=f.hidden_field :medtype, :value=>"image_post"%>
+		<div id="file"><%=f.file_field :image%></div>
+		<div id="dropbox" class="hide">
+		<span class="message">Drop images here to upload. </span>
+		</div>
+		</div>
+		<div class="btns">
+		<%= f.submit "Submit",class: "btn btn-large btn-primary"%>
+		<%= link_to "self post?",submit2_path,class:"btn btn-large btn-primary",id: "link_post2"%>
+		<%= link_to "link post?",submit2_path,class:"btn btn-large btn-primary",id: "link_post"%>
+		<%end%>
+		</div>
+</section>

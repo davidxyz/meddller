@@ -1,0 +1,72 @@
+<%provide(:title, @micropost.title)%>
+<%provide(:controller, "micropost")%>
+<div class="micropost_show">
+<!--<div class="dialog">
+</div> make compliant for crappy browsers-->
+	<%= image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author", class: "author")%>
+<%if @micropost.medtype=="self_post"%>
+	<div class="micro_top">
+			<% if current_user?(@micropost.user)%>
+			<span class="edit">edit</span>
+			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
+			<%end%>
+			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
+		</div>
+		<span class="title"><%=link_to @micropost.title, @micropost%></span>
+		<span class="content "><%= wrap(@micropost.content,450)%></span>
+		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
+		<span class="med_container">
+		
+		<span class="meds"><%=@micropost.meds%></span>
+		</span>
+			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+<%elsif @micropost.medtype=="image_post"%>
+	<div class="micro_top">
+			<% if current_user?(@micropost.user)%>
+			<span class="edit">edit</span>
+			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
+			<%end%>
+			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
+		</div>
+		<span class="title"><%=link_to @micropost.title, @micropost%></span>
+		<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
+			<span class="med_container">
+		
+		<span class="meds"><%=@micropost.meds%></span>
+		</span>
+			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+<%elsif @micropost.medtype=="link_post"%>
+	 <div class="micro_top">
+			<% if current_user?(@micropost.user)%>
+			<span class="edit">edit</span>
+			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
+			<%end%>
+			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
+		</div>
+		<span class="title"><%=link_to @micropost.title, @micropost%></span>
+		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
+		<span class="med_container">
+		<span class="meds"><%=@micropost.meds%></span>
+		</span>
+			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+			
+<%end%>
+</div>
+<div class="mid_page">
+	<div class="comment_form_container">
+			<%if signed_in?%>
+				<%= render 'comments/form'%>
+			<%end%>
+	</div>
+	<div class="comment_container">
+		<%if @comments.any?%>
+			<ol class="comments">
+				<%= render partial: 'comments/comments', collection: @comments%>
+			</ol>
+			<%= will_paginate @comments%>
+		<%else%>
+			<div class="nothing">*Crickets*</div>
+		<%end%>
+	</div>
+</div>

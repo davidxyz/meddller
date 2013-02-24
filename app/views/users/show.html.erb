@@ -1,0 +1,55 @@
+<% provide(:title, @user.name)%>
+<div class="other_user">
+<div class="other_user_info">
+	<span class="user_preview"><%= image_tag(@user.image_url, :width => 45, :height => 45, :title => @user.name)%></span>
+			<h1>
+				<%= @user.name%>
+			</h1>
+			<section class="rank">rank: <%=calculateRank(@user)%></section>
+			<div class="timestamp">User for: <%=time_ago_in_words(@user.created_at)%></div>
+			<section class="stats"><%= render 'shared/stats'%></section>
+		<%= render 'follow_form' if signed_in?%>
+		</div>
+		<% if @user.microposts.any?%>
+		<ol class="microposts"> <%= render @microposts%></ol>
+		<%= will_paginate @microposts%>
+		<%else%>
+		<div class="nothing">*Crickets*</div>
+		<% end %>
+		
+		<div class="more_info">
+		<div class="followers">
+			<div class="header">subscribers</div>
+			<%@followeds.each do |user|%>
+			<div class="users">
+				<div class="info">
+				<%=link_to image_tag(user.image_url, :width => 55, :height => 25, :title => user.name), user%>
+				</div>
+				<div class="img">
+				<%=link_to user.name, user%>
+				</div>
+			</div>
+			<%end%>
+		</div>
+		<div class="followeds">
+			<div class="header">subscribed</div>
+			<%@followers.each do |user|%>
+			<div class="users">
+			<div class="img">
+			<%=link_to image_tag(user.image_url, :width => 25, :height => 25, :title => user.name), user%>
+			</div>
+			<div class="info">
+			<%=link_to user.name, user%>
+			</div>
+			</div>
+			<%end%>
+			
+		</div>
+		</div>
+		<div class="meddals">
+			<div class="header">meddals</div>
+			<div class="inner_meddals">
+			<%=image_tag "user_images/medal_100_meds.png", width:75, height:75, title: @user.name+" has aquired 100 meds"%>
+			</div>
+		</div>
+</div>

@@ -1,0 +1,53 @@
+<div class="feed_menu">
+	  <ul class="nav nav-tabs">
+	        <li class="active"><a href="#">MedFeed</a></li>
+			<li class="dropdown">
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedSelf posts<b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Popular</a></li>
+	            <li><a href="#">Rising</a></li>
+	            <li><a href="#">New</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Subscribers</a></li>
+	          </ul>
+	        </li>
+	        <li class="dropdown">
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedImage posts<b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Popular</a></li>
+	            <li><a href="#">Rising</a></li>
+	            <li><a href="#">New</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Subscribers</a></li>
+	          </ul>
+	        </li>
+			<li class="dropdown">
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedLink posts<b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Popular</a></li>
+	            <li><a href="#">Rising</a></li>
+	            <li><a href="#">New</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Subscribers</a></li>
+	          </ul>
+	        </li>
+	        <li class="dropdown">
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedComments<b class="caret bottom-up"></b></a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Popular</a></li>
+	            <li><a href="#">Rising</a></li>
+	            <li><a href="#">New</a></li>
+	            <li class="divider"></li>
+	            <li><a href="#">Subscribers</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+	</li>
+	</ul>
+</div>
+<% if @feed_items.any?%>
+	<ol class="microposts_feed">
+		<%= render partial: 'shared/feed_item', collection: @feed_items%>
+	</ol>
+		<%= will_paginate @feed_items%>
+		<%end%>

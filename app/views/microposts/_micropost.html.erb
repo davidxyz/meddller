@@ -1,0 +1,26 @@
+
+<span class="user_image"><%=link_to image_tag(micropost.user.image_url,width: 35, height:35, title: micropost.user.name),micropost.user%></span>
+<!--<div class="dialog">
+</div> make compliant for crappy browsers-->
+<li >
+	<% if !micropost.image_url.nil?%>
+	<span class="preview"><%=link_to image_tag(micropost.image_url, :width => 100, :height => 100, :title => "Originating site"), micropost.urls%></span>
+	<%else%>
+	<%#nothing%>
+	<%end%>
+
+<div class="micro_top">
+		<% if current_user?(micropost.user)%>
+		<span class="edit">edit</span>
+		<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), micropost, method: :delete, confirm: "You 	sure?", title: micropost.content,class:"delete"%>
+		<%end%>
+		<span class="user"><%=link_to micropost.user.name, micropost.user%><span class="posted"> posted:</span></span>
+	</div>
+	<span class="title"><%=link_to micropost.title, micropost%></span>
+	<span class="content hide"><%= micropost.content%></span>
+	<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
+	<%= image_tag("anon.png" , :width => 35, :height => 35, :title => "author", class: "author hide")%>
+		<span class="med_container"><span class="meds"><%= micropost.meds%></span>	</span>
+		<span class="timestamp">Posted <%=time_ago_in_words(micropost.created_at)%> ago.</span>
+		
+</li>
