@@ -16,10 +16,18 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation, :image_url
   has_many :microposts, dependent: :destroy
+  #relationships
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
   has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :followed_users, through: :relationships, source: :followed
+  #relationships_m
+  has_many :relationshipms, foreign_key: "subscriber_id", dependent: :destroy
+  has_many :medchannels, through: :relationshipms, source: :subscribed
+  #relationships_l
+  has_many :relationshipls, foreign_key: "liker_id", dependent: :destroy
+  has_many :likes, through: :relationshipls, source: :liked
+
   has_many :comments, dependent: :destroy
   has_secure_password
   before_save :create_remember_token
@@ -36,6 +44,40 @@ class User < ActiveRecord::Base
     #will provide an algoithm for suscribed med_groups and suscribed people
     Micropost.select("*")
   end
+  def inc
+    self.update_attribute(:meds,meds+1)
+  end
+  def dec
+    self.update_attribute(:meds,meds-1)
+  end
+  #relationships_m
+  def subscribed?(medchannel)
+    relationshipms.find_by_subscribed_id(medchannel.id)
+  end
+  def subscribe!(medchannel)
+    relationshipms.create!(subscribed_id: medchannel.id)
+  end
+   def unsubscribe!(medchannel)
+    relationshipms.find_by_subscribed_id(medchannel.id).destroy
+  end
+  #relationships_l
+  def like!(post,post_type)
+  relationshipls.create!(liked_id: post.id,uptype: "upvote",posttype:post_type)
+  end
+  def hate!(post,post_type)
+    relationshipls.create!(liked_id: post.id,posttype: post_type,uptype: "downvote")
+  end
+  def neutral!(post,post_type)
+  relationshipls.find(liked_id: post.id,posttype: post_type).destroy
+  end
+  def have_I_liked_or_not?(post,post_type)
+    begin
+    relationshipls.find(:first,:conditions=>{liked_id: post.id,posttype: post_type}).uptype
+    rescue
+      false
+    end
+  end
+  #relationships_p
   def following?(other_user)
     relationships.find_by_followed_id(other_user.id)
   end

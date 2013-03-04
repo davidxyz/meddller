@@ -1,8 +1,8 @@
 <header class="navbar navbar-fixed-top">
  <div class="navbar-inner">
 	<div class="container">
-		<%= link_to image_tag("sloth.png", :alt => "home image", :width => 45, :height => 65, :title => "Click here to return to your MedBoard", class: "logo sloth"), root_path %>
-	<%= link_to image_tag("mlogo.png", :alt => "home image", :width => 180, :height => 35, :title => "Click here to return to your MedBoard", class: "logo font"), root_path %>
+		<%= image_tag("sloth.png", :alt => "home image", :width => 45, :height => 65, class: "logo sloth")%>
+	<%= link_to image_tag("mlogo.png", :alt => "home image", :width => 180, :height => 35, class: "logo font"), root_path %>
 	<nav>
 	<ul class="nav pull-right">
 	<li><%= link_to "Search", '#',id:"search" %></li>

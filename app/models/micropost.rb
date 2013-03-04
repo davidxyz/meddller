@@ -19,11 +19,17 @@ require 'uri'
 class Micropost < ActiveRecord::Base
   acts_as_commentable
   has_many :comments
-  attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:nsfw
+  attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:nsfw,:medchannel
   before_save :create_preview,:lazy_user,:clean_input
   belongs_to :user
+  belongs_to :medchannel
   default_scope order:'microposts.created_at DESC'
   validates :nsfw, presence: true
+  validates :medchannel, presence: true
+  #relationshipl
+  has_many :reverse_relationshipls,foreign_key: "liked_id",class_name:"Relationshipl", dependent: :destroy
+  has_many :likers, through: :reverse_relationshipls,source: :liker
+
   #3medtypes of microposts medimage, medself, medlink
   mount_uploader :image, ImageUploader
   validates :user_id, presence: true
@@ -41,23 +47,36 @@ class Micropost < ActiveRecord::Base
      errors[:base]<<("Uhh, you sure that's a website?")  if urls.nil? or !URI::DEFAULT_PARSER.regexp[:ABS_URI].match(urls) 
     elsif medtype=="self_post"
       errors[:base]<<("Woah say something")  if content.nil? or content.length <4 
-      errors[:base]<<("Woah you're saying way too much in your body") if content.length > 1000
+      errors[:base]<<("Woah you're saying way too much in your post") if content.length > 1000
     elsif medtype=="image_post"
       errors[:base]<<("Hey, can you upload something already") if image.nil?
     else
       errors[:base]<<("Something, went wrong with your post and we're tearing out our heads trying to find why")
     end
-    errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
+    unless medtype=="self_post"
+      errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
     errors[:base]<<("Woah your title is way too long") if title.length >140
+    end
+    
+  end
+  def inc 
+   self.update_attribute(:meds,meds+1)
+  end
+  def dec
+    self.update_attribute(:meds,meds-1)
   end
   private
   
   def create_preview
     if medtype=="link_post"
+      if /\.(gif|png|jpe?g)\z/.match(urls)
+        self.preview_url=urls
+        return nil
+      end
       doc = Nokogiri::HTML(open(urls))
       max_size=0;
       doc.css('img').each {|image|
-        if /\A(http:\/\/).+(gif|png|jpe?g)\z/.match(image['src'])  
+        if /\A(http:\/\/).+\.(gif|png|jpe?g)\z/.match(image['src'])  
           if image['height'].to_i>max_size
             self.preview_url=image['src']
             max_size=image['height'].to_i
@@ -70,10 +89,12 @@ class Micropost < ActiveRecord::Base
     unless medtype=="link_post"
       self.urls="/microposts/"+id.to_s
     end
+    if medtype=="self_post"
+    end
   end
   def clean_input
     unless self.content.nil?
-    self.content=wrap(content,35)
+    self.content=ActionController::Base.helpers.sanitize(content)
     end
   end
 end

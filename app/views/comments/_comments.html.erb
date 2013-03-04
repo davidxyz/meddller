@@ -1,23 +1,18 @@
 <li class="comment_wrapper">
-<div class="user_comment_image"><%=image_tag(current_user.image_url,width: 35, height:35, title: current_user.name)%></div>
-<!--<div class="dialog2">
-</div> make compliant for crappy browsers-->
+	
+<div class="user_comment_image"><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%></div>
 <div class="comment">
-<div class="micro_top">
-		<span class="user"><%=link_to current_user.name, current_user%><span class="posted"> commented:</span></span>
-		<% if current_user?(comments.user)%>
-		<span class="edit">edit</span>
-		<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), comments, method: :delete, confirm: "You 	sure?", title: comments.body,class:"delete"%>
-		<%end%>
-	</div>
-		
-		<div class="content"><%= wrap(comments.body,80)%></div>
+
+		<div class="title"><%if comments.id == @micropost.comment_threads.first.id%><div class="top-comment">Top Comment</div><%end%></div>
+		<div class="content"><p><%= comments.body%></div>
 		<span class="med_container">
 		<span class="meds"><%=comments.meds%></span>
 		</span>
-		<div class="comment_reply">
+		<span class="repost"><%=comments.meds%></span>
+		<span class="comments"><%=comments.children.size%></span>
+		<!--<div class="comment_reply">
 			<span class="replies"><%=comments.children.size%></span>
-		</div>
+		</div>-->
 </div>
 </li>
 

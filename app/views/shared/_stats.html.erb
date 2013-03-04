@@ -1,12 +1,8 @@
 <% @user ||= current_user%>
 	<div class="stats">
-		<div>
-			<strong id="following" class="stat">
-				<%= @user.followed_users.count%>
-				</strong>
-				following
+			<div id="following" class="stat">
+				<i class="icon-magnet"></i>Following<span class="count"><%= @user.followed_users.count%></span>
 				</div>
-			<div>
-				<strong id="followers"class="stat"><%=@user.followers.count%></strong>
-				followers</div>
-				</div>
+				<div id="followers"class="stat"><i><%=image_tag "magdown.png",width:13, height:13%></i>Followers<span class="count"><%=@user.followers.count%></span></div>
+				<div class="med_container"><span class="meds"><%=@user.meds%></span></div>
+		</div>

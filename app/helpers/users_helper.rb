@@ -1,9 +1,5 @@
 module UsersHelper
-  def gravatar_for(user)
-    gravatar_id=Digest::MD5::hexdigest(user.email.downcase)
-    gravatar_url = "https://secure.gravatar.com/avatars/#{gravatar_id}.png"
-    image_tag(gravatar_url, alt: user.name, class: "gravatar")
-  end
+  
   def calculateRank(user)
     rank=""
     #first part of rank algorithm
@@ -29,5 +25,20 @@ module UsersHelper
       #nothing
     end
     rank
+  end
+  def user_ready?
+    user_time_left==0
+  end
+  def user_time_left
+    begin
+    time=(Time.now-(current_user.comments.find(:first,order: "created_at DESC").created_at)).seconds
+      if time<60
+        time
+      else
+        0
+      end
+    rescue
+        0
+    end
   end
 end

@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
   acts_as_nested_set :scope => [:commentable_id, :commentable_type]
 
-  validates_presence_of :body
+  validates :body, :length=>{minimum:4,maximum:400},:presence=>true
   validates_presence_of :user
 
   # NOTE: install the acts_as_votable plugin if you
@@ -16,6 +16,7 @@ class Comment < ActiveRecord::Base
   # Helper class method that allows you to build a comment
   # by passing a commentable object, a user_id, and comment text
   # example in readme
+
   def self.build_from(obj, user_id, comment)
     c = self.new
     c.commentable_id = obj.id

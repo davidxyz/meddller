@@ -1,18 +1,23 @@
 <%provide(:title,'Submit your post')%>
-<section class="micropost_form alone">
+<section class="micropost_form selfpost">
 <%= form_for(@micropost) do |f|%>
 	<%= render 'shared/error_messages', object: f.object%>
-	<div class="field">
+
 		<h1 id="micropost_form_title">Self Post</h1>
 		 
-		<%=f.label :title%>
-		<%=f.text_field :title%>
 		
-		<%= f.text_area :content, placeholder: "Compose new micropost..."%>
 		<%=f.hidden_field :medtype, :value=>"self_post"%>
-		</div>
+		<%=f.label :medchannel%>
+		<%=f.text_field :medchannel%>
+		<%=f.label :nsfw%>
+		<%=f.check_box :nsfw, :value=>0%>
+		<div class="user_comment_image "><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%><div class="user"><%=current_user.name%></div></div>
+<div class="self_outlook">
+
+		<%= f.text_area :content, placeholder: "Compose new self post..."%>
+	</div>
 		<%= f.submit "Submit",class: "btn btn-large btn-primary"%>
-		<%= link_to "image upload?",submit3_path,class:"btn btn-large btn-primary",id: "link_post2"%>
-		<%= link_to "link post?",submit_path,class:"btn btn-large btn-primary",id: "link_post"%>
+		<%= link_to "image upload?",submit3_path,class:"btn btn-large btn-success link_post2"%>
+		<%= link_to "link post?",submit_path,class:"btn btn-large btn-warning link_post"%>
 		<%end%>
 </section>

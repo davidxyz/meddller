@@ -1,65 +1,80 @@
 <%provide(:title, @micropost.title)%>
-<%provide(:controller, "micropost")%>
-<div class="micropost_show">
-<!--<div class="dialog">
-</div> make compliant for crappy browsers-->
+<%provide(:page_size, "large2")%>
+<%provide(:background, "blue")%>
+<div class="blue-mask"></div>
+<div id="<%=@micropost.id%>"class="micropost_show ">
+
 	<%= image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author", class: "author")%>
 <%if @micropost.medtype=="self_post"%>
-	<div class="micro_top">
-			<% if current_user?(@micropost.user)%>
-			<span class="edit">edit</span>
-			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
-			<%end%>
-			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
-		</div>
-		<span class="title"><%=link_to @micropost.title, @micropost%></span>
-		<span class="content "><%= wrap(@micropost.content,450)%></span>
-		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
-		<span class="med_container">
-		
+
+	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+
+	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
+
+		<%end%></span></span>
+
+	<span class="content"><%=@micropost.content%></span>
+	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
+		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+		<span class="repost"><span class="number">2</span></span>
+		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="image_post"%>
-	<div class="micro_top">
-			<% if current_user?(@micropost.user)%>
-			<span class="edit">edit</span>
-			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
-			<%end%>
-			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
-		</div>
-		<span class="title"><%=link_to @micropost.title, @micropost%></span>
-		<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
-		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
-			<span class="med_container">
-		
+	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+
+	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><%=content_tag(:div, content_tag(:p, "Nsfw"), :class => "nsfw") if @micropost.nsfw%><% if current_user?(@micropost.user)%><span class="settings hide">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
+		<%end%></span></span>
+	
+	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
+		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+		<span class="repost"><span class="number">2</span></span>
+		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="link_post"%>
-	 <div class="micro_top">
-			<% if current_user?(@micropost.user)%>
-			<span class="edit">edit</span>
-			<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content,class:"delete"%>
-			<%end%>
-			<span class="user"><%=link_to @micropost.user.name, @micropost.user%><span class="posted"> posted:</span></span>
-		</div>
-		<span class="title"><%=link_to @micropost.title, @micropost%></span>
-		<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
-		<span class="med_container">
+	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+
+	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><%=content_tag(:div, content_tag(:p, "Nsfw"), :class => "nsfw") if @micropost.nsfw%><% if current_user?(@micropost.user)%><span class="settings hide">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
+		<%end%></span></span>
+	
+	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
+		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-			<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+		<span class="repost"><span class="number">2</span></span>
+		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 			
 <%end%>
 </div>
+
+<div class="medchannel-info"></div>
+<div class="related"></div>
+<div class="mnav_right"></div>
+<div class="mnav_left"></div>
+
 <div class="mid_page">
-	<div class="comment_form_container">
+	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">
 			<%if signed_in?%>
 				<%= render 'comments/form'%>
+			<%else%>
+			<div class="signin-notice"><h2>You need to signin to comment <span class="signin"> sign in</span><h2></div>
 			<%end%>
 	</div>
 	<div class="comment_container">
+		<div class="added-info"></div>
 		<%if @comments.any?%>
 			<ol class="comments">
 				<%= render partial: 'comments/comments', collection: @comments%>

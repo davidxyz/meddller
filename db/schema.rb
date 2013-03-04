@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130220182909) do
+ActiveRecord::Schema.define(:version => 20130228001140) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -29,22 +29,59 @@ ActiveRecord::Schema.define(:version => 20130220182909) do
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
+  create_table "medchannels", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.text     "rules"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+    t.boolean  "nsfw"
+  end
+
+  add_index "medchannels", ["name"], :name => "index_medchannels_on_name", :unique => true
+
   create_table "microposts", :force => true do |t|
     t.text     "content"
     t.integer  "user_id"
     t.string   "title"
-    t.integer  "meds",        :default => 1
-    t.integer  "integer",     :default => 1
+    t.integer  "meds",          :default => 1
+    t.integer  "integer",       :default => 1
     t.string   "urls"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
     t.string   "medtype"
     t.string   "image"
     t.string   "preview_url"
-    t.boolean  "nsfw",        :default => false
+    t.boolean  "nsfw",          :default => false
+    t.integer  "medchannel_id"
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
+
+  create_table "relationshipls", :force => true do |t|
+    t.integer  "liker_id"
+    t.integer  "liked_id"
+    t.string   "uptype"
+    t.string   "posttype"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "relationshipls", ["liked_id"], :name => "index_relationshipls_on_liked_id"
+  add_index "relationshipls", ["liker_id", "liked_id", "posttype"], :name => "index_relationshipls_on_liker_id_and_liked_id_and_posttype", :unique => true
+  add_index "relationshipls", ["liker_id"], :name => "index_relationshipls_on_liker_id"
+  add_index "relationshipls", ["posttype"], :name => "index_relationshipls_on_posttype"
+
+  create_table "relationshipms", :force => true do |t|
+    t.integer  "subscriber_id"
+    t.integer  "subscribed_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "relationshipms", ["subscribed_id", "subscriber_id"], :name => "index_relationshipms_on_subscribed_id_and_subscriber_id", :unique => true
+  add_index "relationshipms", ["subscribed_id"], :name => "index_relationshipms_on_subscribed_id"
+  add_index "relationshipms", ["subscriber_id"], :name => "index_relationshipms_on_subscriber_id"
 
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"
@@ -56,6 +93,30 @@ ActiveRecord::Schema.define(:version => 20130220182909) do
   add_index "relationships", ["followed_id"], :name => "index_relationships_on_followed_id"
   add_index "relationships", ["follower_id", "followed_id"], :name => "index_relationships_on_follower_id_and_followed_id", :unique => true
   add_index "relationships", ["follower_id"], :name => "index_relationships_on_follower_id"
+
+  create_table "relationships_l", :force => true do |t|
+    t.integer  "liker_id"
+    t.integer  "liked_id"
+    t.string   "type"
+    t.string   "posttype"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "relationships_l", ["liked_id"], :name => "index_relationships_l_on_liked_id"
+  add_index "relationships_l", ["liker_id", "liked_id", "posttype"], :name => "index_relationships_l_on_liker_id_and_liked_id_and_posttype"
+  add_index "relationships_l", ["liker_id"], :name => "index_relationships_l_on_liker_id"
+
+  create_table "relationships_m", :force => true do |t|
+    t.integer  "subscriber_id"
+    t.integer  "subscribed_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "relationships_m", ["subscribed_id"], :name => "index_relationships_m_on_subscribed_id"
+  add_index "relationships_m", ["subscriber_id", "subscribed_id"], :name => "index_relationships_m_on_subscriber_id_and_subscribed_id", :unique => true
+  add_index "relationships_m", ["subscriber_id"], :name => "index_relationships_m_on_subscriber_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false

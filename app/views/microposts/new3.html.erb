@@ -1,5 +1,15 @@
 <%provide(:title,'Submit your post')%>
+<div id="boxes">
+ 
+ <div id="dropbox" class="window">
+ 	<a href="#" class="close">Close</a>
+		<span class="message">Drag and drop images here to upload. </span>
+		<%=image_tag "go_up copy.png", width: 230, width: 230%>
+		</div>
+		<div id="mask"></div>
+  </div> 
 <section class="micropost_form alone dropbox">
+	<div class="title_message"><img src=""><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img1")%><p></p></div>
 <%= form_for(@micropost) do |f|%>
 	<div class="field">
 		<%= render 'shared/error_messages', object: f.object%>
@@ -7,17 +17,20 @@
 		
 		 
 		<%=f.label :title%>
-		<%=f.text_field :title%>
+		<%=f.text_field :title,class:"form_title",id:"upload-title",autocomplete:"off"%>
 		<%=f.hidden_field :medtype, :value=>"image_post"%>
+		<%=f.label :medchannel%>
+		<%=f.text_field :medchannel%>
+		<%=f.label :nsfw%>
+		<%=f.check_box :nsfw, :value=>0%>
 		<div id="file"><%=f.file_field :image%></div>
-		<div id="dropbox" class="hide">
-		<span class="message">Drop images here to upload. </span>
-		</div>
-		</div>
-		<div class="btns">
+    <!-- Do not remove div#mask, because you'll need it to fill the whole screen --> 
+</div>
+</div>
+		<span class="btns">
 		<%= f.submit "Submit",class: "btn btn-large btn-primary"%>
-		<%= link_to "self post?",submit2_path,class:"btn btn-large btn-primary",id: "link_post2"%>
-		<%= link_to "link post?",submit2_path,class:"btn btn-large btn-primary",id: "link_post"%>
+		<%= link_to "self post?",submit2_path,class:"btn btn-large btn-success link_post2"%>
+		<%= link_to "link post?",submit2_path,class:"btn btn-large btn-warning link_post"%>
+		</span>
 		<%end%>
-		</div>
 </section>

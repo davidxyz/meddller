@@ -1,0 +1,16 @@
+<%provide(:page_size,'large')%>
+<%provide(:title,'See what\'s popular on'+@medchannel.name)%>
+<div class="subscribe-box">
+	<div class="header"><div class="close">X</div></div>
+	<div class="subscribers">subscribers<div class="subscribers_data"><%=@medchannel.subscribers.count%></div></div>
+	<a href="#" class="btn"><i class="icon-eye-open"></i> Subscribe</a>
+</div>
+<a class="description-vote" href="#"><span class="close">X</span><span class="desc">Description</span><div class="count"></div></a>
+<div class="recent_channels">
+	<ul>
+		<li class="active">random</li>
+		<li>funny</li>
+		<li>gaming</li>
+	</ul>
+</div>
+<%= render 'shared/feed'%>

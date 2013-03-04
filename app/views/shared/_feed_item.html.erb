@@ -1,69 +1,76 @@
+<div class="post_wrapper">
 <%if feed_item.medtype=="link_post"%>
-<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 35, height:35, title: feed_item.user.name),feed_item.user%></span>
-<span class="dialog">
-</span>
-<li id="<%= feed_item.id%>" class="link_post">
-	<span class="preview"><%=link_to image_tag(feed_item.image_url, :width => 100, :height => 100, :title => "Originating site"), feed_item.image_url%></span>
 
-<div class="micro_top poster_cadet">
-		<% if current_user?(feed_item.user)%>
-		<span class="edit">edit</span>
-		<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), feed_item, method: :delete, confirm: "You 			sure?", title: feed_item.content,class:"delete"%>
-		<%end%>
-		<span class="user"><%=link_to feed_item.user.name, feed_item.user%><span class="posted"> posted:</span></span>
-	</div>
-	<span class="title"><%=link_to feed_item.title, feed_item%></span>
-	<span class="content hide"><%= feed_item.content%></span>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+feed_item.id.to_s%>"class="comments"><div class="number">7</div><div class="text">comments</div></a>
-		<span class="med_container">
-		<span class="meds"><%=feed_item.meds%></span>
-		</span>
-		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
-</li>
-<%elsif feed_item.medtype=="image_post"%>
 <span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 25, height:25, title: feed_item.user.name),feed_item.user%></span>
-<span class="dialog">
-</span>
-<li id="<%= feed_item.id%>" class="image_post" >
+
+<div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
 	<span class="preview"><%=link_to image_tag feed_item.image_url(:thumb) if feed_item.image?%></span>
 
-<div class="micro_top poster_cadet">
-		<% if current_user?(feed_item.user)%>
-		<span class="edit">edit</span>
-		<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), feed_item, method: :delete, confirm: "You 			sure?", title: feed_item.content,class:"delete"%>
+	<span class="title"><%=link_to feed_item.title, feed_item%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), feed_item, method: :update, title: feed_item.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
+		</span>
+		<%else%>
+		<div>user settings</div>
+		</span>
 		<%end%>
-		<span class="user"><%=link_to feed_item.user.name, feed_item.user%><span class="posted"> posted:</span></span>
-	</div>
-	<span class="title"><%=link_to feed_item.title, feed_item%></span>
+	</span>
 	<span class="content hide"><%= feed_item.content%></span>
 	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+feed_item.id.to_s%>"class="comments"><div class="number">7</div><div class="text">comments</div></a>
-		<span class="med_container">
+		<div class="options"><a  href="<%='microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number">7</div></a>
+		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
-		</span>
+		</div>
+		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		<a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
-</li>
-<%elsif feed_item.medtype=="self_post"%>
-<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 35, height:35, title: feed_item.user.name),feed_item.user%></span>
-<span class="dialog">
-</span>
-<li id="<%= feed_item.id%>" class="self_post">
+</div>
+<%elsif feed_item.medtype=="image_post"%>
+<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 25, height:25, title: feed_item.user.name),feed_item.user%></span>
+<div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
+	<span class="preview"><%=link_to image_tag feed_item.image_url(:thumb) if feed_item.image?%></span>
 
-<div class="micro_top poster_cadet">
-		<% if current_user?(feed_item.user)%>
-		<span class="edit">edit</span>
-		<%= link_to image_tag("deleteblue.png", :width => 13, :height => 15, :title => "delete"), feed_item, method: :delete, confirm: "You 			sure?", title: feed_item.content,class:"delete"%>
-		<%end%>
-		<span class="user"><%=link_to feed_item.user.name, feed_item.user%><span class="posted"> posted:</span></span>
-	</div>
-	<span class="title"><%=link_to feed_item.title, feed_item%></span>
-	<span class="content hide"><%= feed_item.content%></span>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+feed_item.id.to_s%>"class="comments"><div class="number">7</div><div class="text">comments</div></a>
-		<span class="med_container">
-		<span class="meds"><%=feed_item.meds%></span>
+	<span class="title"><%=link_to feed_item.title, feed_item%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), feed_item, method: :update, title: feed_item.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
 		</span>
+		<%else%>
+		<div>user settings</div>
+		</span>
+		<%end%>
+	</span>
+	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
+		<div class="options"><a  href="<%='microposts/'+feed_item.id.to_s%>"class="comments" title="comment?"><div class="number">7</div></a>
+		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
+		<span class="meds"><%=feed_item.meds%></span>
+		</div>
+		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		<a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
-</li>
+</div>
+<%elsif feed_item.medtype=="self_post"%>
+<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 25, height:25, title: feed_item.user.name),feed_item.user%></span>
+<div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
+	<span class="preview"><%=link_to image_tag feed_item.image_url(:thumb) if feed_item.image?%></span>
+
+	<span class="title"><%=link_to "", feed_item%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), feed_item, method: :update, title: feed_item.content%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
+		</span>
+		<%else%>
+		<div>user settings</div>
+		</span>
+		<%end%>
+	</span>
+	<div class="content "><%= wrap(feed_item.content,5)%></div>
+	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
+		<div class="options"><a  href="<%='microposts/'+feed_item.id.to_s%>"class="comments" title="comment?"><div class="number">7</div></a>
+		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
+		<span class="meds"><%=feed_item.meds%></span>
+		</div>
+		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		 <a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
+		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
+</div>
 <%end%>
+</div>

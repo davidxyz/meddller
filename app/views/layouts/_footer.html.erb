@@ -1,12 +1,12 @@
-<footer class="footer">
+<footer class="footer <%=yield(:page_size)%>">
 	<small>
-		<a href="http://railstutoiral.org/">Meddler</a> by MeddlerCo
+		<a href="/">Meddler</a> by MeddlerCo
 		</small>
 	<nav>
 		<ul>
-			<li><%= link_to "About",  about_path%></li>
-			<li><%= link_to "Contact", contact_path%></li>
-			<li><%= link_to "News", news_path%></li>
+			<li><i class="icon-list-alt"></i><%= link_to "About",  about_path%></li>
+			<li><i class="icon-envelope"></i> <%= link_to "Contact", contact_path%></li>
+			<li><i class="icon-glass"></i><%= link_to "Ask the MedTeam", "/AskTheMedTeam"%></li>
 		</ul>
 	</nav>
 </footer>

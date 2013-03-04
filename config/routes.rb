@@ -4,7 +4,8 @@ SampleApp::Application.routes.draw do
  # resources :microposts, only: [:create, :destroy]
  resources :microposts
   resources :relationships, only: [:create, :destroy]
-  resources :comments, only: [:create,:destroy]
+  resources :relationshipls, only: [:create, :destroy]
+  resources :comments, only: [:destroy]
   
   match '/signin', to: 'sessions#new'
   match '/signout', to: 'sessions#destroy'
@@ -12,14 +13,16 @@ SampleApp::Application.routes.draw do
   match '/help', to: 'static_pages#help'
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
-  match '/news', to: 'static_pages#news'
+  match '/AskTheMedTeam', to: 'static_pages#ask'
   match '/users', to: 'users#show'
   match '/signup', to: 'users#new'
   match '/submit', to: 'microposts#new'
   match '/submit2', to: 'microposts#new2'
   match '/submit3', to: 'microposts#new3'
   match '/show_urls', to: 'microposts#show_urls'
-  match '/commands/inc', to: 'microposts#inc'
+  match '/commands/inc', to: 'microposts#increment'
+  match 'commands/create_a_comment', to: 'comments#create'
+  match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z]+/i
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

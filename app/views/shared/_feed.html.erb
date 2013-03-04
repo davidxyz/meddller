@@ -1,53 +1,66 @@
-<div class="feed_menu">
+<div class="medfeed_box">
+		<div class="header">
+			<span class="text"><%=@name%></span>
+			<span class="hnav_left">&lt</span>
+			<span class="hnav_right">&gt</span>
+			<!--<div id="tabs_container"> 
+			 <ul class="tabs"> 
+			 	<li class="active"> <a href="#" class="tab" title="only the most popular posts land up on your med feed">MedFeed</a> </li>
+			 	<li><a href="#" class="tab" title="not quite there yet but these little guys could use your help to wind up on the top">Rising</a></li> 
+				<li><a href="#" class="tab" title="these young wipper snappers need some guidance and discipline in their lives. Will you help them?">New</a></li> 
+				</ul> This is used so the contents don't appear to the right of the tabs 
+				</div>--> 
+			<!--<div class="feed_menu">
 	  <ul class="nav nav-tabs">
-	        <li class="active"><a href="#">MedFeed</a></li>
-			<li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedSelf posts<b class="caret"></b></a>
-	          <ul class="dropdown-menu">
-	            <li><a href="#">Popular</a></li>
-	            <li><a href="#">Rising</a></li>
-	            <li><a href="#">New</a></li>
-	            <li class="divider"></li>
-	            <li><a href="#">Subscribers</a></li>
-	          </ul>
-	        </li>
+	        <li class="active"><a href="#"><i class="icon-inbox"></i>MedFeed</a></li>
 	        <li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedImage posts<b class="caret"></b></a>
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Popular<b class="caret"></b></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Popular</a></li>
-	            <li><a href="#">Rising</a></li>
-	            <li><a href="#">New</a></li>
+	            <li><a href="#">MedLink posts</a></li>
+	            <li><a href="#">MedImage posts</a></li>
+	            <li><a href="#">MedComments</a></li>
 	            <li class="divider"></li>
-	            <li><a href="#">Subscribers</a></li>
+	            <li><a href="#">All</a></li>
 	          </ul>
 	        </li>
 			<li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedLink posts<b class="caret"></b></a>
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rising<b class="caret"></b></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Popular</a></li>
-	            <li><a href="#">Rising</a></li>
-	            <li><a href="#">New</a></li>
+	            <li><a href="#">MedLink posts</a></li>
+	            <li><a href="#">MedImage posts</a></li>
+	            <li><a href="#">MedComments</a></li>
 	            <li class="divider"></li>
-	            <li><a href="#">Subscribers</a></li>
+	            <li><a href="#">All</a></li>
 	          </ul>
 	        </li>
 	        <li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">MedComments<b class="caret bottom-up"></b></a>
+	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">New<b class="caret"></b></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Popular</a></li>
-	            <li><a href="#">Rising</a></li>
-	            <li><a href="#">New</a></li>
+	            <li><a href="#">MedLink posts</a></li>
+	            <li><a href="#">MedImage posts</a></li>
+	            <li><a href="#">MedComments</a></li>
 	            <li class="divider"></li>
-	            <li><a href="#">Subscribers</a></li>
+	            <li><a href="#">All</a></li>
 	          </ul>
 	        </li>
 	      </ul>
 	</li>
 	</ul>
 </div>
+<div class="after"></div><div class="before"></div>!-->
+
+</div>
+<div class="medfeed_container">
 <% if @feed_items.any?%>
-	<ol class="microposts_feed">
-		<%= render partial: 'shared/feed_item', collection: @feed_items%>
-	</ol>
-		<%= will_paginate @feed_items%>
+		<%@feed_items.each do |feed_item|%>
+
+		<%= render partial: 'shared/feed_item',:locals => { :feed_item => feed_item }%>
+
 		<%end%>
+
+		<%= will_paginate @feed_items%>
+		<%else%>
+		<div class="nothing"></div>
+		<%end%>
+	</div>
+</div>
