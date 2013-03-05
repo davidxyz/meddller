@@ -239,9 +239,9 @@ addMask(new_reply);
 
 
 /*form validations for submit1 page*/
-$('#preview_url').on('blur',function(){
+$('#urls').on('blur',function(){
 var url_message=$('.url_message p');
-$this=$('#preview_url');
+$this=$('#urls');
 var img=$(".v_img");
 if(!img.hasClass("hide")){img.attr("src","/assets/ajax-loader.gif");}
 img.removeClass("hide");
@@ -296,10 +296,11 @@ setTimeout(function(){
 });
 $("form").submit(function(event){
 
-var $input = $(this).find("input.form_title");
-   if (!$input.val()) {
+var $input = $(this).find("input#urls");
+   if ($input.val().length>1) {
+   	alert("should work");
      // Value is falsey (i.e. null), lets set a new one
-     $input.val($('#img2').attr('src'));
+     $("#preview").val($('#img1').attr('src'));
    }
 
 });
@@ -367,8 +368,11 @@ $("[title]").load(function(){
 $(this).attr('data-title',$(this).attr('title'));
 $(this).removeAttr('title');
 });
-$(document).on("mouseenter","[data-title]",function(e){
+$(document).on("mouseover","[data-title]",function(e){
+	
 	$this=$(this);
+	if($this.is("img")){ return false;}
+	setTimeout(function(){
 	var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip');
 
@@ -387,13 +391,15 @@ $(document).on("mouseenter","[data-title]",function(e){
 
 
    tooltip.show().html($this.attr('data-title'));
+},1000);
 
 });
-$(document).on("mouseleave","[data-title]",function(event){
+$(document).on("mouseout","[data-title]",function(event){
 $('#tooltip').remove();
 });
-$(".medchannel").on("mouseenter",function(){
+$(".medchannel").on("mouseover",function(){
 $this=$(this);
+setTimeout(function(){
 var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip');
 	tooltip.css({
@@ -409,9 +415,10 @@ var tooltip=$(document.createElement('div'));
         color:'white'
     }).insertBefore($this);
     tooltip.html($this.attr("data-description"));
+},500);
 });
 
-$(".medchannel").on("mouseleave",function(){
+$(".medchannel").on("mouseout",function(){
 $('#tooltip').remove();
 });
 
@@ -533,12 +540,13 @@ switch (event.which) {
 //tabs:
 $(".hnav_right").on("click",function(){
 	var textx=$(".header .text");
+	var feeds=$(".medfeed_container");
 $this=$(this);
 if($this.hasClass("not_done")){return false;}
 
 
 $this.addClass("not_done");
-textx.animate({left:"-=340px",opacity: "0"}
+textx.animate({left:"+=350px",opacity: "0"}
 	, {duration: "slow",
 	complete:  function() { textx.css({right:"10px"}); 	switch(textx.text())
 {
@@ -552,9 +560,12 @@ case "New":
   textx.text(textx.data("name"));
   break;
 }} });
-
-
-textx.animate({left:"+=340px",opacity: "1"}
+//limbo
+feeds.animate({left:"+=200px",opacity: "0"},"slow");
+textx.animate({left: '-=700px'},50);
+feeds.animate({left: '-=600px'},50);
+feeds.animate({left:"+=400px",opacity: "1"},"slow");
+textx.animate({left:"+=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
 
@@ -562,14 +573,13 @@ textx.animate({left:"+=340px",opacity: "1"}
 $(".header > .text").data("name",$(".header > .text").text())
 $(".hnav_left").on("click",function(){
 	var textx=$(".header > .text");
-
-	var textx=$(".header .text");
+var feeds=$(".medfeed_container");
 $this=$(this);
 if($this.hasClass("not_done")){return false;}
 
 
 $this.addClass("not_done");
-textx.animate({left:"-=340px",opacity: "0"}
+textx.animate({left:"-=350px",opacity: "0"}
 	, {duration: "slow",
 	complete:  function() { switch(textx.text())
 {
@@ -583,11 +593,13 @@ case "New":
   textx.text("Trending");
   break;
 }} });
-
-
-textx.animate({left:"+=340px",opacity: "1"}
+feeds.animate({left:"-=200px",opacity: "0"},"slow");
+textx.animate({left: '+=700px'},50);
+feeds.animate({left: '+=600px'},50);
+feeds.animate({left:"-=400px",opacity: "1"},"slow");
+textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
 });
-
+/*$('.medchannels-box').jScrollPane();*/
 /*medplus acc added functionality*/

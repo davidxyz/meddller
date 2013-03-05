@@ -1,8 +1,10 @@
 <div class="medfeed_box">
 		<div class="header">
 			<span class="text"><%=@name%></span>
+			<%unless @controller=="users_show"%>
 			<span class="hnav_left">&lt</span>
 			<span class="hnav_right">&gt</span>
+			<%end%>
 			<!--<div id="tabs_container"> 
 			 <ul class="tabs"> 
 			 	<li class="active"> <a href="#" class="tab" title="only the most popular posts land up on your med feed">MedFeed</a> </li>
@@ -50,6 +52,13 @@
 <div class="after"></div><div class="before"></div>!-->
 
 </div>
+<div class="feed_helper hide"><!-- give user options to bring it out if they want-->
+	<div class="options">
+	<span class="btn btn-small btn-custom"><i class="icon-random"></i>random</span>
+	<span class="btn btn-small btn-custom"><i class="icon-pause"></i>stop feed</span>
+	</div>
+	<div class="close">X</div>
+</div>
 <div class="medfeed_container">
 <% if @feed_items.any?%>
 		<%@feed_items.each do |feed_item|%>
@@ -57,7 +66,7 @@
 		<%= render partial: 'shared/feed_item',:locals => { :feed_item => feed_item }%>
 
 		<%end%>
-
+		<img src="ajax-loading.gif" width="25px" height="25px" class="hide paginating_gif"/>
 		<%= will_paginate @feed_items%>
 		<%else%>
 		<div class="nothing"></div>

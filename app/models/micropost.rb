@@ -19,12 +19,11 @@ require 'uri'
 class Micropost < ActiveRecord::Base
   acts_as_commentable
   has_many :comments
-  attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:nsfw,:medchannel
+  attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:medchannel,:preview_url
   before_save :create_preview,:lazy_user,:clean_input
   belongs_to :user
   belongs_to :medchannel
   default_scope order:'microposts.created_at DESC'
-  validates :nsfw, presence: true
   validates :medchannel, presence: true
   #relationshipl
   has_many :reverse_relationshipls,foreign_key: "liked_id",class_name:"Relationshipl", dependent: :destroy
@@ -32,7 +31,6 @@ class Micropost < ActiveRecord::Base
 
   #3medtypes of microposts medimage, medself, medlink
   mount_uploader :image, ImageUploader
-  validates :user_id, presence: true
   validate :ultra_val
   def self.from_users_followed_by(user)
     followed_user_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
@@ -53,11 +51,13 @@ class Micropost < ActiveRecord::Base
     else
       errors[:base]<<("Something, went wrong with your post and we're tearing out our heads trying to find why")
     end
-    unless medtype=="self_post"
-      errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
+    unless medtype=="self_post" and medtype=="desc"
+    errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
     errors[:base]<<("Woah your title is way too long") if title.length >140
     end
-    
+    unless medtype=="desc"
+       errors[:base]<<("uhh, login first?") if user_id.nil? 
+    end
   end
   def inc 
    self.update_attribute(:meds,meds+1)
@@ -69,9 +69,8 @@ class Micropost < ActiveRecord::Base
   
   def create_preview
     if medtype=="link_post"
-      if /\.(gif|png|jpe?g)\z/.match(urls)
-        self.preview_url=urls
-        return nil
+      unless preview_url.nil?
+        return preview_url
       end
       doc = Nokogiri::HTML(open(urls))
       max_size=0;

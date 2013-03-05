@@ -4,12 +4,13 @@
 <div class="comment">
 
 		<div class="title"><%if comments.id == @micropost.comment_threads.first.id%><div class="top-comment">Top Comment</div><%end%></div>
-		<div class="content"><p><%= comments.body%></div>
+		<div class="content"><p class="body"><%= comments.body%></p></div>
+
 		<span class="med_container">
 		<span class="meds"><%=comments.meds%></span>
 		</span>
-		<span class="repost"><%=comments.meds%></span>
-		<span class="comments"><%=comments.children.size%></span>
+		<span class="repost"><span class="number">3</span></span>
+		<span class="comments"><span class="number"><%=comments.children.size%></span></span>
 		<!--<div class="comment_reply">
 			<span class="replies"><%=comments.children.size%></span>
 		</div>-->

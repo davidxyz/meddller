@@ -9,8 +9,6 @@
 		<%=f.hidden_field :medtype, :value=>"self_post"%>
 		<%=f.label :medchannel%>
 		<%=f.text_field :medchannel%>
-		<%=f.label :nsfw%>
-		<%=f.check_box :nsfw, :value=>0%>
 		<div class="user_comment_image "><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%><div class="user"><%=current_user.name%></div></div>
 <div class="self_outlook">
 

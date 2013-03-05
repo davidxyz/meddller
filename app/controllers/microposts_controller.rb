@@ -22,12 +22,32 @@ class MicropostsController < ApplicationController
     end
   end
   def hall_of_fame# best posts of all time
+    begin
+    @microposts=Micropost.order("meds DESC").limit(10)
+    rescue
+      @microposts=[]
+    end
   end
-  def popularposts# best posts in last 24 hours
+  def popularposts# best posts in last 18 hours
+    begin
+      @microposts=Micropost.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date)).order("meds DESC")
+    rescue 
+      @microposts=[]
+    end
   end
-  def risingposts# rising posts in last 5 hours
+  def risingposts# rising posts in algorithm
+    begin
+    @microposts=Micropost.where(:created_at => (4.hours.ago.to_date)..(Time.now.to_date)).order("meds DESC")#automatically gives created at descending order
+    rescue
+      @microposts=[]
+    end
   end
   def newposts# newest posts in last 5 hours
+    begin
+    @microposts=Micropost.all#automatically gives created at descending order
+    rescue
+      @microposts=[]
+    end
   end
   def new
     @micropost =current_user.microposts.build

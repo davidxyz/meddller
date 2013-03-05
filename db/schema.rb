@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130228001140) do
+ActiveRecord::Schema.define(:version => 20130304164614) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(:version => 20130228001140) do
   create_table "medchannels", :force => true do |t|
     t.string   "name"
     t.text     "description"
-    t.text     "rules"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.boolean  "nsfw"
@@ -47,12 +46,11 @@ ActiveRecord::Schema.define(:version => 20130228001140) do
     t.integer  "meds",          :default => 1
     t.integer  "integer",       :default => 1
     t.string   "urls"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
     t.string   "medtype"
     t.string   "image"
     t.string   "preview_url"
-    t.boolean  "nsfw",          :default => false
     t.integer  "medchannel_id"
   end
 

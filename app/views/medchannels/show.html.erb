@@ -5,12 +5,15 @@
 	<div class="subscribers">subscribers<div class="subscribers_data"><%=@medchannel.subscribers.count%></div></div>
 	<a href="#" class="btn"><i class="icon-eye-open"></i> Subscribe</a>
 </div>
-<a class="description-vote" href="#"><span class="close">X</span><span class="desc">Description</span><div class="count"></div></a>
+<a class="description-vote" href="<%=site('/m/'+@name+'/description')%>"><span class="close">X</span><span class="desc">Description</span><div class="count"></div></a>
+<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
 <div class="recent_channels">
+
+	<div>Related Channels</div>
 	<ul>
-		<li class="active">random</li>
-		<li>funny</li>
-		<li>gaming</li>
+		<li class="active">random <span class="data"></span></li>
+		<li>funny <span class="data"></span></li>
+		<li>gaming <span class="data"></span></li>
 	</ul>
 </div>
 <%= render 'shared/feed'%>

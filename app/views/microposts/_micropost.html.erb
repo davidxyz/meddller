@@ -4,7 +4,7 @@
 </div> make compliant for crappy browsers-->
 <li >
 	<% if !micropost.image_url.nil?%>
-	<span class="preview"><%=link_to image_tag(micropost.image_url, :width => 100, :height => 100, :title => "Originating site"), micropost.urls%></span>
+	<span class="preview"><%=link_to image_tag(micropost.image_url, :width => 50, :height => 50, :title => "Originating site"), micropost.urls%></span>
 	<%else%>
 	<%#nothing%>
 	<%end%>
@@ -23,7 +23,7 @@
 			<span class="med_container <%=current_user.have_I_liked_or_not?(micropost,'micropost')%>" id="<%=micropost.id%>">
 		<span class="meds"><%=micropost.meds%></span>
 		</span>
-		<span class="medchannel"><%=micropost.medchannel.name%><span class="hide data-description"><%=micropost.medchannel.description%></span><span class="hide data-rules"><%=micropost.medchannel.rules%></span></span>
+		<span class="medchannel" data-description="<%=micropost.medchannel.description%>"><%=micropost.medchannel.name%></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(micropost.created_at)%> ago.</span>
 		
 </li>

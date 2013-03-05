@@ -7,14 +7,13 @@
 		<%= render 'shared/error_messages', object: f.object%>
 		<h1 id="micropost_form_title">Link Post</h1>
 		<%=f.label :url%>
-		<%=f.text_field :urls, value: "", id: "preview_url"%>
+		<%=f.text_field :urls, value: "", id: "urls"%>
 		<%=f.label :title%>
 		<%=f.text_field :title, class: "form_title"%>
 		<%=f.hidden_field :medtype, :value=>"link_post"%>
+		<%=f.hidden_field :preview_url, id: "preview"%>
 		<%=f.label :medchannel%>
 		<%=f.text_field :medchannel%>
-		<%=f.label :nsfw%>
-		<%=f.check_box :nsfw, :value=>0%>
 		<%= f.submit "Submit",class: "btn btn-large btn-primary", id:"submit"%>
 		<%= link_to "image upload?",submit3_path,class:"btn btn-large btn-success link_post2"%>
 		<%= link_to "self post?",submit2_path,class:"btn btn-large btn-warning link_post"%>

@@ -1,5 +1,5 @@
 SampleApp::Application.routes.draw do
-  resources :users
+  #resources :users, only 
   resources :sessions, only: [:new, :create, :destroy]
  # resources :microposts, only: [:create, :destroy]
  resources :microposts
@@ -14,7 +14,7 @@ SampleApp::Application.routes.draw do
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
   match '/AskTheMedTeam', to: 'static_pages#ask'
-  match '/users', to: 'users#show'
+  match '/users/:name'=> 'users#show',:name => /[a-z]+/i
   match '/signup', to: 'users#new'
   match '/submit', to: 'microposts#new'
   match '/submit2', to: 'microposts#new2'
@@ -22,7 +22,25 @@ SampleApp::Application.routes.draw do
   match '/show_urls', to: 'microposts#show_urls'
   match '/commands/inc', to: 'microposts#increment'
   match 'commands/create_a_comment', to: 'comments#create'
+  #medchannnel routes
   match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z]+/i
+  match '/m/:name'=> 'medchannels#show',:name => /[a-z]+/i
+  match '/m/:name/description'=> 'medchannels#desc',:name => /[a-z]+/i
+  match '/medchannel/:name/description'=> 'medchannels#desc',:name => /[a-z]+/i
+  match '/medchannel/:name/hall_of_fame', to: "medchannels#hall_of_fame"
+  match '/medchannel/:name/new', to: "medchannels#newposts"
+  match '/medchannel/:name/popular', to: "medchannels#popularposts"
+  match '/medchannel/:name/rising', to: "medchannels#risingposts"
+  match '/m/:name/hall_of_fame', to: "medchannels#hall_of_fame"
+  match '/m/:name/new', to: "medchannels#newposts"
+  match '/m/:name/popular', to: "medchannels#popularposts"
+  match '/m/:name/rising', to: "medchannels#risingposts"
+  #routes
+  match '/hall_of_fame', to: "microposts#hall_of_fame"
+  match '/new', to: "microposts#newposts"
+  match '/popular', to: "microposts#popularposts"
+  match '/rising', to: "microposts#risingposts"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -4,33 +4,23 @@
 	
 	<%= render 'shared/feed'%>
 <% if signed_in?%>
-<section id="sidebar">
-	<section class="user_header">
-<span class="user_preview"><%= image_tag(current_user.image_url, :width => 35, :height => 35, :title => current_user.name)%></span>
-	<h1 class="name"><%=current_user.name%></h1>
-	</section>
+<div id="sidebar">
+	
 	<!-- uhh put in the user page show action><section class="name"><%= render 'shared/user_info'%></section>-->
-	<section class="user_info"><%= render 'shared/stats'%></section>
-		<a id="submit_post"class="btn btn-custom" href="/submit">post</a>
-		<div class="medchannels-box">
-			<div class="header">
-				MedChannels
-				<div class="after"></div>
-				<div class="before"></div>
-				<%if current_user.medchannels.any?%>
+	
+		<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
+		<div class="divider"></div>
+		<div class="subscribed_channels">
+			<div class="header">Medchannels</div>
+			<%if current_user.medchannels.any?%>
+			<ul>
 				<%current_user.medchannels.each do |medchannel|%>
-				<div class="medchannel">
-					<span class="name"><%=medchannel.name%></span>
-					<span class="subscribers"><%=medchannel.subscribers.count%></span>
-				</div>
-				<%end%>
-				<%else%>
-				<div class="nothing">nothing</div>
-				<%end%>		
-			</div>
+				<li><%=medchannel.name%><span class="data"><%=medchannel.subscribers.count%></span></li>
+				<%end%>				
+			</ul>
+			<%end%>
 		</div>
-		<!--<a href="#top" class="top"><i class="icon-white icon-circle-arrow-up" title="return to the top"></i>top</a>
-		<a href="#" class="btn btn-info btn-large"><i class="icon-eye-open"></i> Easy</a>-->
+	</div>
 	<%else%>
 	<div class="welcome-message">
 		<h2>Welcome to Meddler</h2>

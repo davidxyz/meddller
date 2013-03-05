@@ -1,15 +1,14 @@
 <%provide(:title, @micropost.title)%>
 <%provide(:page_size, "large2")%>
-<%provide(:background, "blue")%>
-<div class="blue-mask"></div>
+
 <div id="<%=@micropost.id%>"class="micropost_show ">
 
-	<%= image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author", class: "author")%>
+	<div class="author"><%= link_to image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author"), site('/users/'+@micropost.user.name)%><div><%=@micropost.user.name%></div></div>
 <%if @micropost.medtype=="self_post"%>
 
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=current_user?(@micropost.user)%>"><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 
@@ -22,12 +21,12 @@
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number">2</span></span>
-		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="medchannel" data-description="<%=@micropost.medchannel.description%>"><%=@micropost.medchannel.name%></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="image_post"%>
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><%=content_tag(:div, content_tag(:p, "Nsfw"), :class => "nsfw") if @micropost.nsfw%><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
@@ -38,12 +37,12 @@
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number">2</span></span>
-		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="medchannel" data-description="<%=@micropost.medchannel.description%>"><%=@micropost.medchannel.name%></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="link_post"%>
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><%=content_tag(:div, content_tag(:p, "Nsfw"), :class => "nsfw") if @micropost.nsfw%><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
@@ -54,7 +53,7 @@
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number">2</span></span>
-		<span class="medchannel"><%=@micropost.medchannel.name%><span class="hide data-description"><%=@micropost.medchannel.description%></span><span class="hide data-rules"><%=@micropost.medchannel.rules%></span></span>
+		<span class="medchannel" data-description="<%=@micropost.medchannel.description%>"><%=@micropost.medchannel.name%></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 			
 <%end%>
@@ -74,6 +73,8 @@
 			<%end%>
 	</div>
 	<div class="comment_container">
+		<div class="header"></div>
+		<div class="comments_helper"></div>
 		<div class="added-info"></div>
 		<%if @comments.any?%>
 			<ol class="comments">

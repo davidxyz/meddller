@@ -31,8 +31,8 @@ module UsersHelper
   end
   def user_time_left
     begin
-    time=(Time.now-(current_user.comments.find(:first,order: "created_at DESC").created_at)).seconds
-      if time<60
+    time=(Time.now-(current_user.comments.find(:first,order: "created_at DESC").created_at))
+      if time<=60
         time
       else
         0
