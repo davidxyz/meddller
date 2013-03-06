@@ -1,5 +1,5 @@
 SampleApp::Application.routes.draw do
-  #resources :users, only 
+  resources :users, only: [:destroy]
   resources :sessions, only: [:new, :create, :destroy]
  # resources :microposts, only: [:create, :destroy]
  resources :microposts
@@ -15,6 +15,8 @@ SampleApp::Application.routes.draw do
   match '/contact', to: 'static_pages#contact'
   match '/AskTheMedTeam', to: 'static_pages#ask'
   match '/users/:name'=> 'users#show',:name => /[a-z]+/i
+  match '/users/:id/edit'=> 'users#edit'
+  match 'GodCommands/index', to: 'Users#index'
   match '/signup', to: 'users#new'
   match '/submit', to: 'microposts#new'
   match '/submit2', to: 'microposts#new2'
@@ -22,6 +24,7 @@ SampleApp::Application.routes.draw do
   match '/show_urls', to: 'microposts#show_urls'
   match '/commands/inc', to: 'microposts#increment'
   match 'commands/create_a_comment', to: 'comments#create'
+  match 'commands/repost', to: 'comments#create'
   #medchannnel routes
   match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z]+/i
   match '/m/:name'=> 'medchannels#show',:name => /[a-z]+/i

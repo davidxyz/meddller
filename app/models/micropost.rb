@@ -22,14 +22,14 @@ class Micropost < ActiveRecord::Base
   attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:medchannel,:preview_url
   before_save :create_preview,:lazy_user,:clean_input
   belongs_to :user
-  belongs_to :medchannel
+  has_many :relationshiprs, foreign_key: "post_id", dependent: :destroy
+  has_many :channels, through: :relationshiprs, source: :channel
   default_scope order:'microposts.created_at DESC'
-  validates :medchannel, presence: true
   #relationshipl
   has_many :reverse_relationshipls,foreign_key: "liked_id",class_name:"Relationshipl", dependent: :destroy
   has_many :likers, through: :reverse_relationshipls,source: :liker
 
-  #3medtypes of microposts medimage, medself, medlink
+  #3medtypes of microposts medimage, medself, medlink and repost quivalents
   mount_uploader :image, ImageUploader
   validate :ultra_val
   def self.from_users_followed_by(user)
@@ -39,6 +39,20 @@ class Micropost < ActiveRecord::Base
   def default_feed
     #must improve
     self.all
+  end
+  def in_channel?(medchannel)
+    unless relationshiprs.find_by_channel_id(medchannel.id).nil?
+     true
+   else
+     false
+    end
+    
+  end
+  def put_in_channel!(medchannel)
+    relationshiprs.create!(channel_id: medchannel.id)
+  end
+   def remove_from_channel!(medchannel)
+    relationshiprs.find_by_channel_id(medchannel.id).destroy
   end
   def ultra_val
     if medtype=="link_post"

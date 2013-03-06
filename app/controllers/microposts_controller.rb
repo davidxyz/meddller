@@ -21,6 +21,7 @@ class MicropostsController < ApplicationController
       format.json { render :json => { :urls => srcs, valid: valid} }
     end
   end
+  #have to incoporate some type of user controls so they can get more from their fee
   def hall_of_fame# best posts of all time
     begin
     @microposts=Micropost.order("meds DESC").limit(10)
@@ -47,6 +48,20 @@ class MicropostsController < ApplicationController
     @microposts=Micropost.all#automatically gives created at descending order
     rescue
       @microposts=[]
+    end
+  end
+  def repost#basically copies and attributes to original user
+    micropost=Micropost.find(params[:id])
+    channel=Medchannel.find_by_name(params[:medchannel])
+    unless micropost.in_channel?(channel)
+      micropost.put_in_channel!(channel)
+      respond_to do |format|
+      format.json { render :json => { :valid=>true} }
+      end
+    else
+      respond_to do |format|
+      format.json { render :json => { :valid=>false} }
+      end
     end
   end
   def new

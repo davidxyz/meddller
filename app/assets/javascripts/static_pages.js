@@ -601,5 +601,6 @@ textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
 });
+//the different channels
 /*$('.medchannels-box').jScrollPane();*/
 /*medplus acc added functionality*/

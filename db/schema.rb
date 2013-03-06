@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304164614) do
+ActiveRecord::Schema.define(:version => 20130305202208) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -43,15 +43,14 @@ ActiveRecord::Schema.define(:version => 20130304164614) do
     t.text     "content"
     t.integer  "user_id"
     t.string   "title"
-    t.integer  "meds",          :default => 1
-    t.integer  "integer",       :default => 1
+    t.integer  "meds",        :default => 1
+    t.integer  "integer",     :default => 1
     t.string   "urls"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.string   "medtype"
     t.string   "image"
     t.string   "preview_url"
-    t.integer  "medchannel_id"
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
@@ -80,6 +79,15 @@ ActiveRecord::Schema.define(:version => 20130304164614) do
   add_index "relationshipms", ["subscribed_id", "subscriber_id"], :name => "index_relationshipms_on_subscribed_id_and_subscriber_id", :unique => true
   add_index "relationshipms", ["subscribed_id"], :name => "index_relationshipms_on_subscribed_id"
   add_index "relationshipms", ["subscriber_id"], :name => "index_relationshipms_on_subscriber_id"
+
+  create_table "relationshiprs", :force => true do |t|
+    t.integer "channel_id"
+    t.integer "post_id"
+  end
+
+  add_index "relationshiprs", ["channel_id", "post_id"], :name => "index_relationshiprs_on_channel_id_and_post_id", :unique => true
+  add_index "relationshiprs", ["channel_id"], :name => "index_relationshiprs_on_channel_id"
+  add_index "relationshiprs", ["post_id"], :name => "index_relationshiprs_on_post_id"
 
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"

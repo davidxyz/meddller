@@ -26,6 +26,7 @@ class MedchannelsController < ApplicationController
       @microposts=[]
     end
   end
+  #posts actions should only have who the user is following and channels subscribed to
   def popularposts# best posts in last 18 hours
     begin
       @microposts=Micropost.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date),medchannel_id: params[:channel]).order("meds DESC")

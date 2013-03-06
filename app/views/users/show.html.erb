@@ -28,10 +28,10 @@
 			<%@followeds.each do |user|%>
 			<div class="users">
 				<div class="info">
-				<%=link_to image_tag(user.image_url, :width => 55, :height => 25, :title => user.name), user%>
+				<%=link_to image_tag(user.image_url, :width => 55, :height => 25, :title => user.name), site('/users/'+user.name)%>
 				</div>
 				<div class="img">
-				<%=link_to user.name, user%>
+				<%=link_to user.name, site('/users/'+user.name)%>
 				</div>
 			</div>
 			<%end%>
@@ -44,10 +44,10 @@
 			<%@followers.each do |user|%>
 			<div class="users">
 			<div class="img">
-			<%=link_to image_tag(user.image_url, :width => 25, :height => 25, :title => user.name), user%>
+			<%=link_to image_tag(user.image_url, :width => 25, :height => 25, :title => user.name), site('/users/'+user.name)%>
 			</div>
 			<div class="info">
-			<%=link_to user.name, user%>
+			<%=link_to user.name, site('/users/'+user.name)%>
 			</div>
 			</div>
 			<%end%>

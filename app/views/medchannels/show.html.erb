@@ -1,12 +1,30 @@
 <%provide(:page_size,'large')%>
 <%provide(:title,'See what\'s popular on'+@medchannel.name)%>
+<% if signed_in?%>
+<div id="sidebar">
+	
+	<!-- uhh put in the user page show action><section class="name"><%= render 'shared/user_info'%></section>-->
+	
+		<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
+		<div class="divider"></div>
+		<div class="subscribed_channels">
+			<div class="header">Medchannels</div>
+			<%if current_user.medchannels.any?%>
+			<ul>
+				<%current_user.medchannels.each do |medchannel|%>
+				<li><%=medchannel.name%><span class="data"><%=medchannel.subscribers.count%></span></li>
+				<%end%>				
+			</ul>
+			<%end%>
+		</div>
+	</div>
+	<%end%>
 <div class="subscribe-box">
 	<div class="header"><div class="close">X</div></div>
 	<div class="subscribers">subscribers<div class="subscribers_data"><%=@medchannel.subscribers.count%></div></div>
 	<a href="#" class="btn"><i class="icon-eye-open"></i> Subscribe</a>
 </div>
 <a class="description-vote" href="<%=site('/m/'+@name+'/description')%>"><span class="close">X</span><span class="desc">Description</span><div class="count"></div></a>
-<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
 <div class="recent_channels">
 
 	<div>Related Channels</div>

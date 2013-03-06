@@ -22,7 +22,11 @@
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
 		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
-		<a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
+		<%feed_item.channels.each do |channel|%>
+		<ul>
+		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
+		</ul>
+		<%end%>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
 </div>
 <%elsif feed_item.medtype=="image_post"%>
@@ -45,7 +49,11 @@
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
 		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
-		<a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
+		<%feed_item.channels.each do |channel|%>
+		<ul>
+		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
+		</ul>
+		<%end%>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
 </div>
 <%elsif feed_item.medtype=="self_post"%>
@@ -67,7 +75,11 @@
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
 		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
-		 <a href="<%='/medchannel/'+feed_item.medchannel.name%>"class="medchannel" data-description="<%=feed_item.medchannel.description%>"><%=feed_item.medchannel.name%></a>
+		<%feed_item.channels.each do |channel|%>
+		<ul>
+		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
+		</ul>
+		<%end%>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		
 </div>
 <%end%>
