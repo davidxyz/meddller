@@ -5,52 +5,6 @@
 			<span class="hnav_left">&lt</span>
 			<span class="hnav_right">&gt</span>
 			<%end%>
-			<!--<div id="tabs_container"> 
-			 <ul class="tabs"> 
-			 	<li class="active"> <a href="#" class="tab" title="only the most popular posts land up on your med feed">MedFeed</a> </li>
-			 	<li><a href="#" class="tab" title="not quite there yet but these little guys could use your help to wind up on the top">Rising</a></li> 
-				<li><a href="#" class="tab" title="these young wipper snappers need some guidance and discipline in their lives. Will you help them?">New</a></li> 
-				</ul> This is used so the contents don't appear to the right of the tabs 
-				</div>--> 
-			<!--<div class="feed_menu">
-	  <ul class="nav nav-tabs">
-	        <li class="active"><a href="#"><i class="icon-inbox"></i>MedFeed</a></li>
-	        <li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Popular<b class="caret"></b></a>
-	          <ul class="dropdown-menu">
-	            <li><a href="#">MedLink posts</a></li>
-	            <li><a href="#">MedImage posts</a></li>
-	            <li><a href="#">MedComments</a></li>
-	            <li class="divider"></li>
-	            <li><a href="#">All</a></li>
-	          </ul>
-	        </li>
-			<li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rising<b class="caret"></b></a>
-	          <ul class="dropdown-menu">
-	            <li><a href="#">MedLink posts</a></li>
-	            <li><a href="#">MedImage posts</a></li>
-	            <li><a href="#">MedComments</a></li>
-	            <li class="divider"></li>
-	            <li><a href="#">All</a></li>
-	          </ul>
-	        </li>
-	        <li class="dropdown">
-	          <a class="dropdown-toggle" data-toggle="dropdown" href="#">New<b class="caret"></b></a>
-	          <ul class="dropdown-menu">
-	            <li><a href="#">MedLink posts</a></li>
-	            <li><a href="#">MedImage posts</a></li>
-	            <li><a href="#">MedComments</a></li>
-	            <li class="divider"></li>
-	            <li><a href="#">All</a></li>
-	          </ul>
-	        </li>
-	      </ul>
-	</li>
-	</ul>
-</div>
-<div class="after"></div><div class="before"></div>!-->
-
 </div>
 <div class="feed_helper hide"><!-- give user options to bring it out if they want-->
 	<div class="options">
@@ -59,6 +13,7 @@
 	</div>
 	<div class="close">X</div>
 </div>
+<%=image_tag "ajax-loader.gif",width:25,height:25, class: "hide paginating_gif"%>
 <div class="medfeed_container">
 <% if @feed_items.any?%>
 		<%@feed_items.each do |feed_item|%>
@@ -66,7 +21,6 @@
 		<%= render partial: 'shared/feed_item',:locals => { :feed_item => feed_item }%>
 
 		<%end%>
-		<img src="ajax-loading.gif" width="25px" height="25px" class="hide paginating_gif"/>
 		<%= will_paginate @feed_items%>
 		<%else%>
 		<div class="nothing"></div>

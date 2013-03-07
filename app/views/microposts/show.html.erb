@@ -15,12 +15,11 @@
 		<%end%></span></span>
 
 	<span class="content"><%=@micropost.content%></span>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-		<span class="repost"><span class="number">2</span></span>
+		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
 
 		<%@micropost.channels.each do |channel|%>
 		<ul>
@@ -36,12 +35,11 @@
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
 	
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-		<span class="repost"><span class="number">2</span></span>
+		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
 		<%@micropost.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -49,19 +47,18 @@
 		<%end%>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="link_post"%>
-	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+	<span class="preview"><%=link_to image_tag(@micropost.preview_url,width: 65, height:85),@micropost.urls%></span>
 
 	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
 	
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-		<span class="repost"><span class="number">2</span></span>
+		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
 		<%@micropost.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -88,8 +85,10 @@
 	<div class="comment_container">
 		<div class="header"></div>
 		<div class="comments_helper"></div>
-		<div class="added-info"></div>
 		<%if @comments.any?%>
+		<div class="added-info"><div class="meddals"><div><%= image_tag("user_images/topcomment.png",width:55, height:55,:data=>{desc:"awarded to those who are on top"})%><span><%=@micropost.top_comment.user.name%></span></div>
+		<div><%= image_tag("user_images/mostreplied.png",width:55, height:55,:data=>{desc:"awarded to those who garner the most reponses from their peers"})%><span><%=@micropost.most_replied.user.name%></span></div></div>
+		</div>
 			<ol class="comments">
 				<%= render partial: 'comments/comments', collection: @comments%>
 			</ol>

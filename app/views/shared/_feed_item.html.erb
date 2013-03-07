@@ -6,22 +6,21 @@
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
 	<span class="preview"><%=link_to image_tag(feed_item.preview_url,width: 65, height:85),feed_item.urls%></span>
 
-	<span class="title"><%=link_to feed_item.title, feed_item%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
+	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", feed_item)%><%else%><%=link_to( feed_item.title, feed_item)%><%end%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), feed_item, method: :update, title: feed_item.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
 		</span>
 		<%else%>
-		<div>user settings</div>
+		<div><!--user settings--></div>
 		</span>
 		<%end%>
 	</span>
 	<span class="content hide"><%= feed_item.content%></span>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number">7</div></a>
+		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -34,21 +33,20 @@
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
 	<span class="preview"><%=image_tag feed_item.image_url(:thumb) if feed_item.image?%></span>
 
-	<span class="title"><%=link_to feed_item.title, feed_item%><% if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
+	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", feed_item)%><%else%><%=link_to( feed_item.title, feed_item)%><%end%><%if current_user?(feed_item.user)%><span class="settings hide <%=current_user?(feed_item.user)%>">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), feed_item, method: :update, title: feed_item.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
 		</span>
 		<%else%>
-		<div>user settings</div>
+		<div><!--user settings--></div>
 		</span>
 		<%end%>
 	</span>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number">7</div></a>
+		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -64,17 +62,16 @@
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), feed_item, method: :delete, confirm: "You 	sure?", title: feed_item.content%>
 		</span>
 		<%else%>
-		<div>user settings</div>
+		<div><!--user settings--></div>
 		</span>
 		<%end%>
 	</span>
 	<div class="content "><%= wrap(feed_item.content,5)%></div>
-	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number">7</div></a>
+		<div class="options"><a  href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>

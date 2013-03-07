@@ -55,6 +55,24 @@ class Micropost < ActiveRecord::Base
   def dec
     self.update_attribute(:meds,meds-1)
   end
+  def top_comment
+    comment_threads.order("meds DESC").first
+  end
+  def top_comment?(comment)
+    comment_threads.order("meds DESC").first.id==comment.id
+  end
+  def most_replied
+        mostreplied=self.comment_threads.first
+    self.comment_threads.each{|comment|
+      if comment.children.size>mostreplied.children.size
+      mostreplied=comment
+     end
+     }
+     mostreplied
+  end
+  def most_replied?(comment)
+      self.most_replied==comment
+  end
   private #validations
     def ultra_val
     if medtype=="link_post"
@@ -69,7 +87,7 @@ class Micropost < ActiveRecord::Base
     end
     unless medtype=="self_post" and medtype=="desc"
     errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
-    errors[:base]<<("Woah your title is way too long") if title.length >140
+    errors[:base]<<("Woah your title is way too long") if title.length >100
     end
     unless medtype=="desc"
        errors[:base]<<("uhh, login first?") if user_id.nil? 

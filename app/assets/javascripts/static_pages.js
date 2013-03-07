@@ -1,15 +1,4 @@
-/*might make it easier for javascripters or add this as funcitonality to medplus accounts
-$("#submit_post").on('click',function(){
-	$this=$(this);//cacheing
-	$this.attr('href','#');
-	if($this.text()=="post"){
-	$("#micropost_form").css('display','block');
-	$this.text("cancel");
-	}else{
-		$("#micropost_form").css('display','none');
-		$this.text("post");
-	}
-});*/
+
 /*javascript relating to micropost data*/
 var getLocation = function(href) {
     var l = document.createElement("a");
@@ -312,11 +301,10 @@ $("[title]").load(function(){
 $(this).attr('data-title',$(this).attr('title'));
 $(this).removeAttr('title');
 });
-$(document).on("mouseover","[data-title]",function(e){
-	
+
+$(document).on("mouseenter","[data-title]",function(e){	
 	$this=$(this);
-	if($this.is("img")){ return false;}
-	setTimeout(function(){
+	if($this.is("img") || $this.parent().hasClass("options")){ return false;} //will refine for extra power
 	var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip');
 
@@ -333,17 +321,69 @@ $(document).on("mouseover","[data-title]",function(e){
         color:'white'
     }).insertBefore($this);
 
-
-   tooltip.show().html($this.attr('data-title'));
-},1000);
+   tooltip.html($this.attr('data-title'));
+   tooltip.fadeTo("slow",0.7);
 
 });
-$(document).on("mouseout mouseleave","[data-title]",function(event){
+//for options under production
+/*
+$(".options [title]").hover(function(){
+	$this=$(this);
+$this.removeAttr("title");
+	if(!$this.hasClass("tip_activate")){
+	 $this.addClass("tip_activate");
+
+	var tooltip=$(document.createElement('div'));
+	tooltip.addClass("options_tooltip");
+	tooltip.css({
+        position: 'relative',
+        background: 'black',
+        border: '1px solid black',
+        padding: '10px',
+        zIndex: 999,
+        width:'100px',
+        height:'20px',
+        display: 'none',
+        top:  20+ 'px',
+        right:0+ 'px',
+        color:'white'
+    }).insertBefore($this);
+
+   tooltip.html($this.attr('data-title'));
+   tooltip.fadeTo("slow",0.6);
+}else{
+	$(".options_tooltip").remove();
+	$this.removeClass("tip_activate");
+}
+});*/
+//for medals on comment page or user show page
+$("[data-desc]").on("mouseenter",function(e){
+	$this=$(this);
+	var tooltip=$(document.createElement('div'));
+	tooltip.addClass("meddal-tooltip");
+
+	tooltip.css({
+        position: 'absolute',
+        background: '#ffe770',
+        padding: '10px',
+        zIndex: 999,
+        display: 'none',
+        right:  ($this.width()*2)+ 'px',
+        color:'black'
+    }).insertBefore($this);
+
+   tooltip.html($this.attr('data-desc'));
+   tooltip.fadeTo("slow",0.7);
+});
+
+$(document).on("mouseleave","[data-desc]",function(event){
+$('.meddal-tooltip').remove();
+});
+$(document).on("mouseleave","[data-title]",function(event){
 $('#tooltip').remove();
 });
-$(".medchannel").on("mouseover",function(){
+$(".medchannel").on("mouseenter",function(){
 $this=$(this);
-setTimeout(function(){
 var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip');
 	tooltip.css({
@@ -356,13 +396,14 @@ var tooltip=$(document.createElement('div'));
         width:'250px',
         top:'180px',
         right: '240px',
-        color:'white'
+        color:'white',
+        display: 'none'
     }).insertBefore($this);
     tooltip.html($this.attr("data-description"));
-},500);
+    tooltip.fadeTo("slow",0.7);
 });
 
-$(".medchannel").on("mouseout",function(){
+$(".medchannel").on("mouseleave",function(){
 $('#tooltip').remove();
 });
 
@@ -447,7 +488,7 @@ $("span.med_container").mousedown(function(event){
 	var $this=$(this);
 	var meds = $this.find(".meds");
 	var mid=$this.attr("id");
-	console.log(window.location.origin);
+	//console.log(window.location.origin);
 	if(!$this.hasClass("upvote") && !$this.hasClass("downvote")){
 switch (event.which) {
         case 1://left
@@ -614,13 +655,20 @@ var post=$this.parent().parent();
 	}
 
 });
-//comment_reply functionality
+//comment_reply functionality not even working yet
 $(".comment .comments").on("click",function(){
 var new_new=$(".comment_form_container").clone();
 new_new.appendTo($("body"))
 new_new.hide();
 new_new.addClass("comment_reply");
 addMask(new_new);
+});
+
+//paginator for medfeed
+$(window).scroll(function() {
+   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+       $("img.paginating_gif").show();
+   }
 });
 /*$('.medchannels-box').jScrollPane();*/
 /*medplus acc added functionality*/

@@ -14,7 +14,8 @@
 #   
 
 class User < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation, :image_url
+  attr_accessible :email, :name, :password, :password_confirmation, :image, :remote_image_url
+  mount_uploader :image, ImageUploader
   has_many :microposts, dependent: :destroy
   #relationships
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy
@@ -46,6 +47,13 @@ class User < ActiveRecord::Base
     #Micropost.where("user_id=?", id)
     #will provide an algoithm for suscribed med_groups and suscribed people
     Micropost.select("*")
+  end
+  def image_url
+    if self.image? 
+      self.image_url(:thumb)
+    else
+      "anon.png"
+    end
   end
   def inc
     self.update_attribute(:meds,meds+1)

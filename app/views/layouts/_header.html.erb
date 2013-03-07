@@ -6,7 +6,7 @@
 	<nav>
 	<ul class="nav pull-right">
 	<li><%= link_to "Search", '#',id:"search" %></li>
-	 <li><%= link_to "Help", help_path %></li>
+	<li><%= link_to "Help", help_path %></li>
 	<%if signed_in?%>
 	<li><%= link_to "Users", site('/GodCommands/'+'index') if current_user?(User.find_by_name("fag"))%></li>
 	<li id="fat-menu" class="dropdown">

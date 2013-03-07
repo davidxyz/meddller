@@ -26,6 +26,7 @@ module UsersHelper
     end
     rank
   end
+
   def user_ready?
     user_time_left==0
   end

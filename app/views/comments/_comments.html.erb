@@ -3,7 +3,7 @@
 <div class="user_comment_image"><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%><p><%=comments.user.name%></p></div>
 <div class="comment">
 	<div id="whiteout"></div>
-<%if comments.id == @micropost.comment_threads.first.id%><div class="top-comment">Top Comment</div><%end%>
+<%if @micropost.top_comment?(comments)%><div class="top-comment">Top Comment</div><%end%>
 		<div class="content"><p class="body">
 <%=comments.body%></p></div>
 
@@ -12,9 +12,6 @@
 		</span>
 		<span class="comments"><span class="number"><%=comments.children.size%></span></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(comments.created_at)%> ago.</span>
-		<!--<div class="comment_reply">
-			<span class="replies"><%=comments.children.size%></span>
-		</div>-->
 </div>
 </li>
 

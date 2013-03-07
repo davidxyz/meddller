@@ -1083,7 +1083,7 @@ height:35px;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
+padding: 0 4px 0 4px;
 height:16px;
 font-size:14px;
 background-color:#00ABFF;
@@ -1111,7 +1111,7 @@ height:35px;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
+padding: 0 4px 0 4px;
 height:16px;
 font-size:14px;
 background-color:#00ABFF;
@@ -1207,6 +1207,7 @@ width:170px;
   width:50px;
   background-image:url('heart2.png');
   .meds{
+    width: 15px;
     left:22px;
     bottom:10px;
   }
@@ -1292,7 +1293,6 @@ text-align:center;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
 height:16px;
 font-size:14px;
 background-color:#00ABFF;
@@ -1300,6 +1300,7 @@ color:white;
 position:absolute;
 bottom:0px;
 right:0px;
+padding: 0 4px 0 4px;
 }
 }
 
@@ -1974,7 +1975,7 @@ height:40px;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
+padding: 0 4px 0 4px;
 height:16px;
 font-size:14px;
 background-color:#00ABFF;
@@ -2002,7 +2003,7 @@ height:40px;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
+padding: 0 4px 0 4px;
 height:16px;
 font-size:14px;
 background-color:#00ABFF;
@@ -2061,7 +2062,7 @@ border-bottom-top-radius: 5px;
 	.preview{
 	position:absolute;
 	top:100px;
-	left:100px;
+	left:10px;
 	width:400px;
 	height:400px;	
 	}
@@ -2069,6 +2070,11 @@ border-bottom-top-radius: 5px;
 	position:relative;
 	right:80px;
 	top:-5px;
+  img{
+-moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+-webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
 	}
 }
 
@@ -2086,6 +2092,11 @@ width:inherit;
 	position:absolute;
 	left:0px;
   top:5px;
+  img{
+-moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+-webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
 }
    
 		.new_comment{
@@ -2150,7 +2161,7 @@ width:inherit;
 	}
 	.comment_container{
 	width:inherit;
-  height: 1800px;
+  height: 1650px;
   position:absolute;
 	margin-top:250px;
 	left:100px;
@@ -2172,7 +2183,13 @@ border-top-right-radius: 7px;
 border-top-left-radius: 7px;
   height:30px;
   width: inherit;
-  background-color: #0088CC;
+ background-color: #fafafa;
+  background-image: -moz-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafafa), to(#f2f2f2));
+  background-image: -webkit-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: -o-linear-gradient(top, #fafafa, #f2f2f2);
+  background-image: linear-gradient(to bottom, #fafafa, #f2f2f2);
+  background-repeat: repeat-x;
   padding-left:100px;
   right:0px; 
 }
@@ -2184,7 +2201,7 @@ border-top-left-radius: 7px;
       top:100px;
       right:30px;
       width:200px;
-      height:400px;
+      height:300px;
       background: #444;
 background-image: initial;
 background-position-x: initial;
@@ -2200,6 +2217,17 @@ border-radius: 10px;
 color: #ccc;
 margin-top: -20px;
 text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+span{
+  position: relative;
+  top:-13px;
+  left: 15px;
+  font-size:14px;
+}
+.meddals{
+  position: absolute;
+  left:20px;
+  top:20px;
+}
     }
 		.comments{
 		list-style:none;
@@ -2246,6 +2274,7 @@ box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     .body{
       width: 480px;
       font-size: 13px;
+      position: relative;
        word-wrap: break-word;
     }
     &:before{
@@ -2306,7 +2335,7 @@ box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
   .timestamp{
   position:absolute;
-  bottom:1px;
+  bottom:2px;
  right:3px;
   font-size:9px;
   }
@@ -2328,7 +2357,6 @@ height:32px;
 -moz-border-radius:5px;
 -webkit-border-radius:5px;
 -border-radius:5px;
-width:16px;
 height:16px;
 font-size:14px;
 background-color:#333;
@@ -2336,6 +2364,7 @@ color:white;
 position:absolute;
 bottom:0px;
 right:0px;
+padding: 0 4px 0 4px;
     }
   }
   
@@ -2589,6 +2618,11 @@ width:200px;
    }
  }
 /* Customize your modal window here, you can add background image too */
+.paginating_gif{
+  position: absolute;
+  bottom: 1px;
+  right:375px;
+}
 #boxes #dropbox {
   width:700px; 
   height:350px;
@@ -2723,6 +2757,53 @@ border-left:3px solid #BBB;
     -moz-transform: rotate(222deg);
   }
 }
+.options_tooltip{
+     -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+          font-size: 13px;
+  &:before{
+    content: ' ';
+  display: block;
+    position: absolute;
+    right: 65px;
+    bottom: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    border-color: #5E5E5E;
+    border-width: 1px;
+    border-style: none none solid solid;
+    transform: rotate(312deg);
+    -webkit-transform: rotate(312deg);
+    -moz-transform: rotate(312deg);
+  }
+}
+
+/*for meddals*/
+.meddal-tooltip{
+   -webkit-border-radius: 15px;
+     -moz-border-radius: 15px;
+          border-radius: 15px;
+        width:100px;
+        font-size: 10px;
+  &:before{
+    content: ' ';
+  display: block;
+    position: absolute;
+    right: -8px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    background-color: #ffe770;
+    border-color: #f7ce00;
+    border-width: 1px;
+    border-style: none none solid solid;
+    transform: rotate(222deg);
+    -webkit-transform: rotate(222deg);
+    -moz-transform: rotate(222deg);
+  }
+}
 .dialog_circle{/*gives data about reposting to the user through a friendly interface*/
   -webkit-border-radius: 50px;
      -moz-border-radius: 50px;
@@ -2776,8 +2857,7 @@ color:#f89406;
 background-color: #eed3d7;
 color:#b94a48;
 }
-.custom-info{}
-
+/*plugin data o.o?*/
 .jspContainer
 {
   overflow: hidden;
