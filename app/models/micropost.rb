@@ -19,11 +19,13 @@ require 'uri'
 class Micropost < ActiveRecord::Base
   acts_as_commentable
   has_many :comments
+  has_one :medchannel
   attr_accessible :content, :title, :urls, :image,:medtype, :remote_image_url,:medchannel,:preview_url
   before_save :create_preview,:lazy_user,:clean_input
   belongs_to :user
   has_many :relationshiprs, foreign_key: "post_id", dependent: :destroy
   has_many :channels, through: :relationshiprs, source: :channel
+  has_many :reposters, through: :relationshiprs, source: :poster
   default_scope order:'microposts.created_at DESC'
   #relationshipl
   has_many :reverse_relationshipls,foreign_key: "liked_id",class_name:"Relationshipl", dependent: :destroy
@@ -45,16 +47,16 @@ class Micropost < ActiveRecord::Base
      true
    else
      false
-    end
-    
+    end 
   end
-  def put_in_channel!(medchannel)
-    relationshiprs.create!(channel_id: medchannel.id)
+  def inc 
+   self.update_attribute(:meds,meds+1)
   end
-   def remove_from_channel!(medchannel)
-    relationshiprs.find_by_channel_id(medchannel.id).destroy
+  def dec
+    self.update_attribute(:meds,meds-1)
   end
-  def ultra_val
+  private #validations
+    def ultra_val
     if medtype=="link_post"
      errors[:base]<<("Uhh, you sure that's a website?")  if urls.nil? or !URI::DEFAULT_PARSER.regexp[:ABS_URI].match(urls) 
     elsif medtype=="self_post"
@@ -73,14 +75,6 @@ class Micropost < ActiveRecord::Base
        errors[:base]<<("uhh, login first?") if user_id.nil? 
     end
   end
-  def inc 
-   self.update_attribute(:meds,meds+1)
-  end
-  def dec
-    self.update_attribute(:meds,meds-1)
-  end
-  private
-  
   def create_preview
     if medtype=="link_post"
       unless preview_url.nil?

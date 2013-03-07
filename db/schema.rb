@@ -83,11 +83,14 @@ ActiveRecord::Schema.define(:version => 20130305202208) do
   create_table "relationshiprs", :force => true do |t|
     t.integer "channel_id"
     t.integer "post_id"
+    t.integer "poster_id"
   end
 
   add_index "relationshiprs", ["channel_id", "post_id"], :name => "index_relationshiprs_on_channel_id_and_post_id", :unique => true
   add_index "relationshiprs", ["channel_id"], :name => "index_relationshiprs_on_channel_id"
+  add_index "relationshiprs", ["post_id", "poster_id"], :name => "index_relationshiprs_on_post_id_and_poster_id", :unique => true
   add_index "relationshiprs", ["post_id"], :name => "index_relationshiprs_on_post_id"
+  add_index "relationshiprs", ["poster_id"], :name => "index_relationshiprs_on_poster_id"
 
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"

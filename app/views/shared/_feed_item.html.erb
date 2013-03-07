@@ -21,7 +21,7 @@
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -48,7 +48,7 @@
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
@@ -74,7 +74,7 @@
 		<div class="med_container <%=current_user.have_I_liked_or_not?(feed_item,'micropost')%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
-		<div class="repost" title="repost it?"><span class="number">2</span></div></div>
+		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count-1%></span></div></div>
 		<%feed_item.channels.each do |channel|%>
 		<ul>
 		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>

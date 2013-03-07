@@ -33,18 +33,17 @@ function addMask(thing,classname){
 		//then its obviously a dialog
 		thing=$(document.createElement('div'))
 		thing.addClass(classname);
-		thing.appendTo($(document));
+		thing.appendTo($("body"));
 	}
 	 var maskHeight = $(document).height();
-        var maskWidth = $(window).width();
+      var maskWidth = $(window).width();
      //make the mask
      var mask=$(document.createElement('div'));
      var close=$(document.createElement('div'));
      mask.attr('id','mask');close.addClass('close');
      close.appendTo(mask);
      thing.addClass('window');
-     mask.appendTo($(document));
-
+     mask.appendTo($("body"));
         //Set height and width to mask to fill up the whole screen
         $('#mask').css({'width':maskWidth,'height':maskHeight});
         //transition effect     
@@ -65,6 +64,7 @@ function addMask(thing,classname){
     //if close button is clicked
     $('.window .close').click(function (e) {
         //Cancel the link behavior
+        $this=$(this)
         e.preventDefault();
         $('#mask, .window').hide();
         $($this).removeAttr("disabled");
@@ -72,6 +72,7 @@ function addMask(thing,classname){
      
     //if mask is clicked
     $('#mask').click(function () {
+    	$this=$(this)
         $(this).hide();
         $('.window').hide();
         $($this).removeAttr("disabled");
@@ -80,62 +81,6 @@ function addMask(thing,classname){
 }
 $(".mnav_right").text(">");
 $(".mnav_left").text("<");
-//shorthand functionality for making a post
-//settings tool tip
-/* will add user functionality
-$(".title").on("mouseenter",function(){
-$this=$(this);
-var settings=$this.children("span.settings");
-if(settings===false || settings==='undefined' || settings == null){return false;}
-
-
-if(settings.hasClass("true")){//current user settings
-
-}else{//random user settings
-
-}
-$("#tooltip").remove();
-	var tooltip=$(document.createElement('div'));
-	tooltip.attr('id','tooltip');
-tooltip.addClass("title-tip");
-	tooltip.css({
-        position: 'absolute',
-        background: 'black',
-        border: '1px solid black',
-        padding: '10px',
-        zIndex: 1,
-        width:'50px',
-        height:'20px',
-        display: 'none',
-        top: 0 +'px',
-        left:  $this.width()+10+ 'px',
-        color:'white'
-    }).insertBefore($this);
-    settings.show();
-    settings.css('z-index','2');
-    settings.prependTo(tooltip);
-   tooltip.show();
-   //improve so settings sat on tooltip
-});
-$(".title").on("mouseleave",function(){
-	$this=$(this);
-	var tooltip=$("#tooltip");
-
-setTimeout(function(){
-if (!tooltip.hasClass("nope")){
-tooltip.remove();
-}
-},1100);
-});*/
-
-$(document).bind("#tooltip","mouseenter",function(){
-	$(this).addClass("nope");
-
-});
-$(document).bind("#tooltip","mouseleave",function(){
-	tooltip.removeClass("nope");
-$(this).remove();
-});
 
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	
@@ -171,21 +116,20 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   		data: {micropost_id:id,body:$this.val()},
   	}).done(function(response){
 	if(response.valid==true){
-		var parent2=$(".comment_form_container");
-	var top=parent2.css('top');
-		parent2.animate({//bounce effect
+	var top=parent.css('top');
+		parent.animate({//bounce effect
 		top: top+400+'px',
 		},2000);
-		parent2.animate({//bounce effect
+		parent.animate({//bounce effect
 		top: top+200+'px',
 		},1500);
-		parent2.animate({//bounce effect
+		parent.animate({//bounce effect
 		top: top+400+'px',
 		},1000);
-		parent2.animate({//bounce effect
+		parent.animate({//bounce effect
 		top: top+300+'px',
 		},600);
-		parent2.animate({//bounce effect
+		parent.animate({//bounce effect
 		top: top+400+'px',
 		},300);
 	}
@@ -394,7 +338,7 @@ $(document).on("mouseover","[data-title]",function(e){
 },1000);
 
 });
-$(document).on("mouseout","[data-title]",function(event){
+$(document).on("mouseout mouseleave","[data-title]",function(event){
 $('#tooltip').remove();
 });
 $(".medchannel").on("mouseover",function(){
@@ -601,6 +545,82 @@ textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
 });
-//the different channels
+//repost functionality
+$(".post .repost").on('click',function(){
+	//make a sort of input tooltip
+	$this=$(this);
+	if(!$this.hasClass("active")){
+var post=$this.parent().parent();
+	var tooltip=$(document.createElement('div'));
+	tooltip.attr('id','tooltip_form');
+	var input=$(document.createElement('input'));
+	input.attr('type','text');
+	input.attr('class','input_tool');
+	var p=$(document.createElement('p'));
+	p.addClass("repost_header");
+	p.text("What Channel do you want to repost to?");
+	tooltip.css({
+        position: 'relative',
+        background: 'black',
+        border: '1px solid black',
+        padding: '10px',
+        zIndex: 999,
+        width:'180px',
+        height:'100px',
+        display: 'block',
+        left:  ($this.width()*6)+ 'px',
+        top:($this.height()*3)+ 'px',
+        color:'white'
+    }).insertBefore($this);
+	input.appendTo(tooltip);
+	p.prependTo(tooltip);
+	$this.addClass("active");
+
+	input.on("keypress",function(e){
+	  if(e.type=="keypress" && e.which==13){
+		$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/repost',
+  		data: {id:post.attr("id"),medchannel:input.val()},
+  		}).done(function(response){//should i add a mask to the repost dialog circle?
+  			tooltip.remove();
+  			var dialog=$(document.createElement('div'));
+  			var p=$(document.createElement('p'));
+  			p.appendTo(dialog);
+  			dialog.addClass("dialog_circle");
+  			var winH = $(window).height();
+            var winW = $(window).width();
+        dialog.css('top',  winH/2-dialog.height()/2);
+        dialog.css('left', winW/2-dialog.width()/2);
+			if(response.valid){
+				dialog.addClass("success");
+				p.text("success");
+			}else{//false
+				dialog.addClass("error");
+				p.text(response.reason);
+			}
+			
+			dialog.fadeOut("slow").remove();
+  		});
+	  }
+	});
+	tooltip.on("mouseleave",function(e){
+		tooltip.remove();
+	})
+	}else{
+		$this.removeClass("active");
+		$("#tooltip_form").remove();
+	}
+
+});
+//comment_reply functionality
+$(".comment .comments").on("click",function(){
+var new_new=$(".comment_form_container").clone();
+new_new.appendTo($("body"))
+new_new.hide();
+new_new.addClass("comment_reply");
+addMask(new_new);
+});
 /*$('.medchannels-box').jScrollPane();*/
 /*medplus acc added functionality*/

@@ -16,7 +16,7 @@
 
 	<span class="content"><%=@micropost.content%></span>
 	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
@@ -37,7 +37,7 @@
 		<%end%></span></span>
 	
 	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
@@ -57,7 +57,7 @@
 		<%end%></span></span>
 	
 	<%= image_tag("anon.png" , :width => 40, :height => 40, :title => "author", class: "author hide")%>
-		<a  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></a>
+		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number">7</div></span>
 		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>

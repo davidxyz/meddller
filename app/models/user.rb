@@ -27,13 +27,16 @@ class User < ActiveRecord::Base
   #relationships_l
   has_many :relationshipls, foreign_key: "liker_id", dependent: :destroy
   has_many :likes, through: :relationshipls, source: :liked
+  #relationshiprs
+  has_many :relationshiprs,foreign_key: "poster_id",dependent: :destroy
+  has_many :reposts,through: :relationshiprs,source: :post
 
   has_many :comments, dependent: :destroy
   has_secure_password
   before_save :create_remember_token
   before_save{|user| user.email=email.downcase}
   
-  validates :name, presence:true, length: {maximum: 30},format: {with: /\A[a-z0-9]\z/},uniqueness: {case_sensitive: false}
+  validates :name, presence:true, length: {minimum:3,maximum: 12},format: {with: /\A[a-z0-9_]+\z/},uniqueness: {case_sensitive: false}
   VALID_EMAIL_REGEX=/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence:true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   validates :password, presence: true, length: {minimum: 6}
@@ -49,6 +52,19 @@ class User < ActiveRecord::Base
   end
   def dec
     self.update_attribute(:meds,meds-1)
+  end
+  def reposted_this?(micropost)
+    if relationshiprs.find_by_post_id(micropost.id).nil?
+      return false
+    else
+      true
+    end
+  end
+  def repost!(medchannel,micropost)
+    relationshiprs.create!(channel_id: medchannel.id,post_id: micropost.id)
+  end
+   def remove_from_channel!(medchannel,micropost)
+    relationshiprs.find(channel_id:medchannel.id,post_id:micropost.id).destroy
   end
   #relationships_m
   def subscribed?(medchannel)

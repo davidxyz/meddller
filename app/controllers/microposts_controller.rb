@@ -1,7 +1,7 @@
 require 'Nokogiri'
 require 'open-uri'
 class MicropostsController < ApplicationController
-  before_filter :signed_in_user, only: [:new,:create, :destroy, :increment]
+  before_filter :signed_in_user, only: [:new,:create, :destroy, :increment,:repost]
   before_filter :correct_user, only: :destroy
   def index
   end
@@ -53,16 +53,27 @@ class MicropostsController < ApplicationController
   def repost#basically copies and attributes to original user
     micropost=Micropost.find(params[:id])
     channel=Medchannel.find_by_name(params[:medchannel])
-    unless micropost.in_channel?(channel)
-      micropost.put_in_channel!(channel)
+    begin
+    channel=Medchannel.create(name: params[:medchannel]) if channel.nil?
+    cond1=micropost.in_channel?(channel)
+    cond2=current_user.reposted_this?(micropost)
+    if !cond1 and !cond2
+      current_user.repost!(channel,micropost)
       respond_to do |format|
       format.json { render :json => { :valid=>true} }
       end
     else
+      reason="can't repost to a channel that post is already in" if cond1
+      reason="you have already reposted this" if cond2
       respond_to do |format|
-      format.json { render :json => { :valid=>false} }
+      format.json { render :json => { :valid=>false,:reason=>reason}}
       end
     end
+    rescue
+      respond_to do |format|
+      format.json { render :json => { :valid=>false,:reason=>"can only repost to a valid channel"} }
+      end
+    end   
   end
   def new
     @micropost =current_user.microposts.build
@@ -119,19 +130,13 @@ class MicropostsController < ApplicationController
     end
   end
   def create
-    @medchannel=nil
-    begin
     @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel])
-    rescue
-      @medchannel=Medchannel.find(1);
-    end
-    params[:micropost][:medchannel]=@medchannel
-    @micropost=params[:micropost]
-
+    @medchannel=Medchannel.new(name: params[:micropost][:medchannel]) if @medchannel.nil?
+    @micropost=params[:micropost].except(:medchannel)
     @micropost =current_user.microposts.build(@micropost)
-    if @micropost.save
+    if @micropost.save and @medchannel.save
+      current_user.repost!(@medchannel,@micropost)
       flash[:success]= "Micropost created!"
-     
       redirect_to root_path
     else
       # dont need @feed_items=[]
