@@ -43,9 +43,8 @@ class User < ActiveRecord::Base
   validates :password, presence: true, length: {minimum: 6}
   validates :password_confirmation, presence: true
   def feed
-    #this is preliminary. See "Following users" for the full implementation
-    #Micropost.where("user_id=?", id)
-    #will provide an algoithm for suscribed med_groups and suscribed people
+    #everyone your following
+    #subscribers
     Micropost.select("*")
   end
   def image_url

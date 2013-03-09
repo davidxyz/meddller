@@ -23,32 +23,13 @@ class MicropostsController < ApplicationController
   end
   #have to incoporate some type of user controls so they can get more from their fee
   def hall_of_fame# best posts of all time
-    begin
-    @microposts=Micropost.order("meds DESC").limit(10)
-    rescue
-      @microposts=[]
-    end
   end
   def popularposts# best posts in last 18 hours
-    begin
-      @microposts=Micropost.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date)).order("meds DESC")
-    rescue 
-      @microposts=[]
-    end
   end
   def risingposts# rising posts in algorithm
-    begin
-    @microposts=Micropost.where(:created_at => (4.hours.ago.to_date)..(Time.now.to_date)).order("meds DESC")#automatically gives created at descending order
-    rescue
-      @microposts=[]
-    end
   end
   def newposts# newest posts in last 5 hours
-    begin
-    @microposts=Micropost.all#automatically gives created at descending order
-    rescue
-      @microposts=[]
-    end
+    
   end
   def repost#basically copies and attributes to original user
     micropost=Micropost.find(params[:id])
@@ -85,6 +66,7 @@ class MicropostsController < ApplicationController
     @micropost=current_user.microposts.build
   end
   def increment
+    return false unless user_ready?
     if params[:type]=="upvote"
       @micropost=Micropost.find(params[:id])
       @type=current_user.have_I_liked_or_not?(@micropost,"micropost")
@@ -121,11 +103,11 @@ class MicropostsController < ApplicationController
   def show
     @micropost=Micropost.find(params[:id])
     @comments=@micropost.comment_threads.paginate(page: params[:page])
-
-    @comment=Comment.build_from( @micropost, current_user.id, " " )
     if signed_in? 
+    @comment=Comment.build_from( @micropost, current_user.id, " " )
     @timeleft=user_time_left
     else
+      @comment=nil
       @timeleft=0
     end
   end

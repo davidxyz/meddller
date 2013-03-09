@@ -40,7 +40,27 @@ class Micropost < ActiveRecord::Base
   end
   def default_feed
     #must improve
-    self.all
+   Micropost.select("*")
+  end
+  def self.calculate_feed(user,medchannel,popularity)#takes the user, takes the channel the user is currently in and the popularity
+    microposts=[]
+    if popularity==:hall_of_fame 
+      microposts=Micropost.order("meds DESC").limit(10)
+      return microposts
+    end
+    microposts=medchannel.posts unless medchannel.nil?
+   user.followed_users.each{|user| microposts<<user.microposts unless user.microposts.nil?} unless user.nil?
+    case popularity
+    when :popular
+      microposts=microposts.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date)).order("meds DESC")
+    when :rising
+    microposts=microposts.where(:created_at => (4.hours.ago.to_date)..(Time.now.to_date)).order("meds DESC")
+    when :new
+      #nothing
+    else 
+      #nothing
+    end
+    microposts
   end
   def in_channel?(medchannel)
     unless relationshiprs.find_by_channel_id(medchannel.id).nil?

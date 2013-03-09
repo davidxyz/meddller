@@ -1,5 +1,5 @@
 SampleApp::Application.routes.draw do
-  resources :users, only: [:destroy]
+  resources :users, only: [:destroy,:create]
   resources :sessions, only: [:new, :create, :destroy]
  # resources :microposts, only: [:create, :destroy]
  resources :microposts
@@ -23,8 +23,11 @@ SampleApp::Application.routes.draw do
   match '/submit3', to: 'microposts#new3'
   match '/show_urls', to: 'microposts#show_urls'
   match '/commands/inc', to: 'microposts#increment'
+  match '/commands/inc_a_comment', to: 'comments#increment'
   match '/commands/create_a_comment', to: 'comments#create'
   match '/commands/repost', to: 'microposts#repost'
+  match '/commands/no_other_users', to: 'users#no_other_users'
+  match '/commands/no_other_emails', to: 'users#no_other_emails'
   #medchannnel routes
   match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z_]+/i
   match '/m/:name'=> 'medchannels#show',:name => /[a-z_]+/i

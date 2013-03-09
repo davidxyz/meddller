@@ -1,6 +1,8 @@
 
 module MicropostsHelper
-  
+  def default_feed
+    Micropost.select("*")
+  end
  def wrap(content,max_width=20)
   max_width-=1
  	while max_width < content.size  do

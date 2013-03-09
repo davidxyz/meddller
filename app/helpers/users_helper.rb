@@ -26,7 +26,25 @@ module UsersHelper
     end
     rank
   end
-
+  def calculate_meddals(user)
+    meddals={}
+    num1=0
+    num2=0
+    user.comments.each{|comment|
+      if comment.commentable_type="micropost"
+        micropost=Micropost.find(comment.commentable_id)
+      if micropost.top_comment?(comment)
+        num1+=1
+        meddals[:topcomment]= num1
+      end
+      if micropost.top_comment?(comment)
+        num2+=1
+        meddals[:mostreplied]= num2
+      end
+    end
+    }
+    meddals
+  end
   def user_ready?
     user_time_left==0
   end

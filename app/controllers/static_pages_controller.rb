@@ -5,8 +5,8 @@ class StaticPagesController < ApplicationController
     @feed_items = current_user.feed.paginate(page: params[:page])
     @name="Medfeed"
     else
-      @feed_items=[]
-      #Micropost.all.paginate(page: params[:page])
+      @feed_items=default_feed.paginate(page: params[:page])
+      @name="Medfeed"
     end
   end
 

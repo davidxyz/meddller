@@ -8,7 +8,7 @@
 
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 
@@ -16,7 +16,7 @@
 
 	<span class="content"><%=@micropost.content%></span>
 		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
-		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
@@ -30,13 +30,13 @@
 <%elsif @micropost.medtype=="image_post"%>
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
 	
 		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
-		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
@@ -49,13 +49,13 @@
 <%elsif @micropost.medtype=="link_post"%>
 	<span class="preview"><%=link_to image_tag(@micropost.preview_url,width: 65, height:85),@micropost.urls%></span>
 
-	<span class="title <%=current_user?(@micropost.user)%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
 	
 		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
-		<span class="med_container <%=current_user.have_I_liked_or_not?(@micropost,'micropost')%>" id="<%=@micropost.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
@@ -79,7 +79,7 @@
 			<%if signed_in?%>
 				<%= render 'comments/form'%>
 			<%else%>
-			<div class="signin-notice"><h2>You need to signin to comment <span class="signin"> sign in</span><h2></div>
+			<div class="signin-notice"><h2>You need to signin to comment <a href="<%=signin_path%>" class="signin"> sign in</a><h2></div>
 			<%end%>
 	</div>
 	<div class="comment_container">

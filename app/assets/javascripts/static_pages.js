@@ -94,8 +94,7 @@ $("textarea.comment_form_content").on('keydown input paste change',function(e){
 if(e.type=="keypress" && e.which==13){//also dont forget to replicate validations on the server side
 	
 	var $this=$(this);
-	if($this.val()=="says..."){return false;}
-	if(!$this.hasClass("reply_form")){
+	if($this.val()=="" || $this.val().legnth<3){return false;}
 //exit if the user submits 
 		id=$(".micropost_show").attr('id');
 		$.ajax({
@@ -104,22 +103,24 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   		url: '/commands/create_a_comment',
   		data: {micropost_id:id,body:$this.val()},
   	}).done(function(response){
+  		var parent=$(".new_comment");
 	if(response.valid==true){
 	var top=parent.css('top');
-		parent.animate({//bounce effect
-		top: top+400+'px',
+	//bounce effect
+		parent.animate({
+		top: '+=400px',
 		},2000);
-		parent.animate({//bounce effect
-		top: top+200+'px',
+		parent.animate({
+		top: '-=200px',
 		},1500);
-		parent.animate({//bounce effect
-		top: top+400+'px',
+		parent.animate({
+		top: '+=100px',
 		},1000);
-		parent.animate({//bounce effect
-		top: top+300+'px',
+		parent.animate({
+		top: '-=50px',
 		},600);
-		parent.animate({//bounce effect
-		top: top+400+'px',
+		parent.animate({
+		top: '+=25px',
 		},300);
 	}
 	else{
@@ -129,20 +130,6 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
 	}
 
   	});
-		//make a diminishing bounce effect with the comment
-	
-	}else{//do this
-	var id=$(".micropost_show").attr('id');
-	var p_id=$(".comment.replying_to").attr('id');//attach listeners on comments who have their replied button clicked
-		$.ajax({
-		type: "post",
-		dataType: "json",
-  		url: '/commands/create_a_comment',
-  		data: {parent_id:p_id,micropost_id:id,body:$this.val()},
-  	}).done(function(response){
-
-  	});
-	}
 }
 });
 /*$(".custom-disabled").hover(function(){
@@ -159,14 +146,21 @@ function dec(){
 window.setInterval(dec, 1000);
 
 //reply user interface
-$(".comment .reply_button").on("click",function(){
-var parent=$(this).parent(".comment");
-$(".comment.replying_to").removeClass("replying_to");
-parent.addClass("replying_to");
-//show reply form
-var new_reply=$(".new_comment").clone();
-addMask(new_reply);
-		
+$(document).on("keypress",".comment_reply textarea",function(e){
+		//make a diminishing bounce effect with the comment	
+	$this=$(this);
+if(e.type=="keypress" && e.which==13){
+	var id=$(".micropost_show").attr('id');
+	var p_id=$(".comment.replying_to").attr('id');//attach listeners on comments who have their replied button clicked
+		$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/create_a_comment',
+  		data: {parent_id:p_id,body:$this.val()},
+  	}).done(function(response){
+  		alert("done");
+  	});
+	}
 });
 
 
@@ -278,7 +272,70 @@ $(document).on('click',".nav_right",function(event){
 			}
 			slider.data('index',(index+1)%len);
 });
-
+//checks to see if the name and email are already taken using ajax
+$('form#new_user input').on('blur',function(){
+	$this=$(this);
+if($this.attr("name")=="user[name]"){
+	$(".wrong-info").remove();
+var img=$(document.createElement('img'));
+var div=$(document.createElement('div'));
+img.attr("src","/assets/ajax-loader.gif");
+img.appendTo(div);
+img.width(25);img.height(25);
+div.prependTo($this.parent());
+div.css({position:"relative",left:"500px",top:"63px"});
+setTimeout(function(){
+$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/no_other_users',
+  		data: {name:$this.val()},}).done(function(response){
+  			var span=$(document.createElement('span'));
+  			span.appendTo(div);
+  			console.log(response);
+  			 if (response.user){
+  			 	img.attr("src","/assets/cross.png");
+  			 	div.addClass("wrong-info");
+  			 	span.text("Name taken");
+  			 }
+  			 else{
+  			 	img.attr("src","/assets/check.png");
+  			 	span.text("Name is okay");
+  			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
+  			 }
+  		});
+  		},1000);
+}else if($this.attr("name")=="user[email]"){
+	$(".wrong-info2").remove();
+var img=$(document.createElement('img'));
+var div=$(document.createElement('div'));
+img.attr("src","/assets/ajax-loader.gif");
+img.width(25);img.height(25);
+img.appendTo(div);
+div.prependTo($this.parent());
+div.css({position:"relative",left:"450px",top:"123px"});
+setTimeout(function(){
+$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/no_other_emails',
+  		data: {email:$this.val()},}).done(function(response){
+  			var span=$(document.createElement('span'));
+  			span.appendTo(div);
+  			console.log(response);
+  			if (response.email){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Email is taken");
+  			 	div.addClass("wrong-info2");
+  			 }
+  			 else{
+  			 	img.attr("src","/assets/check.png");
+  			 	span.text("Email is okay");
+  			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
+  			 }
+  		});},1000);
+}
+});
 $('.form_title').on('blur',function(){
 var title_message=$('.title_message p');
 $this=$(this);
@@ -428,15 +485,12 @@ sidebar.hide();
 });
 
 /*fucking people who have javascript disabled*/
+/* until i can get it to work
 $("#file").load(function(){
 	$(this).hide();
 });
 $("#file").trigger('load');
-$(window).scroll(function() {
-   if($(window).scrollTop() + $(window).height() == $(document).height()) {//user has reached the bottom
-
-   }
-});
+*/
 $('#upload-title').bind('valid-title',function(){
         //Get the A tag
         var dropbox= $('#dropbox');
@@ -489,6 +543,7 @@ $("span.med_container").mousedown(function(event){
 	var meds = $this.find(".meds");
 	var mid=$this.attr("id");
 	//console.log(window.location.origin);
+	if($this.parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}
 	if(!$this.hasClass("upvote") && !$this.hasClass("downvote")){
 switch (event.which) {
         case 1://left
@@ -586,11 +641,33 @@ textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
 });
+//dialog function that goes in the middle of the screen and then times out
+function dialog(message,body){
+	var dialog=$(document.createElement('div'));
+	var text=$(document.createElement('i'));
+	dialog.addClass("dialog-error");
+
+		dialog.appendTo(body);
+		text.text(message);
+		text.appendTo(dialog);
+        var winH = $(window).height();
+        var winW = $(window).width();
+               
+        //Set the popup window to center
+        dialog.css('top',  winH/2-dialog.height()/2);
+        dialog.css('z-index',  999);
+        dialog.css('left', winW/2-dialog.width()/2);
+        dialog.fadeOut(2000);
+        setTimeout(function(){dialog.remove();},2000)
+     
+}
 //repost functionality
 $(".post .repost").on('click',function(){
 	//make a sort of input tooltip
 	$this=$(this);
+	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//user aint signed in so get the fuuck out
 	if(!$this.hasClass("active")){
+
 var post=$this.parent().parent();
 	var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip_form');
@@ -608,13 +685,14 @@ var post=$this.parent().parent();
         zIndex: 999,
         width:'180px',
         height:'100px',
-        display: 'block',
+        display: 'none',
         left:  ($this.width()*6)+ 'px',
         top:($this.height()*3)+ 'px',
         color:'white'
     }).insertBefore($this);
 	input.appendTo(tooltip);
 	p.prependTo(tooltip);
+	tooltip.fadeTo("slow",0.7);
 	$this.addClass("active");
 
 	input.on("keypress",function(e){
@@ -651,19 +729,74 @@ var post=$this.parent().parent();
 	})
 	}else{
 		$this.removeClass("active");
+		$("#tooltip_form").fadeOut("slow");
 		$("#tooltip_form").remove();
 	}
 
 });
 //comment_reply functionality not even working yet
 $(".comment .comments").on("click",function(){
+	$this=$(this);
+if(!$this.parent().parent().hasClass("active")){
 var new_new=$(".comment_form_container").clone();
-new_new.appendTo($("body"))
-new_new.hide();
 new_new.addClass("comment_reply");
-addMask(new_new);
+new_new.hide();
+$this.parent().addClass("replying_to");
+$(".added-info").fadeTo(2000,0.6);
+$this.parent().parent().addClass("active");
+$(".comment_wrapper").each(function(){
+if (!$(this).hasClass("active") && $(this).position().top>$this.parent().parent().position().top){
+$(this).animate({top:"+=150px",opacity:0.6},2000)
+}
 });
+new_new.insertAfter($this.parent().parent());
+new_new.fadeIn(2000);
+new_new.css({position:"absolute",right:"200px"});
+}else{
+	$(".comment_wrapper").each(function(){
+if (!$(this).hasClass("active")&& $(this).position().top>$this.parent().parent().position().top){
+$(this).animate({top:"-=150px",opacity:1},2000)
+}
+});
+	$this.parent().removeClass("replying_to");
+$this.parent().parent().removeClass("active");
+$(".added-info").fadeTo(2000,1);
+$(".comment_reply").fadeOut(1500);
+}
+});
+//add feature later of hiding comment when meds reach low levels
+comment_hide();
+function comment_hide(){
+$.each($(".comment[data-hide=false]"),function(index, value){
+$(value).addClass("hidden");
+$(value).children().hide();$("#whiteout").show();
+$(value).parent().fadeTo("fast",0.8);
+$(value).attr("data-text",$(value).text());
+$(value).attr("data-height",$(value).height());
+$(value).text("");
+var offensive=$(document.createElement('i'));
+offensive.addClass("offense-statement");
+offensive.text("This comment has been deemed unnecessary")
+offensive.prependTo($(value));
+$(value).height(10);
+var chevron=$(document.createElement('div'));
+chevron.addClass("down-hide");
+chevron.prependTo($(value));
+});
+}
+$(".comment .down-hide").on("click",function(){
+$this=$(this);
+var comment=$this.parent();
+if(comment.hasClass("hidden")){//slidedown animation
+comment.children().fadeIn(1000);
+comment.animate({height:comment.attr("data-height"),opacity: "1"}
+	, {duration: "slow",
+	complete:  function() { comment.text(comment.attr("data-text"));comment.parent().fadeTo("fast",1)} });
 
+}else{//slide up animation
+comment_hide();
+}
+});
 //paginator for medfeed
 $(window).scroll(function() {
    if($(window).scrollTop() + $(window).height() == $(document).height()) {

@@ -1,11 +1,11 @@
 <li class="comment_wrapper">
 	
-<div class="user_comment_image"><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%><p><%=comments.user.name%></p></div>
-<div class="comment">
+<div class="user_comment_image"><%=image_tag(comments.user.image_url,width: 25, height:25, title: comments.user.name)%><p><%=comments.user.name%></p></div>
+<div id="<%=comments.id%>"class="comment" data-hide="<%=comments.hide?%>">
 	<div id="whiteout"></div>
 <%if @micropost.top_comment?(comments)%><div class="top-comment">Top Comment</div><%end%>
-		<div class="content"><p class="body">
-<%=comments.body%></p></div>
+
+<%=comments.body%>
 
 		<span class="med_container">
 		<span class="meds"><%=comments.meds%></span>

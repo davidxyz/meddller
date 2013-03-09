@@ -11,10 +11,24 @@ class UsersController < ApplicationController
   end
   def show
     @user=User.find_by_name(params[:name]) unless params[:name].nil?
-@user=User.find(params[:id]) unless params[:id].nil?
+    @user=User.find(params[:id]) unless params[:id].nil?
     @microposts = @user.microposts.paginate(page: params[:page])
     @followeds=@user.followed_users.paginate(page: params[:page])
     @followers=@user.followers.paginate(page: params[:page])
+  end
+  def no_other_users#check to see if there are no other users with your name ajax
+    user=User.find_by_name(params[:name])
+    if user.nil? then user=false else user=true end
+    respond_to do |format|
+      format.json { render :json => { :user=>user}}
+    end
+  end
+  def no_other_emails
+     email=User.find_by_email(params[:email])
+    if email.nil? then email=false else email=true end
+    respond_to do |format|
+      format.json { render :json => { :email=>email}}
+    end
   end
   def create
     @user=User.new(params[:user])
@@ -28,6 +42,7 @@ class UsersController < ApplicationController
     end
   end
   def update
+    #No other user check
     @user =User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:success]="Profile updated"

@@ -27,10 +27,10 @@
 			</div>
 			<%@followeds.each do |user|%>
 			<div class="users">
-				<div class="info">
-				<%=link_to image_tag(user.image_url, :width => 55, :height => 25, :title => user.name), site('/users/'+user.name)%>
-				</div>
 				<div class="img">
+				<%=link_to image_tag(user.image_url, :width => 25, :height => 25, :title => user.name), site('/users/'+user.name)%>
+				</div>
+				<div class="info">
 				<%=link_to user.name, site('/users/'+user.name)%>
 				</div>
 			</div>
@@ -62,12 +62,6 @@
 			uhh medchannels
 		</div>-->
 		<div class="meddals">
-			<div class="header">meddals
-				<div class="after"></div>
-				<div class="before"></div>
-			</div>
-			<div class="inner_meddals">
-			<%=image_tag "user_images/medal_100_meds.png", width:35, height:35, title: @user.name+" has aquired 100 meds"%>
-			</div>
+		
 		</div>
 </div>
