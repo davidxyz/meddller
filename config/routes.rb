@@ -43,10 +43,10 @@ SampleApp::Application.routes.draw do
   match '/m/:name/popular', to: "medchannels#popularposts",:name => /[a-z_]+/i
   match '/m/:name/rising', to: "medchannels#risingposts",:name => /[a-z_]+/i
   #routes
-  match '/hall_of_fame', to: "microposts#hall_of_fame"
-  match '/new', to: "microposts#newposts"
-  match '/popular', to: "microposts#popularposts"
-  match '/rising', to: "microposts#risingposts"
+  match '/hall_of_fame', to: "static_pages#hall_of_fame"
+  match '/new', to: "static_pages#newposts"
+  match '/popular', to: "static_pages#home"
+  match '/rising', to: "static_pages#risingposts"
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

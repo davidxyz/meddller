@@ -8,6 +8,7 @@ class MedchannelsController < ApplicationController
 			@feed_items=[]
 		end
 		@name=@medchannel.name
+		@orig=@medchannel.name
 		begin#not logged in
     	@subscribe=current_user.subscribed?(@medchannel)
     	rescue
@@ -38,32 +39,20 @@ class MedchannelsController < ApplicationController
 		redirect_to "/m/"+@medchannel.name
     end
 	def hall_of_fame# best posts of all time
-    begin
-    @microposts=Micropost.where(medchannel_id: params[:channel]).order("meds DESC").limit(10)
-    rescue
-      @microposts=[]
+    @name="Hall Of Fame"
+	@orig=Medchannel.find_by_name(params[:name])
     end
-  end
   #posts actions should only have who the user is following and channels subscribed to
   def popularposts# best posts in last 18 hours
-    begin
-      @microposts=Micropost.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date),medchannel_id: params[:channel]).order("meds DESC")
-    rescue 
-      @microposts=[]
-    end
+   @name="Popular"
+	@orig=Medchannel.find_by_name(params[:name])
   end
   def risingposts# rising posts in algorithm
-    begin
-    @microposts=Micropost.where(:created_at => (4.hours.ago.to_date)..(Time.now.to_date),medchannel_id: params[:channel]).order("meds DESC")#automatically gives created at descending order
-    rescue
-      @microposts=[]
-    end
+   @name="Rising"
+	@orig=Medchannel.find_by_name(params[:name])
   end
   def newposts# newest posts in last 5 hours
-    begin
-    @microposts=Micropost.all#automatically gives created at descending order
-    rescue
-      @microposts=[]
-    end
+  	@name="New"
+	@orig=Medchannel.find_by_name(params[:name])
   end
 end

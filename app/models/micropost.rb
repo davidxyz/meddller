@@ -42,23 +42,26 @@ class Micropost < ActiveRecord::Base
     #must improve
    Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
   end
-  def self.calculate_feed(user,medchannel,popularity)#takes the user, takes the channel the user is currently in and the popularity
+  #takes the user, takes the channel the user is currently in and the popularity
+  #and returns a feed ordered by the meds
+  def self.calculate_feed(user,medchannel,popularity,default=false)
     microposts=[]
-    if popularity==:hall_of_fame  #only one outcome if we request the hall of fame and thats the top 10 posts
+    id=[]
+    if popularity==:hall_of_fame  #only one outcome if we request the hall of fame and thats the top 10 posts of all time
       microposts=Micropost.order("meds DESC").limit(10)
       return microposts
     end
     microposts=medchannel.posts unless medchannel.nil? #get posts from the medchannel if we are in one
-    user.followed_users.each{|user| microposts<<user.microposts unless user.microposts.nil?} unless user.nil? #if the user is logged in get posts from users he's following
+    user.followed_users.each{|user| microposts<<user.microposts } unless user.nil? #if the user is logged in get posts from users he's following
+    user.medchannels.each{|channel| microposts<<channel.posts } if default
+    microposts.flatten.each{|post| id<<post.id}
     case popularity
     when :popular
-      microposts=microposts.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date)).order("meds DESC")
+      microposts=Micropost.where(:id=>id,:created_at => (1.days.ago.to_date)..(12.hours.ago.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
     when :rising
-    microposts=microposts.where(:created_at => (4.hours.ago.to_date)..(Time.now.to_date)).order("meds DESC")
+    microposts=Micropost.where(:id=>id,:created_at => (12.hours.ago.to_date)..(4.hours.ago.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
     when :new
-      #nothing
-    else 
-      #nothing
+       microposts=Micropost.where(:id=>id,:created_at => (4.hours.ago.to_date)..(Time.now.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
     end
     microposts
   end

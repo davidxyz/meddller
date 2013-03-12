@@ -68,6 +68,7 @@ function addMask(thing,classname){
     });
 
 }
+
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	
 	var $this=$(this);
@@ -100,30 +101,14 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   		url: '/commands/create_a_comment',
   		data: {micropost_id:id,body:$this.val()},
   	}).done(function(response){
-  		var parent=$(".new_comment");
-	if(response.valid==true){
-	var top=parent.css('top');
-	//bounce effect
-		parent.animate({
-		top: '+=400px',
-		},2000);
-		parent.animate({
-		top: '-=200px',
-		},1500);
-		parent.animate({
-		top: '+=100px',
-		},1000);
-		parent.animate({
-		top: '-=50px',
-		},600);
-		parent.animate({
-		top: '+=25px',
-		},300);
+  		
+	if(response.valid==true){//animate a DIY bounce effect
+	 var parent=$(".comment_form_container");parent.css({"z-index":500});parent.animate({top:"+=800"},4000);parent.animate({top:"-=350"},2000);parent.animate({top:"+=350"},1500);parent.animate({top:"-=100"},800);parent.animate({top:"+=100"},500);
 	}
 	else{
-		var dialog=$(document.createElement('div'));
+		var dialog=$(document.createElement('div'));//dafuq dus this work bro?
 		dialog.addClass("dialog-error");
-		addMask(dialog);
+		addMask(dialog)
 	}
 
   	});
@@ -351,36 +336,45 @@ setTimeout( function(){
 },1000);
 
 });
-$("[title]").load(function(){
-$(this).attr('data-title',$(this).attr('title'));
-$(this).removeAttr('title');
+$("[title]").each(function(index,value){
+$(value).attr('data-title',$(value).attr('title'));
+$(value).removeAttr('title');
 });
-
+//so basically this is a tooltip for shit and it goes on top of it will establish this for new users to help them out and then will be disabled
 $(document).on("mouseenter","[data-title]",function(e){	
 	$this=$(this);
-	if($this.is("img") || $this.parent().hasClass("options")){ return false;} //will refine for extra power
+	if($this.is("img")){ return false;} //will refine for extra power
 	var tooltip=$(document.createElement('div'));
-	tooltip.attr('id','tooltip');
-
+	tooltip.attr('id','otooltip');
+var offset = $this.offset();
+var height = $this.height();
+var width = $this.width();
+var top = offset.top -height +"px";
+var left = offset.left - width +10+ "px";
 	tooltip.css({
         position: 'absolute',
         background: 'black',
         border: '1px solid black',
         padding: '10px',
         zIndex: 999,
-        width:'20px',
-        height:'20px',
+        width:'70px',
+        height:'7px',
         display: 'none',
-        right:  ($this.width()*1.5)+ 'px',
+        left:  left,
+        "font-size":"10px",
+        "text-align":"center",
+        top:top,
         color:'white'
-    }).insertBefore($this);
+    }).insertBefore(document.body);
 
    tooltip.html($this.attr('data-title'));
-   tooltip.fadeTo("slow",0.7);
+   tooltip.fadeTo("slow",0.6);
 
 });
 //for options under production
-
+$(document).on("mouseleave","[data-title]",function(event){
+$('#otooltip').remove();
+});
 $(".user-options").click(function(){
 	$this=$(this).parent();
 $this.removeAttr("title");
@@ -433,9 +427,6 @@ $("[data-desc]").on("mouseenter",function(e){
 
 $(document).on("mouseleave","[data-desc]",function(event){
 $('.meddal-tooltip').remove();
-});
-$(document).on("mouseleave","[data-title]",function(event){
-$('#tooltip').remove();
 });
 $(".medchannel").on("mouseenter",function(){
 $this=$(this);
@@ -588,20 +579,20 @@ $(".hnav_right").on("click",function(){
 $this=$(this);
 if($this.hasClass("not_done")){return false;}
 
-
+var original=$("#name_of_channel").text();
 $this.addClass("not_done");
 textx.animate({left:"+=350px",opacity: "0"}
 	, {duration: "slow",
 	complete:  function() { textx.css({right:"10px"}); 	switch(textx.text())
 {
-case textx.data("name"):
+case original:
   textx.text("Trending");
   break;
 case "Trending":
   textx.text("New");
   break;
 case "New":
-  textx.text(textx.data("name"));
+  textx.text(original);
   break;
 }} });
 //limbo
@@ -614,12 +605,16 @@ textx.animate({left:"+=350px",opacity: "1"}
 	complete:  function() { $this.removeClass("not_done");} });
 
 });
-$(".header > .text").data("name",$(".header > .text").text())
+if($(".header > .text").text()=="Hall Of Fame"){
+	$(".hnav_left").hide();
+	$(".hnav_right").hide();
+}
 $(".hnav_left").on("click",function(){
 	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header > .text");
 var feeds=$(".medfeed_container");
 $this=$(this);
+var original=$("#name_of_channel").text();
 if($this.hasClass("not_done")){return false;}
 
 
@@ -628,11 +623,11 @@ textx.animate({left:"-=350px",opacity: "0"}
 	, {duration: "slow",
 	complete:  function() { switch(textx.text())
 {
-case textx.data("name"):
+case original:
   textx.text("New");
   break;
 case "Trending":
-  textx.text(textx.data("name"));
+  textx.text(original);
   break;
 case "New":
   textx.text("Trending");
@@ -812,7 +807,7 @@ feed_box.data("page",1);
 $(window).scroll(function() {
    if($(window).scrollTop() + $(window).height() == $(document).height()) {
        $("img.paginating_gif").show();
-       var name=$(".header > .text").data("name");
+       var name=$("#name_of_channel").text();
        var medchannel="Medfeed";
        var url="/";//default home
       
@@ -871,6 +866,7 @@ $this=$(this);
   		}
   	});
 });
+//if overflow of medchannels
 $("ul.channels").each(function(index,value){
 if ($(value).children().length>5){
 	$(value).parent().find(".onav_left").show();

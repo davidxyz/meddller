@@ -2093,7 +2093,7 @@ border-bottom-top-radius: 5px;
   
 .channels{
   position:absolute;
-  left:50px;
+  left:150px;
   bottom:0px;
   width:350px;
   height:25px;
@@ -2814,6 +2814,27 @@ border-left:3px solid #BBB;
     transform: rotate(222deg);
     -webkit-transform: rotate(222deg);
     -moz-transform: rotate(222deg);
+  }
+}
+#otooltip{
+   -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  &:before{
+    content: ' ';
+  display: block;
+    position: absolute;
+    right: 40px;
+    bottom: -5px;
+    width: 8px;
+    height: 8px;
+    background-color: black;
+    border-color: #5E5E5E;
+    border-width: 1px;
+    border-style: none none solid solid;
+    transform: rotate(312deg);
+    -webkit-transform: rotate(312deg);
+    -moz-transform: rotate(312deg);
   }
 }
 .options_tooltip{

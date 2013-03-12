@@ -1,12 +1,14 @@
 class StaticPagesController < ApplicationController
-  def home
+  def home#aka popular posts
     if signed_in?
     # dont need @micropost =current_user.microposts.build
     @feed_items = Micropost.default_feed.paginate(page: params[:page])
     @name="Medfeed"
+    @orig="Medfeed"
     else
       @feed_items=Micropost.default_feed.paginate(page: params[:page])
-      @name="Medfeed"
+    @name="Medfeed"
+    @orig="Medfeed"
     end
      respond_to do |format|
       format.json { render :json => { :feed=>@feed_items} }
@@ -14,9 +16,10 @@ class StaticPagesController < ApplicationController
       end
   end
   def hall_of_fame# best posts of all time
-
-    @feed_items = Micropost.calculate_feed.paginate(page: params[:page])
-    @name="Hall of fame"
+#self.calculate_feed(user,medchannel,popularity,default=false)
+    @feed_items = Micropost.calculate_feed(nil,nil,:hall_of_fame,nil).paginate(page: params[:page])
+     @name="Hall Of Fame"
+     @orig="Medfeed"
      respond_to do |format|
       format.json { render :json => { :feed=>@feed_items} }# since this is the top 10 posts of all time return false when user accesses the hall of fame
       format.html
@@ -24,18 +27,18 @@ class StaticPagesController < ApplicationController
   end
   
   def risingposts# rising posts in algorithm
-    @feed_items = current_user.feed.paginate(page: params[:page])
+   @feed_items = Micropost.calculate_feed(current_user,nil,:rising)
     @name="Trending"
-  
+    @orig="Medfeed"
      respond_to do |format|
       format.json { render :json => { :feed=>@feed_items} }
       format.html
       end
   end
   def newposts# newest posts in last 5 hours
-      @feed_items=default_feed.paginate(page: params[:page])
+      @feed_items = Micropost.calculate_feed(current_user,nil,:new)
       @name="New"
-
+      @orig="Medfeed"
      respond_to do |format|
       format.json { render :json => { :feed=>@feed_items} }
       format.html
