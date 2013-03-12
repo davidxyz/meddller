@@ -1,5 +1,6 @@
 <%provide(:page_size,'large')%>
 <%provide(:title,'See what\'s popular on'+@medchannel.name)%>
+<div id="name_of_channel"class="hide"><%=@name%></div>
 <% if signed_in?%>
 <div id="sidebar">
 	
@@ -12,26 +13,25 @@
 			<%if current_user.medchannels.any?%>
 			<ul>
 				<%current_user.medchannels.each do |medchannel|%>
-				<li><%=medchannel.name%><span class="data"><%=medchannel.subscribers.count%></span></li>
-				<%end%>				
+				<li class="<%=@name==medchannel.name%>"><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li><%end%>				
 			</ul>
 			<%end%>
 		</div>
 	</div>
 	<%end%>
 <div class="subscribe-box">
-	<div class="header"><div class="close">X</div></div>
+	<div class="header"><div class="close"><i class="icon-white icon-remove"></i></div></div>
 	<div class="subscribers">subscribers<div class="subscribers_data"><%=@medchannel.subscribers.count%></div></div>
-	<a href="#" class="btn"><i class="icon-eye-open"></i> Subscribe</a>
+	<%unless @subscribe.nil?%><%if @subscribe%><a href="/commands/subscribe?medchannel=<%=@name%>" class="btn sub-btn"><i class="icon-eye-close"></i><span>Unsubscribe </span></a><%else%><a href="/commands/subscribe?medchannel=<%=@name%>" class="btn sub-btn"><i class="icon-eye-open"></i> <span>Subscribe</span></a><%end%><%end%>
 </div>
-<a class="description-vote" href="<%=site('/m/'+@name+'/description')%>"><span class="close">X</span><span class="desc">Description</span><div class="count"></div></a>
-<div class="recent_channels">
+<a class="description-vote" href="<%=site('/m/'+@name+'/description')%>"><span class="close"><i class="icon-white icon-remove"></i></span><span class="desc">Description</span><div class="count"></div></a>
+<!--<div class="recent_channels">
 
-	<div>Related Channels</div>
+	Ehh will implement later<div>Related Channels</div>
 	<ul>
 		<li class="active">random <span class="data"></span></li>
 		<li>funny <span class="data"></span></li>
 		<li>gaming <span class="data"></span></li>
 	</ul>
-</div>
+</div>-->
 <%= render 'shared/feed'%>

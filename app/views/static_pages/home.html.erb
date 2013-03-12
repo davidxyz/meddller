@@ -1,5 +1,5 @@
 <%provide(:page_size,'large')%>
-<%provide(:title,'See what\'s popular on the internet')%>
+<%provide(:title,'See what people are posting')%>
 <!-- Micropost feed-->
 	
 	<%= render 'shared/feed'%>
@@ -15,7 +15,7 @@
 			<%if current_user.medchannels.any?%>
 			<ul>
 				<%current_user.medchannels.each do |medchannel|%>
-				<li><%=medchannel.name%><span class="data"><%=medchannel.subscribers.count%></span></li>
+				<li><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li>
 				<%end%>				
 			</ul>
 			<%end%>

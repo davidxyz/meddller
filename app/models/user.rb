@@ -42,11 +42,6 @@ class User < ActiveRecord::Base
   validates :email, presence:true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   validates :password, presence: true, length: {minimum: 6}
   validates :password_confirmation, presence: true
-  def feed
-    #everyone your following
-    #subscribers
-    Micropost.select("*")
-  end
   def image_url
     if self.image? 
       self.image_url(:thumb)
@@ -75,7 +70,11 @@ class User < ActiveRecord::Base
   end
   #relationships_m
   def subscribed?(medchannel)
-    relationshipms.find_by_subscribed_id(medchannel.id)
+   if relationshipms.find_by_subscribed_id(medchannel.id).nil?
+      return false
+    else
+      true
+    end
   end
   def subscribe!(medchannel)
     relationshipms.create!(subscribed_id: medchannel.id)

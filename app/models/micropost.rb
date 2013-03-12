@@ -38,18 +38,18 @@ class Micropost < ActiveRecord::Base
     followed_user_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
     where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user.id)
   end
-  def default_feed
+  def self.default_feed
     #must improve
-   Micropost.select("*")
+   Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
   end
   def self.calculate_feed(user,medchannel,popularity)#takes the user, takes the channel the user is currently in and the popularity
     microposts=[]
-    if popularity==:hall_of_fame 
+    if popularity==:hall_of_fame  #only one outcome if we request the hall of fame and thats the top 10 posts
       microposts=Micropost.order("meds DESC").limit(10)
       return microposts
     end
-    microposts=medchannel.posts unless medchannel.nil?
-   user.followed_users.each{|user| microposts<<user.microposts unless user.microposts.nil?} unless user.nil?
+    microposts=medchannel.posts unless medchannel.nil? #get posts from the medchannel if we are in one
+    user.followed_users.each{|user| microposts<<user.microposts unless user.microposts.nil?} unless user.nil? #if the user is logged in get posts from users he's following
     case popularity
     when :popular
       microposts=microposts.where(:created_at => (1.days.ago.to_date)..(Time.now.to_date)).order("meds DESC")
@@ -95,17 +95,17 @@ class Micropost < ActiveRecord::Base
   end
   private #validations
     def ultra_val
-    if medtype=="link_post"
+    if medtype=="link_post" or "link_video_post"
      errors[:base]<<("Uhh, you sure that's a website?")  if urls.nil? or !URI::DEFAULT_PARSER.regexp[:ABS_URI].match(urls) 
     elsif medtype=="self_post"
       errors[:base]<<("Woah say something")  if content.nil? or content.length <4 
       errors[:base]<<("Woah you're saying way too much in your post") if content.length > 1000
     elsif medtype=="image_post"
       errors[:base]<<("Hey, can you upload something already") if image.nil?
-    else
+    elsif medtype!="desc"
       errors[:base]<<("Something, went wrong with your post and we're tearing out our heads trying to find why")
     end
-    unless medtype=="self_post" and medtype=="desc"
+    unless medtype=="self_post" or medtype=="desc"
     errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
     errors[:base]<<("Woah your title is way too long") if title.length >100
     end
@@ -118,10 +118,14 @@ class Micropost < ActiveRecord::Base
       unless preview_url.nil?
         return preview_url
       end
+      unless /youtube.com|/.match(urls).nil?#youtube video
+        medtype="link_video_post"
+        return true
+      end
       doc = Nokogiri::HTML(open(urls))
       max_size=0;
       doc.css('img').each {|image|
-        if /\A(http:\/\/).+\.(gif|png|jpe?g)\z/.match(image['src'])  
+        unless /\A(http:\/\/).+\.(gif|png|jpe?g)\z/.match(image['src']).nil?
           if image['height'].to_i>max_size
             self.preview_url=image['src']
             max_size=image['height'].to_i
@@ -134,10 +138,10 @@ class Micropost < ActiveRecord::Base
     unless medtype=="link_post"
       self.urls="/microposts/"+id.to_s
     end
-    if medtype=="self_post"
-    end
+    if medtype=="desc" then return true end
   end
   def clean_input
+    if medtype=="desc" then return true end
     unless self.content.nil?
     self.content=ActionController::Base.helpers.sanitize(content)
     end

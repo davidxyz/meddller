@@ -5,13 +5,15 @@
 	<div id="whiteout"></div>
 <%if @micropost.top_comment?(comments)%><div class="top-comment">Top Comment</div><%end%>
 
-<%=comments.body%>
+<p class="body"><%=parseShit(comments.body)%></p>
 
 		<span class="med_container">
 		<span class="meds"><%=comments.meds%></span>
 		</span>
 		<span class="comments"><span class="number"><%=comments.children.size%></span></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(comments.created_at)%> ago.</span>
+		<div style="clear: both"></div>	
 </div>
+<div style="clear: both"></div>
 </li>
 

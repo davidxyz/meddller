@@ -68,9 +68,6 @@ function addMask(thing,classname){
     });
 
 }
-$(".mnav_right").text(">");
-$(".mnav_left").text("<");
-
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	
 	var $this=$(this);
@@ -383,36 +380,37 @@ $(document).on("mouseenter","[data-title]",function(e){
 
 });
 //for options under production
-/*
-$(".options [title]").hover(function(){
-	$this=$(this);
+
+$(".user-options").click(function(){
+	$this=$(this).parent();
 $this.removeAttr("title");
-	if(!$this.hasClass("tip_activate")){
+if(!$this.hasClass("tip_activate")){
 	 $this.addClass("tip_activate");
 
 	var tooltip=$(document.createElement('div'));
 	tooltip.addClass("options_tooltip");
 	tooltip.css({
-        position: 'relative',
+        position: 'absolute',
         background: 'black',
         border: '1px solid black',
         padding: '10px',
         zIndex: 999,
-        width:'100px',
-        height:'20px',
+        width:'50px',
+        height:'13px',
         display: 'none',
-        top:  20+ 'px',
-        right:0+ 'px',
+        top:  '0px',
+        right:-90+ 'px',
         color:'white'
     }).insertBefore($this);
 
-   tooltip.html($this.attr('data-title'));
-   tooltip.fadeTo("slow",0.6);
+   tooltip.html($this.find(".settings").show());
+   tooltip.fadeIn("slow");
 }else{
+	$(".options_tooltip > .settings").hide().appendTo($this);
 	$(".options_tooltip").remove();
 	$this.removeClass("tip_activate");
 }
-});*/
+});
 //for medals on comment page or user show page
 $("[data-desc]").on("mouseenter",function(e){
 	$this=$(this);
@@ -443,19 +441,24 @@ $(".medchannel").on("mouseenter",function(){
 $this=$(this);
 var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip');
+	var offset = $this.offset();
+var height = $this.height();
+var width = $this.width();
+var top = -20+offset.top + height + "px";
+var left = -330+offset.left + width + "px";
 	tooltip.css({
-        position: 'absolute',
+		position:'absolute',
         background: 'black',
         border: '1px solid black',
         padding: '10px',
         zIndex: 999,
         'word-wrap': 'break-word',
         width:'250px',
-        top:'180px',
-        right: '240px',
+    	left: left,
+    	top: top,
         color:'white',
         display: 'none'
-    }).insertBefore($this);
+    }).prependTo(document.body);
     tooltip.html($this.attr("data-description"));
     tooltip.fadeTo("slow",0.7);
 });
@@ -579,6 +582,7 @@ switch (event.which) {
 
 //tabs:
 $(".hnav_right").on("click",function(){
+	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header .text");
 	var feeds=$(".medfeed_container");
 $this=$(this);
@@ -612,6 +616,7 @@ textx.animate({left:"+=350px",opacity: "1"}
 });
 $(".header > .text").data("name",$(".header > .text").text())
 $(".hnav_left").on("click",function(){
+	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header > .text");
 var feeds=$(".medfeed_container");
 $this=$(this);
@@ -647,7 +652,7 @@ function dialog(message,body){
 	var text=$(document.createElement('i'));
 	dialog.addClass("dialog-error");
 
-		dialog.appendTo(body);
+		dialog.appendTo(document.body);
 		text.text(message);
 		text.appendTo(dialog);
         var winH = $(window).height();
@@ -767,13 +772,13 @@ $(".comment_reply").fadeOut(1500);
 //add feature later of hiding comment when meds reach low levels
 comment_hide();
 function comment_hide(){
-$.each($(".comment[data-hide=false]"),function(index, value){
+$.each($(".comment[data-hide=true]"),function(index, value){
 $(value).addClass("hidden");
-$(value).children().hide();$("#whiteout").show();
+
 $(value).parent().fadeTo("fast",0.8);
-$(value).attr("data-text",$(value).text());
 $(value).attr("data-height",$(value).height());
-$(value).text("");
+$(value).children().hide();
+$(value).find("#whiteout").show();
 var offensive=$(document.createElement('i'));
 offensive.addClass("offense-statement");
 offensive.text("This comment has been deemed unnecessary")
@@ -788,20 +793,96 @@ $(".comment .down-hide").on("click",function(){
 $this=$(this);
 var comment=$this.parent();
 if(comment.hasClass("hidden")){//slidedown animation
+$this.addClass("shrink");
 comment.children().fadeIn(1000);
 comment.animate({height:comment.attr("data-height"),opacity: "1"}
 	, {duration: "slow",
-	complete:  function() { comment.text(comment.attr("data-text"));comment.parent().fadeTo("fast",1)} });
-
+	complete:  function() { comment.parent().fadeTo("fast",1)} });
+comment.removeClass("hidden");
+comment.find(".offense-statement").remove();
 }else{//slide up animation
+	comment.find(".down-hide").remove();
 comment_hide();
 }
 });
 //paginator for medfeed
+if($(".medfeed_box").length!=0){
+	var feed_box=$(".medfeed_box");
+feed_box.data("page",1);
 $(window).scroll(function() {
    if($(window).scrollTop() + $(window).height() == $(document).height()) {
        $("img.paginating_gif").show();
+       var name=$(".header > .text").data("name");
+       var medchannel="Medfeed";
+       var url="/";//default home
+      
+       if(name=="Medfeed"){//home
+       	 switch($(".medfeed_box > .header > .text").text()){
+       	case "Trending":
+       	url="/rising";
+       	break;
+       	case "New":
+       	url="/new";
+       	break;
+       	case name://popular on what channel
+  		url="/popular";
+       	break;
+       }
+       	}else{//its a medchannel
+        switch($(".medfeed_box > .header > .text").text()){
+       	case "Trending":
+       	url="/medchannel/"+name+"/rising";
+       	break;
+       	case "New":
+       	url="/medchannel/"+name+"/new";
+       	break;
+       	case name://popular on what channel
+  		url="/medchannel/"+name+"/popular";
+       	break;
+       }
+       	}
+       feed_box.data("page",feed_box.data("page")+1);
+       $.ajax({
+		type: "post",
+		dataType: "json",
+  		url: url,
+  		data: {page:$(".medfeed_box").data("page")},}).done(function(response){
+  		console.log(response.feed);//<-more feed
+  		});
    }
+});
+}
+$(".sub-btn").on("click",function(event){//buggy in that doesnt display ui as nice
+event.preventDefault();
+$this=$(this);
+		$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/subscribe',
+  		data: {medchannel:$("#name_of_channel").text()},
+  		success: function(){
+  			console.log("what");
+  			var text=$this.find("span").text();
+  		if(text.toLowerCase()=="subscribe"){
+  			$(".subscribers_data").text(parseInt($(".subscribers-data").text())+1)
+  		}else{
+  			$(".subscribers_data").text(parseInt($(".subscribers-data").text())-1)
+  		}
+  		}
+  	});
+});
+$("ul.channels").each(function(index,value){
+if ($(value).children().length>5){
+	$(value).parent().find(".onav_left").show();
+$(value).parent().find(".onav_right").show();
+}
+});
+
+$(".onav_left").on("click",function(){
+console.log("yo");
+});
+$(".onav_right").on("click",function(){
+
 });
 /*$('.medchannels-box').jScrollPane();*/
 /*medplus acc added functionality*/

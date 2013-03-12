@@ -7,6 +7,9 @@
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 <%= render 'layouts/shim'%>
+<!--[if lt IE 8]>
+<%= stylesheet_link_tag "font-awesome-ie7.min.css", media: "all" %>
+<![endif]-->
 </head>
 <body class="<%=yield(:page_size)%> <%=yield(:background)%>">
 <%=render 'layouts/header'%>

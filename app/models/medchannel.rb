@@ -1,7 +1,9 @@
 class Medchannel < ActiveRecord::Base
 	#medchannel has nsfw
+  #medchannel has description decided by top comment
   attr_accessible :name, :description
   before_save {|channel| channel.name=name.downcase}
+  before_save :make_description
   has_many :microposts
   has_many :reverse_relationshipms,foreign_key: "subscribed_id",class_name:"Relationshipm", dependent: :destroy
   has_many :subscribers, through: :reverse_relationshipms,source: :subscriber
@@ -13,7 +15,22 @@ class Medchannel < ActiveRecord::Base
 def feed
   posts
 end
-def desc
-  Micropost.find(self.id,:medtype=>"desc")
+def desc(key=0)
+  if key==0
+  desccription_post=Micropost.find(self.description.to_i)
+  else
+    begin
+     desccription_post=Micropost.find(self.description.to_i).topcomment.body
+     desccription_post+" - "+desccription_post.user.name
+   rescue
+    "*crickets* - meddler"
+   end
+  end
+end
+private
+def make_description#the id of the post goes in the description
+  desc_post=Micropost.create(:medtype=>"desc")
+  desc_post.save
+  self.description=desc_post.id.to_s
 end
 end

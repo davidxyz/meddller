@@ -9,6 +9,7 @@ gem 'faker','1.0.1'
 gem 'nokogiri'
 gem 'carrierwave'
 gem 'mini_magick'
+gem "font-awesome-rails"
 gem 'acts_as_commentable_with_threading'
 
 # Bundle edge Rails instead:

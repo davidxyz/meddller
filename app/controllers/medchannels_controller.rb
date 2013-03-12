@@ -1,5 +1,5 @@
 class MedchannelsController < ApplicationController
-	before_filter :signed_in_user, only: [:create]
+	before_filter :signed_in_user, only: [:create,:subscribe,:unsubscribe]
 	def show
 		@medchannel=Medchannel.find_by_name(params[:name])
 		begin
@@ -8,17 +8,35 @@ class MedchannelsController < ApplicationController
 			@feed_items=[]
 		end
 		@name=@medchannel.name
+		begin#not logged in
+    	@subscribe=current_user.subscribed?(@medchannel)
+    	rescue
+      	@subscribe=nil
+  		end
 	end
 	def desc#gives description vote page
 		@medchannel=Medchannel.find_by_name(params[:name])
 		begin #doesnt find a page give it an empty array
 		@micropost=@medchannel.desc
-		@comments=@micropost.comments
+			begin
+			@comments=@micropost.comment_threads
+			rescue
+				@comments=[]
+			end
 		rescue
-		@micropost=nil
-		@comments=[]
+		 not_found
 		end
 	end
+	def subscribe
+		@medchannel=Medchannel.find_by_name(params[:medchannel])
+		if @medchannel.nil? then redirect_to "/" end
+		if current_user.subscribed?(@medchannel)
+		 current_user.unsubscribe!(@medchannel)
+		else
+			current_user.subscribe!(@medchannel)
+		end
+		redirect_to "/m/"+@medchannel.name
+    end
 	def hall_of_fame# best posts of all time
     begin
     @microposts=Micropost.where(medchannel_id: params[:channel]).order("meds DESC").limit(10)
@@ -48,12 +66,4 @@ class MedchannelsController < ApplicationController
       @microposts=[]
     end
   end
-	def create
-	@medchannel=Medchannel.new(params[:medchannel])
-		if @medchannel.save
-		@desc_post=Micropost.create(:medtype=>"desc", :medchannel_id=>@medchannel.id)
-		else
-
-		end
-	end
 end

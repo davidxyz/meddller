@@ -6,27 +6,25 @@
 	<div class="author"><%= link_to image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author"), site('/users/'+@micropost.user.name)%><div><%=@micropost.user.name%></div></div>
 <%if @micropost.medtype=="self_post"%>
 
-	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
-
 	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 
 		<%end%></span></span>
 
-	<span class="content"><%=@micropost.content%></span>
+	<p class="content "><%=parseShit(@micropost.content)%></p>
 		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
-
+		<ul class="channels">
 		<%@micropost.channels.each do |channel|%>
-		<ul>
-		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
-		</ul>
+		<li class="channel-cont"><a href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
+		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
+		<div style="clear: both"></div>	
 <%elsif @micropost.medtype=="image_post"%>
 	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
 
@@ -40,11 +38,11 @@
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
+		<ul class="channels">
 		<%@micropost.channels.each do |channel|%>
-		<ul>
-		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
-		</ul>
+		<li class="channel-cont"><a href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
+		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 <%elsif @micropost.medtype=="link_post"%>
 	<span class="preview"><%=link_to image_tag(@micropost.preview_url,width: 65, height:85),@micropost.urls%></span>
@@ -59,11 +57,11 @@
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
 		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
+		<ul class="channels">
 		<%@micropost.channels.each do |channel|%>
-		<ul>
-		<li><a href="<%='/medchannel/'+channel.name%>"class="medchannel" data-description="<%=channel.description%>"><%=channel.name%></a></li>
-		</ul>
+		<li class="channel-cont"><a href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
+		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 			
 <%end%>
@@ -71,8 +69,8 @@
 
 <div class="medchannel-info"></div>
 <div class="related"></div>
-<div class="mnav_right"></div>
-<div class="mnav_left"></div>
+<a href="#" class="mnav_right"><i class="icon-white icon-chevron-right"></i></a>
+<a href="#" class="mnav_left"><i class="icon-white icon-chevron-left"></i></a>
 
 <div class="mid_page">
 	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">

@@ -22,15 +22,6 @@ class MicropostsController < ApplicationController
     end
   end
   #have to incoporate some type of user controls so they can get more from their fee
-  def hall_of_fame# best posts of all time
-  end
-  def popularposts# best posts in last 18 hours
-  end
-  def risingposts# rising posts in algorithm
-  end
-  def newposts# newest posts in last 5 hours
-    
-  end
   def repost#basically copies and attributes to original user
     micropost=Micropost.find(params[:id])
     channel=Medchannel.find_by_name(params[:medchannel])
@@ -44,8 +35,9 @@ class MicropostsController < ApplicationController
       format.json { render :json => { :valid=>true} }
       end
     else
+      reason=" "
       reason="can't repost to a channel that post is already in" if cond1
-      reason="you have already reposted this" if cond2
+      reason+=" you have already reposted this" if cond2
       respond_to do |format|
       format.json { render :json => { :valid=>false,:reason=>reason}}
       end
@@ -113,7 +105,7 @@ class MicropostsController < ApplicationController
   end
   def create
     @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel])
-    @medchannel=Medchannel.new(name: params[:micropost][:medchannel]) if @medchannel.nil?
+    @medchannel=Medchannel.create(name: params[:micropost][:medchannel]) if @medchannel.nil?
     @micropost=params[:micropost].except(:medchannel)
     @micropost =current_user.microposts.build(@micropost)
     if @micropost.save and @medchannel.save

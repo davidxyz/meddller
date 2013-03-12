@@ -28,6 +28,7 @@ SampleApp::Application.routes.draw do
   match '/commands/repost', to: 'microposts#repost'
   match '/commands/no_other_users', to: 'users#no_other_users'
   match '/commands/no_other_emails', to: 'users#no_other_emails'
+  match '/commands/subscribe', to: 'medchannels#subscribe'
   #medchannnel routes
   match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z_]+/i
   match '/m/:name'=> 'medchannels#show',:name => /[a-z_]+/i

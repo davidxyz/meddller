@@ -3,6 +3,13 @@ module MicropostsHelper
   def default_feed
     Micropost.select("*")
   end
+  def parseShit(body)
+    #<User>
+    #*medchannel*
+    if (/<[a-z_]+>/=~body)==nil && (/\*[a-z_]+\*/=~body)==nil then return body end
+    body.gsub!(/<([a-z_]+)>/,'<a href="/users/\1">\1</a>')
+    sanitize(raw(body.gsub(/\*([a-z_]+)\*/,'<a href="/medchannel/\1">\1</a>')))
+  end
  def wrap(content,max_width=20)
   max_width-=1
  	while max_width < content.size  do

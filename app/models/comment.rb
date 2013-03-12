@@ -31,7 +31,7 @@ class Comment < ActiveRecord::Base
     self.children.size > 0
   end
   def hide?
-    self.meds>1
+    self.meds<-10
   end
   def inc 
    self.update_attribute(:meds,self.meds+1)

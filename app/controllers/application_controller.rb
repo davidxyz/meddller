@@ -3,4 +3,6 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include MicropostsHelper
   include UsersHelper
+  include ApplicationHelper
+  include MedchannelHelper
 end
