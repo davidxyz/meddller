@@ -1068,6 +1068,7 @@ border-color: rgba(208,213,203,0.5);
 		
 	.med_container{
 	top:70px;
+  right:6px;
   background-size:35px 35px; 
   width:35px;height: 35px;
 	}
@@ -1171,6 +1172,7 @@ cursor: pointer
   height:25px;
   padding:3px 0 3px 0;
   z-index: 2;
+  color:#fff;
     background: #333;
 background-image: initial;
 background-position-x: initial;
@@ -1313,8 +1315,6 @@ width:170px;
 	position:absolute;
 	width:40px;
 	height:40px;
-	top:110px;
-	right:6px;
   background-image:url('heart.png');
   background-repeat:no-repeat;
   background-size:40px 40px;
@@ -1959,10 +1959,10 @@ position:absolute;
 margin-top:20px;
 width:800px;
 min-height:300px;
--moz-box-shadow: 0 0 0 4px rgba(208,213,203,0.8);
-    -webkit-box-shadow: 0 0 0 4px rgba(208,213,203,0.8);
-    -o-box-shadow: 0 0 0 4px rgba(208,213,203,0.8);
-    box-shadow: 0 0 0 4px rgba(208,213,203,0.8);
+-moz-box-shadow: 0 0 0 4px rgba(208,213,203,0.5);
+-webkit-box-shadow: 0 0 0 4px rgba(208,213,203,0.5);
+-o-box-shadow: 0 0 0 4px rgba(208,213,203,0.5);
+box-shadow: 0 0 0 4px rgba(208,213,203,0.5);
 border-radius:5px;
 z-index: 1;
 -moz-border-radius:5px;
@@ -1977,10 +1977,10 @@ background-color: #fff;
     top: 2px;
     width: 25px;
     height: 25px;
-    border-color: #d6d6d6;
+    border-color: rgba(208,213,203,0.5);
     border-width: 1px;
     border-style: none none solid solid;
-    background-color: #d6d6d6;
+    background-color: rgba(208,213,203,0.5);
     transform: rotate(42deg);
     -webkit-transform: rotate(42deg);
     -moz-transform: rotate(42deg);
@@ -1988,7 +1988,10 @@ background-color: #fff;
 	a{
 	text-decoration:none;
 	}
-		
+		.med_container{
+      right:8px;
+      top:110px;
+    }
 .content{
   margin:0px 0 0 30px;
   width:700px;
@@ -2159,6 +2162,7 @@ width:inherit;
 	position:absolute;
 	left:0px;
   top:5px;
+  width:30px;
   img{
 -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -2307,8 +2311,9 @@ span{
     top:55px;
 		.user_comment_image{
 		position:relative;
-		right:55px;
-		top:30px;
+		right:50px;
+		top:20px;
+    width:30px;
     img{
 -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -2316,138 +2321,106 @@ box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 		}
 		.comment_wrapper{
-		width:600px;
-		min-height:100px;
+		width:450px;
 		position:relative;
-    margin-bottom:100px; 
-      #whiteout{
-        position: absolute;
-        top: 5px;
-        left:0px;
-        width:20px;
-        height:50px;
-        z-index: 5px;
-        background-color:#fff; 
-      }
-		  .comment{
-		width:520px;
-    top:30px;
-    min-height: 50px;
-    float:left;
-    -moz-box-shadow: 0 0 0 4px rgba(208,213,203,0.7);
-    -webkit-box-shadow: 0 0 0 4px rgba(208,213,203,0.7);
-    -o-box-shadow: 0 0 0 4px rgba(208,213,203,0.7);
-    box-shadow: 0 0 0 4px rgba(208,213,203,0.7);
-    border-radius:6px;
-    padding: 10px 10px;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
-    position:absolute;
-    margin-bottom:20px; 
-    color:#333;
-    font-family: "verdana";
-    background-color: #fff;
+    padding-top: 0px;
+    margin-bottom:40px; 
+    padding-bottom: 30px;
+		 
 .body{
-  float:left;
   word-wrap: break-word;
-margin:15px 20px 0 20px;
-padding-bottom: 10px;
 width:450px;
 }
-    &:before{
-        content: ' ';
-  display: block;
-    position: absolute;
-    left: -13px;
-    top: 5px;
-    width: 18px;
-    height: 18px;
-    border-color: rgba(208,213,203,0.5);
-    border-width: 1px;
-    border-style: none none solid solid;
-    background-color: rgba(208,213,203,0.5);
-    transform: rotate(46deg);
-    -webkit-transform: rotate(46deg);
-    -moz-transform: rotate(46deg);
-      }
-
-  .top-comment{
-    background-color: #333;
-    padding:1px 3px 1px 3px;
-    text-align: center;
-    width:80px;
-    top:0px;
-    color:#fff;
-    font-weight: bold;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    right:3px;
-    position: absolute;
-    font-size: 8px;
-  }
-
- /*p{
-          position:absolute;
-        color:#484848;
-        width: inherit;
-         word-wrap: break-word;
-         margin-bottom:15px;
-         margin-top:15px;
-        top:0px;
-          font-size:11px;
-          clear:both;
-          width: 480px;
-      font-size: 13px;
-       word-wrap: break-word;
- }*/
+.name{
+position: absolute;
+top:15px;
+color: #00ABFF;
+}
 
     .med_container{
-  top:25px;
-  right:2px;
-  background-size:30px 30px; 
-  width:30px;height: 30px;
+  bottom:4px;
+  left:0px;
+  background-size:20px 20px; 
+  width:20px;height: 20px;
+}
   .meds{
-    background-color: #333;
+    position: absolute;
+      border-radius: 2px;
+      -moz-border-radius: 2px;
+      -webkit-border-radius: 2px;
+      bottom:3px;
+      left:30px;
+      color: white;
+      width: 30px;
+      height:18px;
+     background-color: #00ABFF;
+      text-align: center;
+      &:before{
+        content: ' ';
+    position: absolute;
+    left: -4px;
+    top: 5px;
+    width: 6px;
+    height: 6px;
+    background-color: #00ABFF;
+    border-width: 1px;
+    border-style: none none solid solid;
+    transform: rotate(42deg);
+    -webkit-transform: rotate(42deg);
+    -moz-transform: rotate(42deg);
+      
+    }
   }
   }
   .timestamp{
   position:absolute;
-  bottom:2px;
- right:3px;
+  bottom:0px;
+ right:0px;
   font-size:9px;
   color: #BBB;
   }
-  .comments{
+  .commentz{
     position: absolute;
-  top:60px;
-  right:2px;
-  width:32px;
-height:32px;
+  bottom:0px;
+  left:70px;
+  width:24px;
+height:24px;
   background-image:url('comment1.png');
   background-repeat:no-repeat;
-  background-size:32px 32px;
+  background-size:24px 24px;
     cursor:pointer;
+
   &:hover{
     background-image:url('comment1.png');
   }
+}
     .number{
-    text-align:center;
--moz-border-radius:5px;
--webkit-border-radius:5px;
--border-radius:5px;
-height:16px;
-font-size:14px;
-background-color:#333;
-color:white;
-position:absolute;
-bottom:0px;
-right:0px;
-padding: 0 4px 0 4px;
+      position: absolute;
+      border-radius: 2px;
+      -moz-border-radius: 2px;
+      -webkit-border-radius: 2px;
+      bottom:3px;
+      left:100px;
+      color: white;
+      width: 30px;
+      height:18px;
+      background-color: #00ABFF; 
+      text-align: center;
+      &:before{
+        content: ' ';
+    position: absolute;
+    left: -4px;
+    top: 5px;
+    width: 6px;
+    height: 6px;
+    background-color: #00ABFF; 
+    border-width: 1px;
+    border-style: none none solid solid;
+    background-color: #00ABFF;
+    transform: rotate(42deg);
+    -webkit-transform: rotate(42deg);
+    -moz-transform: rotate(42deg);
     }
-  }
-  
-			}
 			}	
 		}/*.comments end*/
 		.nothing{

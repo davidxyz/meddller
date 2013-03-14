@@ -22,7 +22,7 @@ class MedchannelsController < ApplicationController
 			begin
 			@comments=@micropost.comment_threads
 			rescue
-				@comments=[]
+			@comments=[]
 			end
 		rescue
 		 not_found
@@ -46,13 +46,28 @@ class MedchannelsController < ApplicationController
   def popularposts# best posts in last 18 hours
    @name="Popular"
 	@orig=Medchannel.find_by_name(params[:name])
+	@feed_items = Micropost.calculate_feed(current_user,@orig,:popular).paginate(page: params[:page])
+	respond_to do |format|
+      format.json { render :json => { :feed=>@feed_items} }
+      format.html {render partial:'medchannels/show',:locals => { :@feed_items => @feed_items,:@orig=>@orig,:@name=>@name}}
+      end
   end
   def risingposts# rising posts in algorithm
    @name="Rising"
 	@orig=Medchannel.find_by_name(params[:name])
+	@feed_items = Micropost.calculate_feed(current_user,@orig,:rising).paginate(page: params[:page])
+	respond_to do |format|
+      format.json { render :json => { :feed=>@feed_items} }
+      format.html {render partial:'medchannels/show',:locals => { :@feed_items => @feed_items,:@orig=>@orig,:@name=>@name}}
+      end
   end
   def newposts# newest posts in last 5 hours
   	@name="New"
 	@orig=Medchannel.find_by_name(params[:name])
+	@feed_items = Micropost.calculate_feed(current_user,@orig,:new).paginate(page: params[:page])
+	respond_to do |format|
+      format.json { render :json => { :feed=>@feed_items} }
+      format.html {render partial:'medchannels/show',:locals => { :@feed_items => @feed_items,:@orig=>@orig,:@name=>@name}}
+      end
   end
 end

@@ -98,7 +98,7 @@ class Micropost < ActiveRecord::Base
   end
   private #validations
     def ultra_val
-    if medtype=="link_post" or "link_video_post"
+    if medtype=="link_post"
      errors[:base]<<("Uhh, you sure that's a website?")  if urls.nil? or !URI::DEFAULT_PARSER.regexp[:ABS_URI].match(urls) 
     elsif medtype=="self_post"
       errors[:base]<<("Woah say something")  if content.nil? or content.length <4 
@@ -120,10 +120,6 @@ class Micropost < ActiveRecord::Base
     if medtype=="link_post"
       unless preview_url.nil?
         return preview_url
-      end
-      unless /youtube.com|/.match(urls).nil?#youtube video
-        medtype="link_video_post"
-        return true
       end
       doc = Nokogiri::HTML(open(urls))
       max_size=0;

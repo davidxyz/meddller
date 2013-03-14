@@ -10,8 +10,23 @@ class StaticPagesController < ApplicationController
     @name="Medfeed"
     @orig="Medfeed"
     end
-     respond_to do |format|
-      format.json { render :json => { :feed=>@feed_items} }
+      respond_to do |format|
+     format.json {
+        @channels=[]
+        @current_users=[]
+        @comment_nums=[]
+        @repost_nums=[]
+        @names=[]
+        @feed_items.each{|x| 
+          user=x.user
+          @channels<<x.channels
+          @current_users<<current_user?(user)
+          @names<<user.name
+          @comment_nums<<x.comment_threads.count
+          @repost_nums<<x.reposters.count
+        }
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      }
       format.html
       end
   end
@@ -20,8 +35,23 @@ class StaticPagesController < ApplicationController
     @feed_items = Micropost.calculate_feed(nil,nil,:hall_of_fame,nil).paginate(page: params[:page])
      @name="Hall Of Fame"
      @orig="Medfeed"
-     respond_to do |format|
-      format.json { render :json => { :feed=>@feed_items} }# since this is the top 10 posts of all time return false when user accesses the hall of fame
+      respond_to do |format|
+     format.json {
+        @channels=[]
+        @current_users=[]
+        @comment_nums=[]
+        @repost_nums=[]
+        @names=[]
+        @feed_items.each{|x| 
+          user=x.user
+          @channels<<x.channels
+          @current_users<<current_user?(user)
+          @names<<user.name
+          @comment_nums<<x.comment_threads.count
+          @repost_nums<<x.reposters.count
+        }
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      }
       format.html
       end
   end
@@ -29,9 +59,25 @@ class StaticPagesController < ApplicationController
   def risingposts# rising posts in algorithm
    @feed_items = Micropost.calculate_feed(current_user,nil,:rising)
     @name="Trending"
+
     @orig="Medfeed"
-     respond_to do |format|
-      format.json { render :json => { :feed=>@feed_items} }
+      respond_to do |format|
+     format.json {
+        @channels=[]
+        @current_users=[]
+        @comment_nums=[]
+        @repost_nums=[]
+        @names=[]
+        @feed_items.each{|x| 
+          user=x.user
+          @channels<<x.channels
+          @current_users<<current_user?(user)
+          @names<<user.name
+          @comment_nums<<x.comment_threads.count
+          @repost_nums<<x.reposters.count
+        }
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      }
       format.html
       end
   end
@@ -39,8 +85,23 @@ class StaticPagesController < ApplicationController
       @feed_items = Micropost.calculate_feed(current_user,nil,:new)
       @name="New"
       @orig="Medfeed"
-     respond_to do |format|
-      format.json { render :json => { :feed=>@feed_items} }
+      respond_to do |format|
+     format.json {
+        @channels=[]
+        @current_users=[]
+        @comment_nums=[]
+        @repost_nums=[]
+        @names=[]
+        @feed_items.each{|x| 
+          user=x.user
+          @channels<<x.channels
+          @current_users<<current_user?(user)
+          @names<<user.name
+          @comment_nums<<x.comment_threads.count
+          @repost_nums<<x.reposters.count
+        }
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      }
       format.html
       end
   end

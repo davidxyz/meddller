@@ -2,7 +2,6 @@ class CommentsController < ApplicationController
   before_filter :signed_in_user
   before_filter :correct_user, only: [:destroy,:edit]
   def increment
-
     if params[:type]=="upvote"
       @comment=Comment.find(params[:id])
       @type=current_user.have_I_liked_or_not?(@comment,"comment")

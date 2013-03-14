@@ -1,19 +1,15 @@
-<li class="comment_wrapper">
+<li id="<%=comments.id%>" data-hide="<%=comments.hide?%>"class="comment_wrapper">
 	
-<div class="user_comment_image"><%=image_tag(comments.user.image_url,width: 25, height:25, title: comments.user.name)%><p><%=comments.user.name%></p></div>
-<div id="<%=comments.id%>"class="comment" data-hide="<%=comments.hide?%>">
-	<div id="whiteout"></div>
-<%if @micropost.top_comment?(comments)%><div class="top-comment">Top Comment</div><%end%>
+<div class="user_comment_image"><%=image_tag(comments.user.image_url,width: 30, height:30, title: comments.user.name)%>
+</div><p class="name"><%=comments.user.name%></p>
+
 
 <p class="body"><%=parseShit(comments.body)%></p>
 
-		<span class="med_container">
+		<span class="med_container"></span>
 		<span class="meds"><%=comments.meds%></span>
-		</span>
-		<span class="comments"><span class="number"><%=comments.children.size%></span></span>
+		<span class="commentz"></span>
+		<span class="number"><%=comments.children.size%></span>
 		<span class="timestamp">Posted <%=time_ago_in_words(comments.created_at)%> ago.</span>
-		<div style="clear: both"></div>	
-</div>
-<div style="clear: both"></div>
 </li>
 

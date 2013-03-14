@@ -27,10 +27,10 @@ def desc(key=0)
    end
   end
 end
-private
 def make_description#the id of the post goes in the description
   desc_post=Micropost.create(:medtype=>"desc")
   desc_post.save
   self.description=desc_post.id.to_s
+  return desc_post
 end
 end

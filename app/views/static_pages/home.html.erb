@@ -13,7 +13,7 @@
 		<div class="subscribed_channels">
 			<div class="header">Medchannels</div>
 			<%if current_user.medchannels.any?%>
-			<ul>
+			<ul class="channels">
 				<%current_user.medchannels.each do |medchannel|%>
 				<li><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li>
 				<%end%>				

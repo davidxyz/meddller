@@ -16,7 +16,39 @@ console.log("host: "+host+" "+"url: "+url+"is abs");
 //else
 return url;
 }
-
+var DateHelper = {
+  // Takes the format of "Jan 15, 2007 15:45:00 GMT" and converts it to a relative time
+  // Ruby strftime: %b %d, %Y %H:%M:%S GMT
+  time_ago_in_words_with_parsing: function(from) {
+    var date = new Date;
+    date.setTime(Date.parse(from));
+    return this.time_ago_in_words(date);
+  },
+  // Takes a timestamp and converts it to a relative time
+  // DateHelper.time_ago_in_words(1331079503000)
+  time_ago_in_words: function(from) {
+    return this.distance_of_time_in_words(new Date, from);
+  },
+ 
+  distance_of_time_in_words: function(to, from) {
+    var distance_in_seconds = ((to - from) / 1000);
+    var distance_in_minutes = Math.floor(distance_in_seconds / 60);
+    var tense = distance_in_seconds < 0 ? " from now" : " ago";
+    distance_in_minutes = Math.abs(distance_in_minutes);
+    if (distance_in_minutes == 0) { return 'less than a minute'+tense; }
+    if (distance_in_minutes == 1) { return 'a minute'+tense; }
+    if (distance_in_minutes < 45) { return distance_in_minutes + ' minutes'+tense; }
+    if (distance_in_minutes < 90) { return 'about an hour'+tense; }
+    if (distance_in_minutes < 1440) { return 'about ' + Math.floor(distance_in_minutes / 60) + ' hours'+tense; }
+    if (distance_in_minutes < 2880) { return 'a day'+tense; }
+    if (distance_in_minutes < 43200) { return Math.floor(distance_in_minutes / 1440) + ' days'+tense; }
+    if (distance_in_minutes < 86400) { return 'about a month'+tense; }
+    if (distance_in_minutes < 525960) { return Math.floor(distance_in_minutes / 43200) + ' months'+tense; }
+    if (distance_in_minutes < 1051199) { return 'about a year'+tense; }
+ 
+    return 'over ' + Math.floor(distance_in_minutes / 525960) + ' years';
+  }
+};
 function addMask(thing,classname){
 	if(typeof thing ==='undefined'){
 		//then its obviously a dialog
@@ -68,7 +100,136 @@ function addMask(thing,classname){
     });
 
 }
+//doesnt reutrn anything and is all side effects
+function constructPosts(posts,medfeed_container,channelz,current_users,names,comments,reposts,add){//takes a posts array, helpers with other shite, and a medfeed container, or whether we should apped to medfeed or switch
+	add = typeof add !== 'undefined'? add : false;//makeshift default arg-if nil then false we switch out the medfeed container
+	if(!add){
+		medfeed_container.children().remove();
+	}
+	posts.forEach(function(post,index){//should add templating just incase we find another and if we dont find we resort ot the posts.each
+	var post_wrapper=$(document.createElement('div'));
+	var user=$(document.createElement('span'));
+	var user_link=$(document.createElement('a'));
+	var user_image=$(document.createElement('img'));
+	var name=$(document.createElement('div'));name.text(names[index]);//fix
+	var timestamp=$(document.createElement('span'));
+	var inside_post=$(document.createElement('div'));
+	var title=$(document.createElement('span'));
+	var options=$(document.createElement('div'));var opt_link0=$(document.createElement('a'));var num0=$(document.createElement('div'));
+	var opt_link1=$(document.createElement('a'));var num1=$(document.createElement('span'));//med_container
+	var opt_link2=$(document.createElement('div'));var num2=$(document.createElement('span'));
+	var channels=$(document.createElement('ul'));channels.addClass("channels");//need to add the channels
+	var clear_div=$(document.createElement('div'));clear_div.css({clear:"both"});
+	post_wrapper.addClass("post_wrapper");
+	user.addClass("user_image");
+	user_image.appendTo(user_link);
+	user_link.appendTo(user);
+	user.appendTo(post_wrapper);
+	name.appendTo(user_image);
+	user.append(name);
+	user_image.attr("src","/assets/anon.png");//fix
+	user_image.attr("width","25px");user_image.attr("height","25px");
+	user_link.attr("src","/users/"+"fag");//fix
+	timestamp.addClass("timestamp");
+	inside_post.appendTo(post_wrapper);
+	inside_post.attr("id",post.id);
+	inside_post.addClass("post");inside_post.addClass(post.medtype);
+	title.addClass("title");
+	inside_post.append(title);
+	title.text(post.title==null?"":post.title);
+	title.append(user_options);
+	inside_post.attr("data-signed-in",$("#sidebar").length>0?"true":"false");
+	if(current_users[index]){//i its the current use then add the options image--must refine with the setting links
+	var user_options=$(document.createElement('img'));
+	var settings=$(document.createElement('span'));
+	var icon_wrench=$(document.createElement('i'));
+	var icon_remove=$(document.createElement('i'));
+	user_options.attr("alt","options");
+	user_options.attr("height","25px");
+	user_options.attr("src","/assets/options.png");
+	user_options.addClass("user-options");
+	user_options.appendTo(title);
+	settings.appendTo(title);
+	settings.addClass("hide");
+	settings.append(icon_wrench);
+	settings.append(icon_remove);
+	icon_remove.addClass("icon-white");icon_remove.addClass("icon-wrench");icon_remove.addClass("icon-2x");
+	icon_wrench.addClass("icon-white");icon_wrench.addClass("icon-remove");icon_wrench.addClass("icon-2x");
+	user_options.attr("width","25px");
+	}
+	options.addClass("options");
+	options.append(opt_link0);
+	options.append(opt_link1);
+	options.append(opt_link2);
+	inside_post.append(options);
+	opt_link0.attr("href","/microposts/"+post.id);opt_link0.attr("data-title","comment on it?");
+	opt_link0.addClass("comments");
+	opt_link0.append(num0);num0.text(comments[index]);
+	num0.addClass("number");
+	opt_link1.append(num1);
+	opt_link1.addClass("med_container");//must decide whether true or not
+	opt_link1.attr("id",post.id);
+	num1.addClass("meds");
+	num1.text(post.meds);
+	opt_link2.addClass("repost");
+	opt_link2.attr("data-title","repost it?");
+	opt_link2.append(num2);
+	num2.addClass("number");
+	num2.text(reposts[index]);//repost number
+	inside_post.append(timestamp);
+	timestamp.text("Posted " +DateHelper.time_ago_in_words_with_parsing(post.created_at));
+	inside_post.append(channels);
+		var onav_left=$(document.createElement('span'));
+		var onav_right=$(document.createElement('span'));
+		onav_right.addClass("onav_right");
+		onav_left.addClass("onav_left");
+		onav_left.hide();
+		onav_right.hide();
+		channelz[index].forEach(function(channel,index){
+		var channel_cont=$(document.createElement('li'));
+		var channel_link=$(document.createElement('a'));
+		inside_post.append(onav_left);
+		inside_post.append(onav_right);
+		channels.append(channel_cont);
+		channel_cont.append(channel_link);
+		channel_cont.addClass("channel-cont");
+		channel_link.attr("src","/medchannel/"+channel.name);;
+		channel_link.addClass("medchannel");
+		channel_link.text(channel.name);
+		channel_link.css({"background-color":"#5bc0de"});
+	});
 
+	//determin if its the current user or if signed in or not
+	if(post.medtype=="link_post"){
+		var preview=$(document.createElement('span'));
+		var outside_link=$(document.createElement('a'));
+		var preview_img=$(document.createElement('img'));
+		preview.appendTo(inside_post);
+		preview.addClass("preview");
+		preview.append(outside_link);
+		outside_link.append(preview_img);
+		outside_link.attr("href",post.urls);
+		preview_img.attr("width","65");
+		preview_img.attr("height","85");
+		preview_img.attr("src",post.preview_url);
+	}else if(post.medtype=="self_post"){
+		var content=$(document.createElement('p'));
+		content.addClass("content");
+		inside_post.append(content);
+		content.text(post.content);
+	}else if(post.medtype=="image_post"){
+		var preview=$(document.createElement('span'));
+		preview.addClass("preview");
+		var preview_img=$(document.createElement('img'));
+		inside_post.append(preview);
+		preview.append(preview_img);
+		preview_img.attr("src",post.image.thumb.url);
+	}
+	inside_post.append(clear_div);
+	medfeed_container.append(post_wrapper);
+	});
+
+}
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	
 	var $this=$(this);
@@ -114,12 +275,6 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   	});
 }
 });
-/*$(".custom-disabled").hover(function(){
-
-	var time=$this.children(".time");
-	window.setInterval(dec, 1000);
-tooltip("sorry, you must wait "+time+" before continuing");
-});*/
 function dec(){
 	var time=$(".custom-disabled .time");
 	if(parseInt(time.text())<=0){return false;}
@@ -375,7 +530,7 @@ var left = offset.left - width +10+ "px";
 $(document).on("mouseleave","[data-title]",function(event){
 $('#otooltip').remove();
 });
-$(".user-options").click(function(){
+$(".user-options").click(function(){//only for current users
 	$this=$(this).parent();
 $this.removeAttr("title");
 if(!$this.hasClass("tip_activate")){
@@ -537,7 +692,7 @@ $("span.med_container").mousedown(function(event){
 	var meds = $this.find(".meds");
 	var mid=$this.attr("id");
 	//console.log(window.location.origin);
-	if($this.parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}
+	if($this.parent().attr("data-signed-in")=="false"){ dialog("Sign in first please",$this.parent().parent());return false;}//must refine
 	if(!$this.hasClass("upvote") && !$this.hasClass("downvote")){
 switch (event.which) {
         case 1://left
@@ -580,21 +735,53 @@ $this=$(this);
 if($this.hasClass("not_done")){return false;}
 
 var original=$("#name_of_channel").text();
+var url="";
 $this.addClass("not_done");
 textx.animate({left:"+=350px",opacity: "0"}
 	, {duration: "slow",
-	complete:  function() { textx.css({right:"10px"}); 	switch(textx.text())
+	complete:  function() { textx.css({right:"10px"});
+	if(original=="Medfeed"){
+switch(textx.text())
 {
 case original:
   textx.text("Trending");
+  url="/rising";
   break;
 case "Trending":
   textx.text("New");
+  url="/new";
   break;
 case "New":
   textx.text(original);
+  url="/";
   break;
-}} });
+}
+}else{//else its a medchannel o.O
+switch(textx.text())
+{
+case original:
+  textx.text("Trending");
+  url="/m/"+original+"/rising";
+  break;
+case "Trending":
+  textx.text("New");
+  url="/m/"+original+"/rising";
+  break;
+case "New":
+  textx.text(original);
+  url="/m/"+original+"/popular";
+  break;
+}
+}
+}});
+$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: url,
+  		data: {},}).done(function(response){
+  			console.log(response);
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,false);
+  		});
 //limbo
 feeds.animate({left:"+=200px",opacity: "0"},"slow");
 textx.animate({left: '-=700px'},50);
@@ -617,22 +804,53 @@ $this=$(this);
 var original=$("#name_of_channel").text();
 if($this.hasClass("not_done")){return false;}
 
-
+var url="";
 $this.addClass("not_done");
 textx.animate({left:"-=350px",opacity: "0"}
 	, {duration: "slow",
-	complete:  function() { switch(textx.text())
+	complete:  function() {
+	if(original=="Medfeed"){
+ switch(textx.text())
 {
 case original:
   textx.text("New");
+  url="/new";
   break;
 case "Trending":
   textx.text(original);
+  url="/";
   break;
 case "New":
   textx.text("Trending");
+  url="/rising";
   break;
-}} });
+}
+}else{
+	 switch(textx.text())
+{
+case original:
+  textx.text("New");
+  url="/m/"+original+"/new";
+  break;
+case "Trending":
+  textx.text(original);
+  url="/m/"+original;
+  break;
+case "New":
+  textx.text("Trending");
+  url="/m/"+original+"/rising";
+  break;
+}
+}
+} });
+$.ajax({
+		type: "post",
+		dataType: "json",
+  		url: url,
+  		data: {},}).done(function(response){
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,false);
+  		console.log(response);
+  		});
 feeds.animate({left:"-=200px",opacity: "0"},"slow");
 textx.animate({left: '+=700px'},50);
 feeds.animate({left: '+=600px'},50);
@@ -658,14 +876,14 @@ function dialog(message,body){
         dialog.css('z-index',  999);
         dialog.css('left', winW/2-dialog.width()/2);
         dialog.fadeOut(2000);
-        setTimeout(function(){dialog.remove();},2000)
+        setTimeout(function(){dialog.remove();},2000);
      
 }
 //repost functionality
 $(".post .repost").on('click',function(){
 	//make a sort of input tooltip
 	$this=$(this);
-	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//user aint signed in so get the fuuck out
+	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//must refine
 	if(!$this.hasClass("active")){
 
 var post=$this.parent().parent();
@@ -735,45 +953,52 @@ var post=$this.parent().parent();
 
 });
 //comment_reply functionality not even working yet
-$(".comment .comments").on("click",function(){
+$(".comment_wrapper .commentz").on("click",function(){
 	$this=$(this);
-if(!$this.parent().parent().hasClass("active")){
+	if($(".comment_wrapper.active").length>0 && !$this.parent().hasClass("active")){
+		console.log("heyo");
+			var comment=$(".comment_wrapper.active");
+			comment.children(".commentz").trigger("click");
+		//setTimeout(function(){$this.trigger("click");},1500);
+	}//timeout if a comment_wrapper is active
+if(!$this.parent().hasClass("active")){
 var new_new=$(".comment_form_container").clone();
 new_new.addClass("comment_reply");
 new_new.hide();
 $this.parent().addClass("replying_to");
-$(".added-info").fadeTo(2000,0.6);
-$this.parent().parent().addClass("active");
-$(".comment_wrapper").each(function(){
-if (!$(this).hasClass("active") && $(this).position().top>$this.parent().parent().position().top){
-$(this).animate({top:"+=150px",opacity:0.6},2000)
+$(".added-info").fadeTo(1000,0.6);
+$this.parent().addClass("active");
+$(".comment_wrapper").each(function(index,value){
+if (!$(value).hasClass("active") && $(value).offset().top>$this.parent().offset().top){
+$(value).animate({top:"+=150px",opacity:0.6},1500)
 }
 });
-new_new.insertAfter($this.parent().parent());
-new_new.fadeIn(2000);
+new_new.insertAfter($this.parent());
+new_new.fadeIn(1500);
 new_new.css({position:"absolute",right:"200px"});
 }else{
-	$(".comment_wrapper").each(function(){
-if (!$(this).hasClass("active")&& $(this).position().top>$this.parent().parent().position().top){
-$(this).animate({top:"-=150px",opacity:1},2000)
+	$(".comment_wrapper").each(function(index, value){
+if (!$(value).hasClass("active")&& $(value).offset().top>$this.parent().offset().top){
+$(value).animate({top:"-=150px",opacity:1},1500)
 }
 });
+	console.log("hiyo")
 	$this.parent().removeClass("replying_to");
-$this.parent().parent().removeClass("active");
-$(".added-info").fadeTo(2000,1);
-$(".comment_reply").fadeOut(1500);
+$this.parent().removeClass("active");
+$(".added-info").fadeTo(1000,1);
+$(".comment_reply").fadeOut(1000);
+setTimeout(function(){$(".comment_reply").remove();},1001);
 }
 });
 //add feature later of hiding comment when meds reach low levels
-comment_hide();
+//comment_hide(); refine for later
 function comment_hide(){
-$.each($(".comment[data-hide=true]"),function(index, value){
+$.each($(".comment_wrapper[data-hide=true]"),function(index, value){
 $(value).addClass("hidden");
 
 $(value).parent().fadeTo("fast",0.8);
 $(value).attr("data-height",$(value).height());
 $(value).children().hide();
-$(value).find("#whiteout").show();
 var offensive=$(document.createElement('i'));
 offensive.addClass("offense-statement");
 offensive.text("This comment has been deemed unnecessary")
@@ -784,7 +1009,7 @@ chevron.addClass("down-hide");
 chevron.prependTo($(value));
 });
 }
-$(".comment .down-hide").on("click",function(){
+$(".comment_wrapper .down-hide").on("click",function(){
 $this=$(this);
 var comment=$this.parent();
 if(comment.hasClass("hidden")){//slidedown animation
@@ -867,18 +1092,29 @@ $this=$(this);
   	});
 });
 //if overflow of medchannels
+channel_overflow();
+function channel_overflow(){
+
 $("ul.channels").each(function(index,value){
 if ($(value).children().length>5){
-	$(value).parent().find(".onav_left").show();
-$(value).parent().find(".onav_right").show();
+	$(value).parent().find(".onav_left").show().removeClass("hide");
+$(value).parent().find(".onav_right").show().removeClass("hide");
 }
 });
-
+}
 $(".onav_left").on("click",function(){
 console.log("yo");
 });
 $(".onav_right").on("click",function(){
 
 });
-/*$('.medchannels-box').jScrollPane();*/
+
+$(window).trigger("resize");//once per refresh
+$(window).resize(function() {
+  var off0=$("#sidebar").offset();
+  var off1=$(".medfeed_box").offset();
+  (off0.left+$("#sidebar").width())>off1.left?$("#sidebar").fadeOut(1000):$("#sidebar").fadeIn(1000);
+});
+//edit
+$('.subscribed_channels').jScrollPane();
 /*medplus acc added functionality*/
