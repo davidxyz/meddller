@@ -15,7 +15,17 @@ return urlx;
 console.log("host: "+host+" "+"url: "+url+"is abs");
 //else
 return url;
+}/*
+if($(".post").length>0){
+	post_images_drag_resize();
 }
+function post_images_drag_resize(){
+	var image=$(".post .preview_image img");
+	var parent=image.parent();
+	image.resizable();
+
+	parent.draggable();
+}*///no idea what the fuck im doing
 var DateHelper = {
   // Takes the format of "Jan 15, 2007 15:45:00 GMT" and converts it to a relative time
   // Ruby strftime: %b %d, %Y %H:%M:%S GMT
@@ -101,13 +111,26 @@ function addMask(thing,classname){
 
 }
 //doesnt reutrn anything and is all side effects
-function constructPosts(posts,medfeed_container,channelz,current_users,names,comments,reposts,add){//takes a posts array, helpers with other shite, and a medfeed container, or whether we should apped to medfeed or switch
+function constructPosts(posts,medfeed_container,channelz,current_users,names,comments,reposts,height,add){//takes a posts array, helpers with other shite, and a medfeed container, or whether we should apped to medfeed or switch
 	add = typeof add !== 'undefined'? add : false;//makeshift default arg-if nil then false we switch out the medfeed container
 	if(!add){
 		medfeed_container.children().remove();
+		medfeed_container.parent().height(height);
+	}else{
+		medfeed_container.parent().height(medfeed_container.parent().height()+height);
 	}
+	if(posts.length==0){
+		if(medfeed_container.find(".nothing").length<1){
+
+		}else{
+			var nothing=$(document.createElement('div'));
+				nothing.addClass("nothing");
+
+			medfeed_container.append()
+		}
+	}
+
 	posts.forEach(function(post,index){//should add templating just incase we find another and if we dont find we resort ot the posts.each
-	var post_wrapper=$(document.createElement('div'));
 	var user=$(document.createElement('span'));
 	var user_link=$(document.createElement('a'));
 	var user_image=$(document.createElement('img'));
@@ -120,18 +143,17 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 	var opt_link2=$(document.createElement('div'));var num2=$(document.createElement('span'));
 	var channels=$(document.createElement('ul'));channels.addClass("channels");//need to add the channels
 	var clear_div=$(document.createElement('div'));clear_div.css({clear:"both"});
-	post_wrapper.addClass("post_wrapper");
 	user.addClass("user_image");
 	user_image.appendTo(user_link);
 	user_link.appendTo(user);
-	user.appendTo(post_wrapper);
+	user.appendTo(inside_post);
 	name.appendTo(user_image);
 	user.append(name);
-	user_image.attr("src","/assets/anon.png");//fix
+	user_image.attr("src","/assets/anon.png");//fix to user_img
 	user_image.attr("width","25px");user_image.attr("height","25px");
-	user_link.attr("src","/users/"+"fag");//fix
+	user_link.attr("href","/users/"+names[index]);
+	user_image.attr("data-title",post.user_id);//fix
 	timestamp.addClass("timestamp");
-	inside_post.appendTo(post_wrapper);
 	inside_post.attr("id",post.id);
 	inside_post.addClass("post");inside_post.addClass(post.medtype);
 	title.addClass("title");
@@ -217,16 +239,16 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 		content.addClass("content");
 		inside_post.append(content);
 		content.text(post.content);
+		inside_post.append(clear_div);
 	}else if(post.medtype=="image_post"){
 		var preview=$(document.createElement('span'));
-		preview.addClass("preview");
+		preview.addClass("preview_image");
 		var preview_img=$(document.createElement('img'));
 		inside_post.append(preview);
 		preview.append(preview_img);
 		preview_img.attr("src",post.image.thumb.url);
 	}
-	inside_post.append(clear_div);
-	medfeed_container.append(post_wrapper);
+	medfeed_container.append(inside_post);
 	});
 
 }
@@ -473,6 +495,7 @@ $.ajax({
   		});},1000);
 }
 });
+/*when i get this to works
 $('.form_title').on('blur',function(){
 var title_message=$('.title_message p');
 $this=$(this);
@@ -490,7 +513,7 @@ setTimeout( function(){
 	}
 },1000);
 
-});
+});*/
 $("[title]").each(function(index,value){
 $(value).attr('data-title',$(value).attr('title'));
 $(value).removeAttr('title');
@@ -727,7 +750,9 @@ switch (event.which) {
 });
 
 //tabs:
-$(".hnav_right").on("click",function(){
+/*
+$(".hnav_right").on("click",function(e){
+	e.preventDefault();
 	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header .text");
 	var feeds=$(".medfeed_container");
@@ -780,7 +805,7 @@ $.ajax({
   		url: url,
   		data: {},}).done(function(response){
   			console.log(response);
-  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,false);
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,response.feed_height,false);
   		});
 //limbo
 feeds.animate({left:"+=200px",opacity: "0"},"slow");
@@ -797,6 +822,7 @@ if($(".header > .text").text()=="Hall Of Fame"){
 	$(".hnav_right").hide();
 }
 $(".hnav_left").on("click",function(){
+	e.preventDefault();
 	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header > .text");
 var feeds=$(".medfeed_container");
@@ -848,7 +874,7 @@ $.ajax({
 		dataType: "json",
   		url: url,
   		data: {},}).done(function(response){
-  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,false);
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,response.feed_height,false);
   		console.log(response);
   		});
 feeds.animate({left:"-=200px",opacity: "0"},"slow");
@@ -858,7 +884,7 @@ feeds.animate({left:"-=400px",opacity: "1"},"slow");
 textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
-});
+});*/
 //dialog function that goes in the middle of the screen and then times out
 function dialog(message,body){
 	var dialog=$(document.createElement('div'));
@@ -1026,13 +1052,17 @@ comment_hide();
 }
 });
 //paginator for medfeed
+/*
 if($(".medfeed_box").length!=0){
 	var feed_box=$(".medfeed_box");
 feed_box.data("page",1);
 $(window).scroll(function() {
    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+   	var name=$("#name_of_channel").text();
+       if(name.length<1){return false;}
+   	var feeds=$(".medfeed_container");
        $("img.paginating_gif").show();
-       var name=$("#name_of_channel").text();
+
        var medchannel="Medfeed";
        var url="/";//default home
       
@@ -1068,10 +1098,12 @@ $(window).scroll(function() {
   		url: url,
   		data: {page:$(".medfeed_box").data("page")},}).done(function(response){
   		console.log(response.feed);//<-more feed
+  		setTimeout(function(){ constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,true);},400);
+  		$("img.paginating_gif").fadeOut(1000);
   		});
    }
 });
-}
+}*/
 $(".sub-btn").on("click",function(event){//buggy in that doesnt display ui as nice
 event.preventDefault();
 $this=$(this);
@@ -1108,13 +1140,14 @@ console.log("yo");
 $(".onav_right").on("click",function(){
 
 });
-
+if($("#sidebar").length>0){
 $(window).trigger("resize");//once per refresh
 $(window).resize(function() {
   var off0=$("#sidebar").offset();
   var off1=$(".medfeed_box").offset();
   (off0.left+$("#sidebar").width())>off1.left?$("#sidebar").fadeOut(1000):$("#sidebar").fadeIn(1000);
 });
+}
 //edit
 $('.subscribed_channels').jScrollPane();
 /*medplus acc added functionality*/

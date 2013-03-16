@@ -44,6 +44,13 @@ class Micropost < ActiveRecord::Base
   end
   #takes the user, takes the channel the user is currently in and the popularity
   #and returns a feed ordered by the meds
+   def next#should refine to model it out of users feed
+    Micropost.where("id > ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id DESC").first
+  end
+
+  def prev#should refine to model it out of users feed
+    Micropost.where("id < ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id ASC").first
+  end
   def self.calculate_feed(user,medchannel,popularity,default=false)
     microposts=[]
     id=[]

@@ -2,11 +2,15 @@ class StaticPagesController < ApplicationController
   def home#aka popular posts
     if signed_in?
     # dont need @micropost =current_user.microposts.build
-    @feed_items = Micropost.default_feed.paginate(page: params[:page])
+   result=determine_pagination(Micropost.default_feed,if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @feed_items =result[:feed]
+   @medfeed_height=result[:medfeed_height]
     @name="Medfeed"
     @orig="Medfeed"
     else
-      @feed_items=Micropost.default_feed.paginate(page: params[:page])
+    result=determine_pagination(Micropost.default_feed,if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @feed_items =result[:feed]
+   @medfeed_height=result[:medfeed_height]
     @name="Medfeed"
     @orig="Medfeed"
     end
@@ -25,14 +29,15 @@ class StaticPagesController < ApplicationController
           @comment_nums<<x.comment_threads.count
           @repost_nums<<x.reposters.count
         }
-      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html
+      format.html{render "home",:locals => { :@feed_items => @feed_items}}
       end
   end
   def hall_of_fame# best posts of all time
 #self.calculate_feed(user,medchannel,popularity,default=false)
-    @feed_items = Micropost.calculate_feed(nil,nil,:hall_of_fame,nil).paginate(page: params[:page])
+    result=determine_pagination(Micropost.calculate_feed(nil,nil,:hall_of_fame,nil),if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @medfeed_height=result[:medfeed_height]
      @name="Hall Of Fame"
      @orig="Medfeed"
       respond_to do |format|
@@ -50,16 +55,17 @@ class StaticPagesController < ApplicationController
           @comment_nums<<x.comment_threads.count
           @repost_nums<<x.reposters.count
         }
-      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html
+      format.html{render "home",:locals => { :@feed_items => @feed_items}}
       end
   end
   
   def risingposts# rising posts in algorithm
-   @feed_items = Micropost.calculate_feed(current_user,nil,:rising)
+   result=determine_pagination(Micropost.calculate_feed(current_user,nil,:rising),if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @feed_items =result[:feed]
+   @medfeed_height=result[:medfeed_height]
     @name="Trending"
-
     @orig="Medfeed"
       respond_to do |format|
      format.json {
@@ -76,13 +82,15 @@ class StaticPagesController < ApplicationController
           @comment_nums<<x.comment_threads.count
           @repost_nums<<x.reposters.count
         }
-      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html
+      format.html{render "home",:locals => { :@feed_items => @feed_items}}
       end
   end
   def newposts# newest posts in last 5 hours
-      @feed_items = Micropost.calculate_feed(current_user,nil,:new)
+      result=determine_pagination(Micropost.calculate_feed(current_user,nil,:new),if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @feed_items =result[:feed]
+   @medfeed_height=result[:medfeed_height]
       @name="New"
       @orig="Medfeed"
       respond_to do |format|
@@ -100,10 +108,11 @@ class StaticPagesController < ApplicationController
           @comment_nums<<x.comment_threads.count
           @repost_nums<<x.reposters.count
         }
-      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums}
+      render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html
+      format.html{render "home",:locals => { :@feed_items => @feed_items}}
       end
+
   end
   def help
   end

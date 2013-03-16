@@ -1,7 +1,7 @@
 <%provide(:title, @micropost.title)%>
 <%provide(:page_size, "large2")%>
 
-<div id="<%=@micropost.id%>"class="micropost_show ">
+<div id="<%=@micropost.id%>"class="micropost_show <%=@micropost.medtype%>">
 
 	<div class="author"><%= link_to image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author"), site('/users/'+@micropost.user.name)%><div><%=@micropost.user.name%></div></div>
 <%if @micropost.medtype=="self_post"%>
@@ -26,18 +26,19 @@
 		<span class="timestamp">Posted <%=time_ago_in_words(@micropost.created_at)%> ago.</span>
 		<div style="clear: both"></div>	
 <%elsif @micropost.medtype=="image_post"%>
-	<span class="preview"><%=link_to image_tag @micropost.image_url(:thumb) if @micropost.image?%></span>
+	<div class="preview_image"><%=link_to image_tag(@micropost.image_url(:thumb))%></div>
 
 	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
 		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
 		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
 		<%end%></span></span>
 	
-		<span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
+		<div class="options"><span  href="<%='microposts/'+@micropost.id.to_s%>"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
 		<span class="meds"><%=@micropost.meds%></span>
 		</span>
-		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span>
+		<span class="repost"><span class="number"><%=@micropost.reposters.count%></span></span></div>
+		<div style="clear:both"></div>
 		<ul class="channels">
 		<%@micropost.channels.each do |channel|%>
 		<li class="channel-cont"><a href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
@@ -69,10 +70,10 @@
 
 <div class="medchannel-info"></div>
 <div class="related"></div>
-<a href="#" class="mnav_right"><i class="icon-white icon-chevron-right"></i></a>
-<a href="#" class="mnav_left"><i class="icon-white icon-chevron-left"></i></a>
+<a href="<%=if @micropost.next.nil? then "hide"else '/microposts/'+@micropost.next.id.to_s end%>" class="mnav_right"><i class="icon-white icon-chevron-right"></i></a>
+<a href="<%=if @micropost.prev.nil? then "hide"else '/microposts/'+@micropost.prev.id.to_s end%>" class="mnav_left"><i class="icon-white icon-chevron-left"></i></a>
 
-<div class="mid_page">
+<div class="mid_page <%=@micropost.medtype%>">
 	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">
 			<%if signed_in?%>
 				<%= render 'comments/form'%>

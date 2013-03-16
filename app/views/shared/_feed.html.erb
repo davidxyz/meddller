@@ -1,9 +1,9 @@
-<div class="medfeed_box">
+<div class="medfeed_box" style="height:<%=@medfeed_height.to_s+'px'%>;">
 		<div class="header">
 			<span class="text"><%=@name%></span>
 			<%unless @controller=="users_show"%>
-			<span class="hnav_left"><i class="icon-white icon-chevron-left"></i></span>
-			<span class="hnav_right"><i class="icon-white icon-chevron-right"></i></span>
+			<a class="hnav_left" rel="<%=prev_one(@name,@orig,true)%>" href="<%=prev_one(@name,@orig)%>"><i class="icon-white icon-chevron-left"></i></a>
+			<a class="hnav_right" rel="<%=next_one(@name,@orig,true)%>" href="<%=next_one(@name,@orig)%>"><i class="icon-white icon-chevron-right"></i></a>
 			<%end%>
 </div>
 <div class="feed_helper hide"><!-- give user options to bring it out if they want-->
@@ -14,16 +14,17 @@
 	<div class="close">X</div>
 </div>
 <%=image_tag "ajax-loader.gif",width:25,height:25, class: "hide paginating_gif"%>
-<div class="medfeed_container">
+<div class="medfeed_container ">
 <% if @feed_items.any?%>
 		<%@feed_items.each do |feed_item|%>
 
 		<%= render partial: 'shared/feed_item',:locals => { :feed_item => feed_item }%>
 
 		<%end%>
-		<%= will_paginate @feed_items%>
 		<%else%>
-		<div class="nothing"></div>
+		<div class="nothing">*Crickets*</div>
 		<%end%>
 	</div>
+	<div style="clear:both"></div>
+	<%= will_paginate @feed_items%>
 </div>

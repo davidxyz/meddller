@@ -108,12 +108,11 @@ class MicropostsController < ApplicationController
     @medchannel=Medchannel.create(name: params[:micropost][:medchannel]) if @medchannel.nil?
     @micropost=params[:micropost].except(:medchannel)
     @micropost =current_user.microposts.build(@micropost)
-    if @micropost.save and @medchannel.save
+    if @micropost.save
       current_user.repost!(@medchannel,@micropost)
       flash[:success]= "Micropost created!"
       redirect_to root_path
     else
-      # dont need @feed_items=[]
       render 'new'
     end
   end
