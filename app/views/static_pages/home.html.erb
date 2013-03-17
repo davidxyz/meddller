@@ -1,5 +1,5 @@
 
-<%provide(:title,'See what people are posting')%>
+<%provide(:title,'see what\' popular on meddler')%>
 
 <!-- Micropost feed-->
 	<div id="name_of_channel"class="hide"><%=@orig%></div>
@@ -11,12 +11,12 @@
 	
 		<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
 		<div class="divider"></div>
+		<div class="header">Medchannels</div>
 		<div class="subscribed_channels">
-			<div class="header">Medchannels</div>
 			<%if current_user.medchannels.any?%>
 			<ul class="channels">
 				<%current_user.medchannels.each do |medchannel|%>
-				<li><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li>
+				<a href="<%='/medchannel/'+medchannel.name%>"><li><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li></a>
 				<%end%>				
 			</ul>
 			<%end%>

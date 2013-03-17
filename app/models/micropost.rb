@@ -64,7 +64,7 @@ class Micropost < ActiveRecord::Base
     microposts.flatten.each{|post| id<<post.id}
     case popularity
     when :popular
-      microposts=Micropost.where(:id=>id,:created_at => (1.days.ago.to_date)..(12.hours.ago.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
+      microposts=Micropost.where(:id=>id,:created_at => (31.days.ago.to_date)..(12.hours.ago.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
     when :rising
     microposts=Micropost.where(:id=>id,:created_at => (12.hours.ago.to_date)..(4.hours.ago.to_date),:medtype=>['image_post','link_post','self_post']).order("meds DESC")
     when :new

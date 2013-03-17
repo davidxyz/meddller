@@ -33,10 +33,10 @@ include CarrierWave::MiniMagick
   #def scale(width, height)
      # do something
    #end
-
+  process :resize_to_fit => [180, 80]
   # Create different versions of your uploaded files:
    version :thumb do
-     process :resize_to_fit => [180, 80]
+     process :resize_to_fit => [150, 60]
    end
 
   # Add a white list of extensions which are allowed to be uploaded.

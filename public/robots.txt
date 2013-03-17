@@ -3,3 +3,12 @@
 # To ban all spiders from the entire site uncomment the next two lines:
 # User-Agent: *
 # Disallow: /
+# 80legs
+
+User-Agent: *
+Disallow: /signin
+Disallow: /signout
+Disallow: /commands/*
+Disallow: /submit*
+Disallow: /GodCommands/*
+Allow: /

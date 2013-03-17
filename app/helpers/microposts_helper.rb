@@ -10,15 +10,15 @@ module MicropostsHelper
     body.gsub!(/<([a-z_]+)>/,'<a href="/users/\1">\1</a>')
     sanitize(raw(body.gsub(/\*([a-z_]+)\*/,'<a href="/medchannel/\1">\1</a>')))
   end
-  def determine_pagination(feed,page,per_page=7,min_height=200)#returns the paginated feed and the size of the body and medfeed
+  def determine_pagination(feed,page,per_page=7,min_height=300)#returns the paginated feed and the size of the body and medfeed
     counters=0
     feed[((page-1)*per_page)...(page*per_page)].each{|x|
       if x.medtype=="image_post"
         counters+=430
       elsif x.medtype=="self_post"
-        counters+=((x.content.length/65).ceil*70+220)
+        counters+=((x.content.length/60).ceil*50+150)
       elsif x.medtype=="link_post"
-        counters+=250
+        counters+=300
       end
     }
     result={feed:feed.paginate(page:page,per_page: per_page),medfeed_height: if counters<min_height then min_height else counters end}
@@ -44,11 +44,11 @@ when "Trending"
 when "New"
   url="/m/"+orig
  when orig
-  url="/m"+orig+"/rising"
+  url="/m/"+orig+"/rising"
 else
   url="/m/"+orig
 end
-return url[(2+orig)...url.size] if rel
+return url[(2+orig.size)...url.size] if rel
 end
 url
   end
@@ -72,13 +72,13 @@ case name
 when "Trending"
   url="/m/"+orig
 when "New"
-  url="/m"+orig+"/rising"
+  url="/m/"+orig+"/rising"
  when orig
   url="/m/"+orig+"/new"
 else
   url="/m/"+orig
 end
-return url[(2+orig)...url.size] if rel
+return url[(2+orig.size)...url.size] if rel
 end
 url
   end

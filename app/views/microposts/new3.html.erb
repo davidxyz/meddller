@@ -9,7 +9,7 @@
 		<div id="mask"></div>
 </div> 
 <section class="micropost_form alone dropbox">
-	<div class="title_message"><img src=""><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img1")%><p></p></div>
+	<div class="title_message"><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img1")%><p></p></div>
 <%= form_for(@micropost) do |f|%>
 	<div class="field">
 		<%= render 'shared/error_messages', object: f.object%>

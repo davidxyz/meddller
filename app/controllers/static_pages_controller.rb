@@ -1,19 +1,10 @@
 class StaticPagesController < ApplicationController
   def home#aka popular posts
-    if signed_in?
-    # dont need @micropost =current_user.microposts.build
-   result=determine_pagination(Micropost.default_feed,if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
-   @feed_items =result[:feed]
-   @medfeed_height=result[:medfeed_height]
-    @name="Medfeed"
-    @orig="Medfeed"
-    else
     result=determine_pagination(Micropost.default_feed,if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
    @feed_items =result[:feed]
    @medfeed_height=result[:medfeed_height]
     @name="Medfeed"
     @orig="Medfeed"
-    end
       respond_to do |format|
      format.json {
         @channels=[]
@@ -31,7 +22,7 @@ class StaticPagesController < ApplicationController
         }
       render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html{render "home",:locals => { :@feed_items => @feed_items}}
+      format.html{render "home",:locals => { :@feed_items => @feed_items,:@name=>@name,:@medfeed_height=>@medfeed_height,:@orig=>@orig}}
       end
   end
   def hall_of_fame# best posts of all time
@@ -57,7 +48,7 @@ class StaticPagesController < ApplicationController
         }
       render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html{render "home",:locals => { :@feed_items => @feed_items}}
+      format.html{render "home",:locals => { :@feed_items => @feed_items,:@name=>@name,:@medfeed_height=>@medfeed_height,:@orig=>@orig}}
       end
   end
   
@@ -84,7 +75,7 @@ class StaticPagesController < ApplicationController
         }
       render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html{render "home",:locals => { :@feed_items => @feed_items}}
+      format.html{render "home",:locals => { :@feed_items => @feed_items,:@name=>@name,:@medfeed_height=>@medfeed_height,:@orig=>@orig}}
       end
   end
   def newposts# newest posts in last 5 hours
@@ -110,9 +101,8 @@ class StaticPagesController < ApplicationController
         }
       render :json => { :feed=>@feed_items,:channels=>@channels,:current_users=>@current_users,:names=>@names,:comments=>@comment_nums,:reposts=>@repost_nums,:feed_height=>@medfeed_height}
       }
-      format.html{render "home",:locals => { :@feed_items => @feed_items}}
+      format.html{render "home",:locals => { :@feed_items => @feed_items,:@name=>@name,:@medfeed_height=>@medfeed_height,:@orig=>@orig}}
       end
-
   end
   def help
   end

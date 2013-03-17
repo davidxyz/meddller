@@ -16,7 +16,7 @@ SampleApp::Application.routes.draw do
   match '/AskTheMedTeam', to: 'static_pages#ask'
   match '/users/:name'=> 'users#show',:name => /[a-z0-9_]+/i
   match '/users/:id/edit'=> 'users#edit'
-  match 'GodCommands/index', to: 'Users#index'
+  match '/GodCommands/index_that_shit', to: 'Users#index'
   match '/signup', to: 'users#new'
   match '/submit', to: 'microposts#new'
   match '/submit2', to: 'microposts#new2'

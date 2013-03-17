@@ -130,6 +130,12 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 		}
 	}
 
+	if(posts.length<1){//if no posts
+		var nothing=$(document.createElement('div'));
+		nothing.addClass("nothing");
+		nothing.appendTo(medfeed_container);
+		return false;
+	}
 	posts.forEach(function(post,index){//should add templating just incase we find another and if we dont find we resort ot the posts.each
 	var user=$(document.createElement('span'));
 	var user_link=$(document.createElement('a'));
@@ -750,13 +756,14 @@ switch (event.which) {
 });
 
 //tabs:
-/*
+
 $(".hnav_right").on("click",function(e){
+$this=$(this);
+$this.removeAttr("href");
 	e.preventDefault();
 	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header .text");
 	var feeds=$(".medfeed_container");
-$this=$(this);
 if($this.hasClass("not_done")){return false;}
 
 var original=$("#name_of_channel").text();
@@ -822,11 +829,12 @@ if($(".header > .text").text()=="Hall Of Fame"){
 	$(".hnav_right").hide();
 }
 $(".hnav_left").on("click",function(){
+	$this=$(this);
+	$this.removeAttr("href");
 	e.preventDefault();
 	$(".medfeed_box").data("page",1);//reset the page
 	var textx=$(".header > .text");
 var feeds=$(".medfeed_container");
-$this=$(this);
 var original=$("#name_of_channel").text();
 if($this.hasClass("not_done")){return false;}
 
@@ -884,7 +892,7 @@ feeds.animate({left:"-=400px",opacity: "1"},"slow");
 textx.animate({left:"-=350px",opacity: "1"}
 	, {duration: "slow",
 	complete:  function() { $this.removeClass("not_done");} });
-});*/
+});
 //dialog function that goes in the middle of the screen and then times out
 function dialog(message,body){
 	var dialog=$(document.createElement('div'));

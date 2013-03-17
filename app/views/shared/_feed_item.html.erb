@@ -4,7 +4,7 @@
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" data-signed-in="<%=signed_in?%>" >
 	<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 25, height:25, title: feed_item.user.name,alt:"user image"),site('/users/'+feed_item.user.name)%><div><%=feed_item.user.name%></div></span>
 
-	<span class="preview"><%=link_to image_tag(feed_item.preview_url,width: 65, height:85),feed_item.urls%></span>
+	<span class="preview"><%=link_to image_tag(feed_item.preview_url,width: 65, height:85,alt:feed_item.title),feed_item.urls%></span>
 
 	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", feed_item)%><%else%><%=link_to( feed_item.title, feed_item)%><%end%><% if current_user?(feed_item.user)%><%=image_tag("options.png",width: 25, height:25,alt:"user options", class: "user-options")%><span class="settings hide">
 		<i class="icon-white icon-wrench icon-2x"></i>
@@ -34,7 +34,7 @@
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
 	<span class="user_image"><%=link_to image_tag(feed_item.user.image_url,width: 25, height:25, title: feed_item.user.name,alt:"user image"),site('/users/'+feed_item.user.name)%><div><%=feed_item.user.name%></div></span>
 
-	<div class="preview_image" style="display:inline-block"><%=image_tag(feed_item.image_url(:thumb)) %></div>
+	<div class="preview_image" style="display:inline-block"><%=image_tag(feed_item.image_url(:thumb),alt:feed_item.title) %></div>
 
 	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", feed_item)%><%else%><%=link_to( feed_item.title, feed_item)%><%end%><%if current_user?(feed_item.user)%><%=image_tag("options.png",width: 25, height:25, alt:"user options",class: "user-options")%><span class="settings hide ">
 		<i class="icon-white icon-wrench icon-2x"></i>
@@ -52,7 +52,7 @@
 		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div>
 		<ul class="channels">
 		<%feed_item.channels.each do |channel|%>
-		<li class="channel-cont"><a rel="<%=channel%>" href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
+		<li class="channel-cont"><a rel="<%=channel.name%>" href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
 		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>		

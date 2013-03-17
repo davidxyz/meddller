@@ -12,9 +12,16 @@ class UsersController < ApplicationController
   def show
     @user=User.find_by_name(params[:name]) unless params[:name].nil?
     @user=User.find(params[:id]) unless params[:id].nil?
-    @microposts = @user.microposts.paginate(page: params[:page])
-    @followeds=@user.followed_users.paginate(page: params[:page])
-    @followers=@user.followers.paginate(page: params[:page])
+    begin#no method error
+    @name=@user.name
+    rescue
+      not_found
+    end
+    @followeds=@user.followed_users
+    @followers=@user.followers
+    result=determine_pagination(@user.microposts,if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
+   @microposts =result[:feed]
+   @medfeed_height=result[:medfeed_height]
   end
   def no_other_users#check to see if there are no other users with your name ajax
     user=User.find_by_name(params[:name])
