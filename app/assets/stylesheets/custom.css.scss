@@ -1338,8 +1338,11 @@ padding: 0 4px 0 4px;
 }
 }
 /*help*/
+#part1{
+margin: 30px;
+}
 #part2{
-margin: 20px;
+  margin: 50px;
 }
 .divider-x{
   position:absolute;
@@ -2922,9 +2925,7 @@ text-align: center;
 background-color: #FF8EA1;
 color:#E70027;
 }
-.error{
-background-color: #ee5f5b;
-}
+
 .success{
 background-color:#5bc0de;
 }
@@ -3124,4 +3125,23 @@ color:#b94a48;
   left:0px;
   text-align: center;
   width:100%;
+}
+
+.alert-error{
+   position: absolute;
+  top:0px;
+  left:0px;
+  text-align: center;
+  width:100%;
+}
+.error{
+  background-image:url("cross.png");
+  background-repeat: no-repeat;
+  background-size: 35px 29px;
+  background-position: left;
+  padding: 10px 0 10px 40px;
+font-size: 1.1em;
+color: #333;
+font-weight: bold;
+
 }

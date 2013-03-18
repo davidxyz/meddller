@@ -334,6 +334,7 @@ if(e.type=="keypress" && e.which==13){
 $('#urls').on('blur',function(){
 var url_message=$('.url_message p');
 $this=$('#urls');
+$(".error").remove();
 var img=$(".v_img");
 if(!img.hasClass("hide")){img.attr("src","/assets/ajax-loader.gif");}
 img.removeClass("hide");
@@ -440,6 +441,7 @@ $(document).on('click',".nav_right",function(event){
 //checks to see if the name and email are already taken using ajax
 $('form#new_user input').on('blur',function(){
 	$this=$(this);
+	$(".error").remove();
 if($this.attr("name")=="user[name]"){
 	$(".wrong-info").remove();
 var img=$(document.createElement('img'));
@@ -501,7 +503,7 @@ $.ajax({
   		});},1000);
 }
 });
-/*when i get this to works
+
 $('.form_title').on('blur',function(){
 var title_message=$('.title_message p');
 $this=$(this);
@@ -519,7 +521,7 @@ setTimeout( function(){
 	}
 },1000);
 
-});*/
+});
 $("[title]").each(function(index,value){
 $(value).attr('data-title',$(value).attr('title'));
 $(value).removeAttr('title');

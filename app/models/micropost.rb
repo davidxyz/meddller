@@ -117,7 +117,10 @@ class Micropost < ActiveRecord::Base
     end
     unless medtype=="self_post" or medtype=="desc"
     errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
-    errors[:base]<<("Woah your title is way too long") if title.length >100
+    errors[:base]<<("Woah your title is way too long") if title.length >90
+    matchdata=/[a-zA-z0-9\s]+/.match(title)
+    matchdata=matchdata[0] unless matchdata.nil?
+    errors[:base]<<("try to use words only in your title") unless matchdata==title
     end
     unless medtype=="desc"
        errors[:base]<<("uhh, login first?") if user_id.nil? 
@@ -125,7 +128,7 @@ class Micropost < ActiveRecord::Base
   end
   def create_preview
     if medtype=="link_post"
-      unless preview_url.nil?
+      unless preview_url.empty?
         return preview_url
       end
       doc = Nokogiri::HTML(open(urls))

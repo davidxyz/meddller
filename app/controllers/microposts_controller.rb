@@ -94,7 +94,10 @@ class MicropostsController < ApplicationController
   end
   def show
     @micropost=Micropost.find(params[:id])
+    not_found if @micropost.nil?
     @comments=@micropost.comment_threads.paginate(page: params[:page])
+    @next=@micropost.next
+    @prev=@micropost.prev
     if signed_in? 
     @comment=Comment.build_from( @micropost, current_user.id, " " )
     @timeleft=user_time_left
@@ -104,11 +107,11 @@ class MicropostsController < ApplicationController
     end
   end
   def create
-    @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel])
-    @medchannel=Medchannel.create(name: params[:micropost][:medchannel]) if @medchannel.nil?
     @micropost=params[:micropost].except(:medchannel)
     @micropost =current_user.microposts.build(@micropost)
     if @micropost.save
+      @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel]) 
+      @medchannel=Medchannel.create(name: params[:micropost][:medchannel]) if @medchannel.nil?
       current_user.repost!(@medchannel,@micropost)
       flash[:success]= "Micropost created!"
       redirect_to root_path

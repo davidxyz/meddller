@@ -70,13 +70,13 @@
 
 <div class="medchannel-info"></div>
 <div class="related"></div>
-<a href="<%=if @micropost.next.nil? then "hide"else '/microposts/'+@micropost.next.id.to_s end%>" class="mnav_right"><i class="icon-white icon-chevron-right"></i></a>
-<a href="<%=if @micropost.prev.nil? then "hide"else '/microposts/'+@micropost.prev.id.to_s end%>" class="mnav_left"><i class="icon-white icon-chevron-left"></i></a>
+<a href="<%=if @next.nil? then "hide"else '/posts/'+@next.id.to_s+'/'+ if !@next.title.nil? then urlify(@next.title) else 'medpost' end end%>" class="mnav_right"><i class="icon-white icon-chevron-right"></i></a>
+<a href="<%=if @prev.nil? then "hide"else '/posts/'+@prev.id.to_s+'/'+ if !@prev.title.nil? then urlify(@prev.title) else 'medpost' end end%>" class="mnav_left"><i class="icon-white icon-chevron-left"></i></a>
 
 <div class="mid_page <%=@micropost.medtype%>">
 	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">
 			<%if signed_in?%>
-				<%= render 'comments/form'%>
+				<%=render 'comments/form'%>
 			<%else%>
 			<div class="signin-notice"><h2>You need to signin to comment <a href="<%=signin_path%>" class="signin"> sign in</a><h2></div>
 			<%end%>
@@ -86,7 +86,7 @@
 		<div class="comments_helper"></div>
 		<%if @comments.any?%>
 		<div class="added-info"><div class="meddals"><div><%= image_tag("user_images/topcomment.png",width:55, height:55,:data=>{desc:"awarded to those who are on top"})%><span><%=@micropost.top_comment.user.name%></span></div>
-		<div><%= image_tag("user_images/mostreplied.png",width:55, height:55,:data=>{desc:"awarded to those who garner the most reponses from their peers"})%><span><%=@micropost.most_replied.user.name%></span></div></div>
+		<div><%=image_tag("user_images/mostreplied.png",width:55, height:55,:data=>{desc:"awarded to those who garner the most reponses from their peers"})%><span><%=@micropost.most_replied.user.name%></span></div></div>
 		</div>
 			<ol class="comments">
 				<%= render partial: 'comments/comments', collection: @comments%>

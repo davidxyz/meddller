@@ -16,7 +16,7 @@
 		<%end%>
 	</span>
 	<span class="content hide"><%= feed_item.content%></span>
-		<div class="options"><a  rel="comments" href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
+		<div class="options"><a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
@@ -45,7 +45,7 @@
 		</span>
 		<%end%>
 	</span>
-		<a  rel="comments" href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
+		<a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>
@@ -70,7 +70,7 @@
 		<%end%>
 	</span>
 	<p class="content "><%=parseShit(feed_item.content)%></p>
-		<div class="options"><a rel="comments" href="<%='http://'+request.host_with_port+'/microposts/'+feed_item.id.to_s%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
+		<div class="options"><a rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/medpost'%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</div>

@@ -2,7 +2,7 @@ SampleApp::Application.routes.draw do
   resources :users, only: [:destroy,:create]
   resources :sessions, only: [:new, :create, :destroy]
  # resources :microposts, only: [:create, :destroy]
- resources :microposts
+ resources :microposts, only: [:create,:destroy,:edit]
   resources :relationships, only: [:create, :destroy]
   resources :relationshipls, only: [:create, :destroy]
   resources :comments, only: [:destroy]
@@ -22,6 +22,7 @@ SampleApp::Application.routes.draw do
   match '/submit2', to: 'microposts#new2'
   match '/submit3', to: 'microposts#new3'
   match '/show_urls', to: 'microposts#show_urls'
+  match '/posts/:id/:name'=>'microposts#show',:name=>/[a-zA-z_0-9]+/i,:id=>/[0-9]+/
   match '/commands/inc', to: 'microposts#increment'
   match '/commands/inc_a_comment', to: 'comments#increment'
   match '/commands/create_a_comment', to: 'comments#create'

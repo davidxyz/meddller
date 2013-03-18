@@ -3,6 +3,9 @@ module MicropostsHelper
   def default_feed
     Micropost.select("*")
   end
+  def urlify(title)
+    URI::escape(title.split("").map{|x| if x=="\s" then "_" else x end}.join(""))
+  end
   def parseShit(body)
     #<User>
     #*medchannel*
