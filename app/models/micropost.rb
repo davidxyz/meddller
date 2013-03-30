@@ -51,6 +51,14 @@ class Micropost < ActiveRecord::Base
   def prev#should refine to model it out of users feed
     Micropost.where("id < ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id ASC").first
   end
+  def comments
+    comments=[]
+  self.root_comments.each{|x|
+    comments<<x
+    comments<<x.children
+  }
+  comments.flatten
+  end
   def self.calculate_feed(user,medchannel,popularity,default=false)
     microposts=[]
     id=[]

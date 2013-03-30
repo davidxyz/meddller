@@ -42,14 +42,15 @@ class CommentsController < ApplicationController
     else
        @comment= Comment.build_from(Comment.find(params[:parent_id]),current_user.id,params[:body]);
     end
+    @micropost=Micropost.find(params[:micropost_id])
     if @comment.save
       respond_to do |format|
-        format.html {redirect_to "microposts/"+params[:micropost_id].to_s}
+        format.html {redirect_to "/posts/"+@micropost.id.to_s+'/'+urlify(@micropost.title)}
         format.json {render :json => { valid: true }}
       end
     else
       respond_to do |format|
-        format.html {redirect_to "microposts/"+params[:micropost_id].to_s}
+        format.html {redirect_to "/posts/"+@micropost.id.to_s+'/'+urlify(@micropost.title)}
         format.json {render :json => { valid: true,error: errors[:base] }}
       end
     end

@@ -1,9 +1,10 @@
 class Comment < ActiveRecord::Base
   acts_as_nested_set :scope => [:commentable_id, :commentable_type]
 
-  validates :body, :length=>{minimum:4,maximum:400},:presence=>true
+  validates :body, :length=>{minimum:4,maximum:500},:presence=>true
   validates_presence_of :user
-
+has_many :reverse_relationshipls,foreign_key: "liked_id",foreign_key:"Comment",class_name:"Relationshipl", dependent: :destroy
+ has_many :likers, through: :reverse_relationshipls,source: :liker
   # NOTE: install the acts_as_votable plugin if you
   # want user to vote on the quality of comments.
   #acts_as_voteable

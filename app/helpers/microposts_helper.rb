@@ -4,14 +4,15 @@ module MicropostsHelper
     Micropost.select("*")
   end
   def urlify(title)
+    return "medpost" if title.nil? or title.empty?
     URI::escape(title.split("").map{|x| if x=="\s" then "_" else x end}.join(""))
   end
   def parseShit(body)
     #<User>
     #*medchannel*
     if (/<[a-z_]+>/=~body)==nil && (/\*[a-z_]+\*/=~body)==nil then return body end
-    body.gsub!(/<([a-z_]+)>/,'<a href="/users/\1">\1</a>')
-    sanitize(raw(body.gsub(/\*([a-z_]+)\*/,'<a href="/medchannel/\1">\1</a>')))
+    body.gsub!(/<([a-z_]+)>/,'<a class="user_link" href="/users/\1">\1</a>')
+    sanitize(raw(body.gsub(/\*([a-z_]+)\*/,'<a class="channel_link" href="/medchannel/\1">\1</a>')))
   end
   def determine_pagination(feed,page,per_page=7,min_height=300)#returns the paginated feed and the size of the body and medfeed
     counters=0

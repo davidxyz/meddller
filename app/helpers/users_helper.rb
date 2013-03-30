@@ -46,18 +46,19 @@ module UsersHelper
     meddals
   end
   def user_ready?
+   return false if current_user.nil?
+    if current_user.meds<10
     user_time_left==0
+    else
+      true
+    end
   end
   def user_time_left
-    begin
-    time=(Time.now-(current_user.comments.find(:first,order: "created_at DESC").created_at))
+    time=(Time.now-(current_user.comments.order("created_at DESC").first.created_at))
       if time<=60
         time
       else
         0
       end
-    rescue
-        0
-    end
   end
 end

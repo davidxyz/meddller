@@ -1,4 +1,4 @@
-<li id="<%=comments.id%>" data-hide="<%=comments.hide?%>"class="comment_wrapper">
+<li id="<%=comments.id%>" data-hide="<%=comments.hide?%>"class="comment_wrapper <%= 'child' unless comments.parent_id.nil?%>">
 	
 <div class="user_comment_image"><%=image_tag(comments.user.image_url,width: 30, height:30, title: comments.user.name)%>
 </div><p class="name"><%=comments.user.name%></p>

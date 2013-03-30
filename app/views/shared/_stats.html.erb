@@ -4,5 +4,5 @@
 				<i class="icon-magnet"></i>Following<span class="count"><%= @user.followed_users.count%></span>
 				</div>
 				<div id="followers"class="stat"><i><%=image_tag "magdown.png",width:13, height:13%></i>Followers<span class="count"><%=@user.followers.count%></span></div>
-				<div class="med_container"><span class="meds"><%=@user.meds%></span></div>
+				<div class="med_container disabled"><span class="meds"><%=@user.meds%></span></div>
 		</div>

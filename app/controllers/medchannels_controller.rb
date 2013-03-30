@@ -1,13 +1,13 @@
 class MedchannelsController < ApplicationController
 	before_filter :signed_in_user, only: [:create,:subscribe,:unsubscribe]
 	def show
-		begin
+
 		@medchannel=Medchannel.find_by_name(params[:name])
+    not_found if @medchannel.nil?
 		@name=@medchannel.name
 		@orig=@medchannel.name
-		rescue#user doesnt know what they are doing
-			not_found
-		end
+		#user doesnt know what they are doing
+		
 		begin#not logged in
     	@subscribe=current_user.subscribed?(@medchannel)
     	rescue
@@ -38,16 +38,14 @@ class MedchannelsController < ApplicationController
 	end
 	def desc#gives description vote page
 		@medchannel=Medchannel.find_by_name(params[:name])
-		begin #doesnt find a page give it an empty array
+    not_found if @medchannel.nil?
+		 #doesnt find a page give it an empty array
 		@micropost=@medchannel.desc
 			begin
 			@comments=@micropost.comment_threads
 			rescue
 			@comments=[]
-			end
-		rescue
-		 not_found
-		end
+			end		
 	end
 	def subscribe
 		@medchannel=Medchannel.find_by_name(params[:medchannel])

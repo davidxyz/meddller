@@ -116,7 +116,9 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 	if(!add){
 		medfeed_container.children().remove();
 		medfeed_container.parent().height(height);
+		medfeed_container.data("reachedEnd",false);
 	}else{
+		if(medfeed_container.data("reachedEnd")) return false;
 		medfeed_container.parent().height(medfeed_container.parent().height()+height);
 	}
 	if(posts.length==0){
@@ -125,8 +127,8 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 		}else{
 			var nothing=$(document.createElement('div'));
 				nothing.addClass("nothing");
-
-			medfeed_container.append()
+			medfeed_container.append(nothing);
+			medfeed_container.data("reachedEnd",true);
 		}
 	}
 
@@ -321,7 +323,7 @@ if(e.type=="keypress" && e.which==13){
 		type: "post",
 		dataType: "json",
   		url: '/commands/create_a_comment',
-  		data: {parent_id:p_id,body:$this.val()},
+  		data: {micropost_id:$(".micropost_show").attr("id"),parent_id:p_id,body:$this.val()},
   	}).done(function(response){
   		alert("done");
   	});
@@ -649,6 +651,14 @@ $("#search").on('click',function(e){
 	e.preventDefault();
 if($('#search_bar').length<1){
 var search=$(document.createElement('div'));
+var search_input=$(document.createElement('input'));
+var search_pic=$(document.createElement('i'));
+search_pic.addClass("icon-search");
+search_pic.addClass("icon-white");
+search_input.attr("type","text");
+search_input.attr("id","search_input");
+search.append(search_input);
+search.append(search_pic);
 search.attr('id','search_bar');
 search.insertAfter($(".navbar"));
 }else{
@@ -814,7 +824,7 @@ $.ajax({
   		url: url,
   		data: {},}).done(function(response){
   			console.log(response);
-  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,response.feed_height,false);
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.feed_height,false);
   		});
 //limbo
 feeds.animate({left:"+=200px",opacity: "0"},"slow");
@@ -830,7 +840,7 @@ if($(".header > .text").text()=="Hall Of Fame"){
 	$(".hnav_left").hide();
 	$(".hnav_right").hide();
 }
-$(".hnav_left").on("click",function(){
+$(".hnav_left").on("click",function(e){
 	$this=$(this);
 	$this.removeAttr("href");
 	e.preventDefault();
@@ -884,7 +894,7 @@ $.ajax({
 		dataType: "json",
   		url: url,
   		data: {},}).done(function(response){
-  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.add,response.feed_height,false);
+  		constructPosts(response.feed,feeds,response.channels,response.current_users,response.names,response.comments,response.reposts,response.feed_height,false);
   		console.log(response);
   		});
 feeds.animate({left:"-=200px",opacity: "0"},"slow");
@@ -919,9 +929,12 @@ function dialog(message,body){
 $(".post .repost").on('click',function(){
 	//make a sort of input tooltip
 	$this=$(this);
-	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//must refine
+	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//must refine now when user is not signed in-display helpful error message
 	if(!$this.hasClass("active")){
-
+		//nullify existing shit
+		$(".post .repost.active").removeClass("active");
+		$("#tooltip_form").remove();
+var offset=$this.offset();
 var post=$this.parent().parent();
 	var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','tooltip_form');
@@ -940,10 +953,10 @@ var post=$this.parent().parent();
         width:'180px',
         height:'100px',
         display: 'none',
-        left:  ($this.width()*6)+ 'px',
-        top:($this.height()*3)+ 'px',
+        left:  (offset.left+$this.width()+30)+ 'px',
+        top: (offset.top-$this.height())+'px',
         color:'white'
-    }).insertBefore($this);
+    }).insertBefore($(document.body));
 	input.appendTo(tooltip);
 	p.prependTo(tooltip);
 	tooltip.fadeTo("slow",0.7);
@@ -991,11 +1004,18 @@ var post=$this.parent().parent();
 //comment_reply functionality not even working yet
 $(".comment_wrapper .commentz").on("click",function(){
 	$this=$(this);
-	if($(".comment_wrapper.active").length>0 && !$this.parent().hasClass("active")){
-		console.log("heyo");
-			var comment=$(".comment_wrapper.active");
-			comment.children(".commentz").trigger("click");
-		//setTimeout(function(){$this.trigger("click");},1500);
+	var new_fade_time=1500;
+	if($(".comment_wrapper.active").length>0 && !$this.parent().hasClass("active")){//reels back and comment actives
+		var active_comment=$(".comment_wrapper.active");
+			$(".comment_wrapper").each(function(index, value){
+if (!$(value).hasClass("active")&& $(value).offset().top>active_comment.offset().top){
+$(value).animate({top:"-=150px",opacity:1},1000)
+}
+});
+	active_comment.removeClass("replying_to");
+active_comment.removeClass("active");
+$(".comment_reply").remove();
+new_fade_time=3000;
 	}//timeout if a comment_wrapper is active
 if(!$this.parent().hasClass("active")){
 var new_new=$(".comment_form_container").clone();
@@ -1006,16 +1026,16 @@ $(".added-info").fadeTo(1000,0.6);
 $this.parent().addClass("active");
 $(".comment_wrapper").each(function(index,value){
 if (!$(value).hasClass("active") && $(value).offset().top>$this.parent().offset().top){
-$(value).animate({top:"+=150px",opacity:0.6},1500)
+$(value).animate({top:"+=150px",opacity:0.6},1000)
 }
 });
 new_new.insertAfter($this.parent());
-new_new.fadeIn(1500);
+new_new.fadeIn(new_fade_time);
 new_new.css({position:"absolute",right:"200px"});
 }else{
 	$(".comment_wrapper").each(function(index, value){
 if (!$(value).hasClass("active")&& $(value).offset().top>$this.parent().offset().top){
-$(value).animate({top:"-=150px",opacity:1},1500)
+$(value).animate({top:"-=150px",opacity:1},1000)
 }
 });
 	console.log("hiyo")
@@ -1150,14 +1170,50 @@ console.log("yo");
 $(".onav_right").on("click",function(){
 
 });
-if($("#sidebar").length>0){
 $(window).trigger("resize");//once per refresh
+if($("#sidebar").length>0){
+var sidebar=$("#sidebar");
 $(window).resize(function() {
-  var off0=$("#sidebar").offset();
+  var off0=sidebar.offset();
   var off1=$(".medfeed_box").offset();
-  (off0.left+$("#sidebar").width())>off1.left?$("#sidebar").fadeOut(1000):$("#sidebar").fadeIn(1000);
+  (off0.left+sidebar.width())>off1.left?sidebar.fadeOut(1000):sidebar.fadeIn(1000);
 });
 }
+
 //edit
 $('.subscribed_channels').jScrollPane();
 /*medplus acc added functionality*/
+/*error formatting in forms*//*
+if($("form #error_explanation").length>0){//buggy-basically i want to make the errors presented better to end user
+	console.log("hi");
+	var errors=$("form #error_explanation ul").children();
+	var fields=$(".field_with_errors input");
+	fields.each(function(index,value){
+		var val=$(value);
+		var f=$(document.createElement('span'));
+		f.addClass(val.attr("id"));
+		f.addClass("error_box");
+		$(document.body).append(f);
+			f.css({position:"absolute",
+				top:val.offset().top+'px',
+				left:val.offset().left+400+'px'
+		});
+	});
+
+	$.each(errors,function(index,value){
+		var val=$(value);
+		if(/password/i.test(val.text())){
+			var error_box=$(".error_box.user_password");
+			error_box.append(val);
+		}else if(/name/i.test(val.text())){
+			var error_box=$(".error_box.user_name");
+			error_box.append(val);
+		}else if(/email/i.test(val.text())){
+			var error_box=$(".error_box.user_email");
+			error_box.append(val);
+		}else if(/password confirmation/i.test(val.text())){
+	var error_box=$(".error_box.user_password_confirmation");
+			error_box.append(val);
+		}
+	});
+}*/

@@ -1,7 +1,8 @@
 require 'Nokogiri'
 require 'open-uri'
+require 'will_paginate/array'
 class MicropostsController < ApplicationController
-  before_filter :signed_in_user, only: [:new,:create, :destroy, :increment,:repost]
+  before_filter :signed_in_user, only: [:new,:new2,:new3,:create, :destroy, :increment,:repost]
   before_filter :correct_user, only: :destroy
   def index
   end
@@ -95,7 +96,7 @@ class MicropostsController < ApplicationController
   def show
     @micropost=Micropost.find(params[:id])
     not_found if @micropost.nil?
-    @comments=@micropost.comment_threads.paginate(page: params[:page])
+    @comments=@micropost.comments.paginate(page: params[:page])
     @next=@micropost.next
     @prev=@micropost.prev
     if signed_in? 
