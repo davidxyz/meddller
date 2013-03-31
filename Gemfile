@@ -11,7 +11,8 @@ gem 'carrierwave'
 gem 'mini_magick'
 gem "font-awesome-rails"
 gem 'acts_as_commentable_with_threading'
-
+gem 'execjs'
+gem 'therubyracer'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :development,:test do

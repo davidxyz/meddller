@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307014508) do
+ActiveRecord::Schema.define(:version => 20130331125035) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -29,6 +29,15 @@ ActiveRecord::Schema.define(:version => 20130307014508) do
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
+  create_table "med_groups", :force => true do |t|
+    t.string   "name",       :default => "random"
+    t.integer  "followers",  :default => 0
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
+  add_index "med_groups", ["name"], :name => "index_med_groups_on_name"
+
   create_table "medchannels", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -37,20 +46,20 @@ ActiveRecord::Schema.define(:version => 20130307014508) do
     t.boolean  "nsfw"
   end
 
-  add_index "medchannels", ["name"], :name => "index_medchannels_on_name", :unique => true
-
   create_table "microposts", :force => true do |t|
     t.text     "content"
     t.integer  "user_id"
+    t.string   "type"
+    t.string   "local_image_url"
     t.string   "title"
-    t.integer  "meds",        :default => 1
-    t.integer  "integer",     :default => 1
+    t.integer  "meds",            :default => 1
+    t.integer  "integer",         :default => 1
     t.string   "urls"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.string   "medtype"
-    t.string   "image"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.string   "preview_url"
+    t.integer  "medchannel_id"
+    t.string   "medtype",         :default => "self_post"
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
@@ -103,18 +112,16 @@ ActiveRecord::Schema.define(:version => 20130307014508) do
   add_index "relationships", ["follower_id", "followed_id"], :name => "index_relationships_on_follower_id_and_followed_id", :unique => true
   add_index "relationships", ["follower_id"], :name => "index_relationships_on_follower_id"
 
-  create_table "relationships_l", :force => true do |t|
-    t.integer  "liker_id"
-    t.integer  "liked_id"
-    t.string   "type"
-    t.string   "posttype"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "relationships_groups", :force => true do |t|
+    t.integer  "suscriber_id"
+    t.integer  "med_group_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
-  add_index "relationships_l", ["liked_id"], :name => "index_relationships_l_on_liked_id"
-  add_index "relationships_l", ["liker_id", "liked_id", "posttype"], :name => "index_relationships_l_on_liker_id_and_liked_id_and_posttype"
-  add_index "relationships_l", ["liker_id"], :name => "index_relationships_l_on_liker_id"
+  add_index "relationships_groups", ["med_group_id"], :name => "index_relationships_groups_on_med_group_id"
+  add_index "relationships_groups", ["suscriber_id", "med_group_id"], :name => "index_relationships_groups_on_suscriber_id_and_med_group_id", :unique => true
+  add_index "relationships_groups", ["suscriber_id"], :name => "index_relationships_groups_on_suscriber_id"
 
   create_table "relationships_m", :force => true do |t|
     t.integer  "subscriber_id"
@@ -146,7 +153,6 @@ ActiveRecord::Schema.define(:version => 20130307014508) do
     t.string   "remember_token"
     t.boolean  "admin",           :default => false
     t.integer  "meds",            :default => 0
-    t.string   "image"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

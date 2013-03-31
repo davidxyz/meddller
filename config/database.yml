@@ -19,7 +19,11 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
+  adapter: postgresql
+  encoding: unicode
+  database: meddller
   timeout: 5000
+  pool: 5
+  username: postgres
+  password: 4804david
+
