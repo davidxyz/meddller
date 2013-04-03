@@ -122,22 +122,18 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 		medfeed_container.parent().height(medfeed_container.parent().height()+height);
 	}
 	if(posts.length==0){
-		if(medfeed_container.find(".nothing").length<1){
+		if(medfeed_container.find(".nothing").length>=1){
 
 		}else{
 			var nothing=$(document.createElement('div'));
 				nothing.addClass("nothing");
+			nothing.text("*Crickets*");
 			medfeed_container.append(nothing);
 			medfeed_container.data("reachedEnd",true);
 		}
+	return false;
 	}
-
-	if(posts.length<1){//if no posts
-		var nothing=$(document.createElement('div'));
-		nothing.addClass("nothing");
-		nothing.appendTo(medfeed_container);
-		return false;
-	}
+	medfeed_container.find(".nothing").remove();
 	posts.forEach(function(post,index){//should add templating just incase we find another and if we dont find we resort ot the posts.each
 	var user=$(document.createElement('span'));
 	var user_link=$(document.createElement('a'));

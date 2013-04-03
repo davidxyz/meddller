@@ -6,7 +6,8 @@ SampleApp::Application.routes.draw do
   resources :relationships, only: [:create, :destroy]
   resources :relationshipls, only: [:create, :destroy]
   resources :comments, only: [:destroy]
-  
+ match '/public/index.html', to: 'static_pages#home'
+match '/index.html', to: 'static_pages#home' 
   match '/signin', to: 'sessions#new'
   match '/signout', to: 'sessions#destroy'
   root to: 'static_pages#home'

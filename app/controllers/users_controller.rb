@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       #handle a successful save
       sign_in @user
       flash[:success]="welcome to the Meddler"
-      redirect_to @user
+	redirect_to '/users/'+@user.name
     else
       render 'new'
     end
