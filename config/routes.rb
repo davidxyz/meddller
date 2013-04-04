@@ -6,8 +6,6 @@ SampleApp::Application.routes.draw do
   resources :relationships, only: [:create, :destroy]
   resources :relationshipls, only: [:create, :destroy]
   resources :comments, only: [:destroy]
- match '/public/index.html', to: 'static_pages#home'
-match '/index.html', to: 'static_pages#home' 
   match '/signin', to: 'sessions#new'
   match '/signout', to: 'sessions#destroy'
   root to: 'static_pages#home'
@@ -31,6 +29,8 @@ match '/index.html', to: 'static_pages#home'
   match '/commands/no_other_users', to: 'users#no_other_users'
   match '/commands/no_other_emails', to: 'users#no_other_emails'
   match '/commands/subscribe', to: 'medchannels#subscribe'
+  match '/commands/microdec', to: 'microposts#destroy'
+  match '/commands/microedit',to: 'microposts#edit'
   #medchannnel routes
   match '/medchannel/:name'=> 'medchannels#show',:name => /[a-z_]+/i
   match '/m/:name'=> 'medchannels#show',:name => /[a-z_]+/i

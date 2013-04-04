@@ -54,11 +54,15 @@ module UsersHelper
     end
   end
   def user_time_left
+	begin
     time=(Time.now-(current_user.comments.order("created_at DESC").first.created_at))
       if time<=60
         time
       else
         0
       end
+	rescue
+	0
+	end
   end
 end

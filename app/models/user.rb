@@ -15,7 +15,7 @@
 
 class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation, :image, :remote_image_url
-  mount_uploader :image, ImageUploader
+  mount_uploader :image, ProfileimageUploader
   has_many :microposts, dependent: :destroy
   #relationships
   has_many :relationships, foreign_key: "follower_id", dependent: :destroy

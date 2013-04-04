@@ -5,6 +5,7 @@ class MicropostsController < ApplicationController
   before_filter :signed_in_user, only: [:new,:new2,:new3,:create, :destroy, :increment,:repost]
   before_filter :correct_user, only: :destroy
   def index
+
   end
   def show_urls
     srcs=[]
@@ -111,8 +112,11 @@ class MicropostsController < ApplicationController
     @micropost=params[:micropost].except(:medchannel)
     @micropost =current_user.microposts.build(@micropost)
     if @micropost.save
-      @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel]) 
-      @medchannel=Medchannel.create(name: params[:micropost][:medchannel]) if @medchannel.nil?
+      @medchannel=Medchannel.find_by_name(params[:micropost][:medchannel].downcase) 
+      if @medchannel.nil?
+      @medchannel=Medchannel.create(name: params[:micropost][:medchannel])
+      @medchannel.make_description
+      end
       current_user.repost!(@medchannel,@micropost)
       flash[:success]= "Micropost created!"
       redirect_to root_path

@@ -3,14 +3,12 @@
 
 <div id="<%=@micropost.id%>"class="micropost_show <%=@micropost.medtype%>">
 
-	<div class="author"><%= link_to image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => "author"), site('/users/'+@micropost.user.name)%><div><%=@micropost.user.name%></div></div>
+	<div class="author"><%= link_to image_tag(@micropost.user.image_url , :width => 35, :height => 35, :title => @micropost.user.name), site('/users/'+@micropost.user.name)%></div>
 <%if @micropost.medtype=="self_post"%>
 
-	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><% if current_user?(@micropost.user)%><span class="settings hide">
-		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
-		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
-
-		<%end%></span></span>
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><% if current_user?(@micropost.user)%><%=image_tag("options.png",width: 25, height:25,alt:"user options", class: "user-options")%> <span class="settings hide">
+<i class="icon-white icon-wrench icon-2x"></i>
+                        <i class="icon-white icon-remove icon-2x"></i>	<%end%></span></span>
 
 	<p class="content" rel="content"><%=parseShit(@micropost.content)%></p>
 		<span rel="comments"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
@@ -28,10 +26,9 @@
 <%elsif @micropost.medtype=="image_post"%>
 	<div class="preview_image"><%=link_to image_tag(@micropost.image_url(:thumb))%></div>
 
-	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
-		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
-		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
-		<%end%></span></span>
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><%=image_tag("options.png",width: 25, height:25,alt:"user options", class: "user-options")%> <span class="settings hide">
+<i class="icon-white icon-wrench icon-2x"></i>
+                        <i class="icon-white icon-remove icon-2x"></i>	<%end%></span></span>
 	
 		<div class="options"><span rel="comments" class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>
 		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>" id="<%=@micropost.id%>">
@@ -48,9 +45,9 @@
 <%elsif @micropost.medtype=="link_post"%>
 	<span class="preview"><%=link_to image_tag(@micropost.preview_url,width: 65, height:85),@micropost.urls%></span>
 
-	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><span class="settings hide">
-		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), @micropost, method: :update, title: @micropost.content%>
-		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), @micropost, method: :delete, confirm: "You 	sure?", title: @micropost.content%>
+	<span class="title <%=if signed_in? then current_user?(@micropost.user) end%>"><%=link_to @micropost.title, @micropost%><% if current_user?(@micropost.user)%><%=image_tag("options.png",width: 25, height:25,alt:"user options", class: "user-options")%> <span class="settings hide">
+ <i class="icon-white icon-wrench icon-2x"></i>
+                        <i class="icon-white icon-remove icon-2x"></i>
 		<%end%></span></span>
 	
 		<span rel="comments"class="comments"><div class="number"><%=@micropost.comment_threads.count%></div></span>

@@ -138,7 +138,6 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 	var user=$(document.createElement('span'));
 	var user_link=$(document.createElement('a'));
 	var user_image=$(document.createElement('img'));
-	var name=$(document.createElement('div'));name.text(names[index]);//fix
 	var timestamp=$(document.createElement('span'));
 	var inside_post=$(document.createElement('div'));
 	var title=$(document.createElement('span'));
@@ -151,12 +150,10 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 	user_image.appendTo(user_link);
 	user_link.appendTo(user);
 	user.appendTo(inside_post);
-	name.appendTo(user_image);
-	user.append(name);
 	user_image.attr("src","/assets/anon.png");//fix to user_img
 	user_image.attr("width","25px");user_image.attr("height","25px");
 	user_link.attr("href","/users/"+names[index]);
-	user_image.attr("data-title",post.user_id);//fix
+	user_image.attr("data-title",names[index]);//fix
 	timestamp.addClass("timestamp");
 	inside_post.attr("id",post.id);
 	inside_post.addClass("post");inside_post.addClass(post.medtype);
@@ -465,7 +462,8 @@ $.ajax({
   			 }
   			 else{
   			 	img.attr("src","/assets/check.png");
-  			 	span.text("Name is okay");
+				if($this.val()==""){span.text("Name is empty");
+                                div.addClass("wrong-info2");img.attr("src","/assets/cross.png");}else{      span.text("Name is okay");}
   			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
   			 }
   		});
@@ -495,7 +493,8 @@ $.ajax({
   			 }
   			 else{
   			 	img.attr("src","/assets/check.png");
-  			 	span.text("Email is okay");
+  			 if($this.val()==""){span.text("Email is empty");
+                                div.addClass("wrong-info2");img.attr("src","/assets/cross.png");}else{	span.text("Email is okay");}
   			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
   			 }
   		});},1000);
@@ -527,7 +526,6 @@ $(value).removeAttr('title');
 //so basically this is a tooltip for shit and it goes on top of it will establish this for new users to help them out and then will be disabled
 $(document).on("mouseenter","[data-title]",function(e){	
 	$this=$(this);
-	if($this.is("img")){ return false;} //will refine for extra power
 	var tooltip=$(document.createElement('div'));
 	tooltip.attr('id','otooltip');
 var offset = $this.offset();
@@ -552,19 +550,54 @@ var left = offset.left - width +10+ "px";
     }).insertBefore(document.body);
 
    tooltip.html($this.attr('data-title'));
-   tooltip.fadeTo("slow",0.6);
+   tooltip.fadeTo("slow",0.8);
 
 });
 //for options under production
 $(document).on("mouseleave","[data-title]",function(event){
 $('#otooltip').remove();
 });
+$(document).on("click",".options_tooltip i",function(){
+$this=$(this);
+var mid=$(".tip_activate").parent().attr("id");
+if($this.hasClass("icon-remove")){//delete request
+$.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/commands/microdec",
+                data: {id: mid}}).done(function(response){
+$(".tip_activate").parent().fadeOut(1000);
+});
+}else{//edit request
+/*var post=$(".tip_activate").parent();
+var css=post.find("p.content").css();
+var text=$(document.createElement('textarea'));
+text.css(css);
+if(!text.hasClass("edit")){
+post.find("p.content").remove();
+post.append(text);
+text.addClass("edit");
+}else{
+$.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/commands/microedit",
+                data: {id: mid}}).done(function(response){
+var content=$(document.createElement('p'));
+content.addClass("content");
+content.text(text.val());
+text.remove();
+post.append(content);
+});
+}
+*/
+}
+});
 $(".user-options").click(function(){//only for current users
 	$this=$(this).parent();
 $this.removeAttr("title");
 if(!$this.hasClass("tip_activate")){
-	 $this.addClass("tip_activate");
-
+$(".tip_activate").trigger("click");
 	var tooltip=$(document.createElement('div'));
 	tooltip.addClass("options_tooltip");
 	tooltip.css({
@@ -580,7 +613,7 @@ if(!$this.hasClass("tip_activate")){
         right:-90+ 'px',
         color:'white'
     }).insertBefore($this);
-
+$this.addClass("tip_activate");
    tooltip.html($this.find(".settings").show());
    tooltip.fadeIn("slow");
 }else{
@@ -724,6 +757,9 @@ $($this).attr("autocomplete", "off");
 }); 
 //mmedUpping and medDowning
 $("span.med_container").mousedown(function(event){
+if(signin()){
+	return false;
+	}
 	event.preventDefault();
 	var $this=$(this);
 	var meds = $this.find(".meds");
@@ -922,10 +958,18 @@ function dialog(message,body){
      
 }
 //repost functionality
+function signin(){
+if($("header .huser").length<1){
+		location.href="/signin"; location.href="/signin";return true;
+		}
+		return false;
+}
 $(".post .repost").on('click',function(){
 	//make a sort of input tooltip
 	$this=$(this);
-	if($this.parent().parent().attr("data-signed-in")=="false"){ dialog("Sign in first",$this.parent().parent());return false;}//must refine now when user is not signed in-display helpful error message
+if(signin()){
+	return false;
+	}
 	if(!$this.hasClass("active")){
 		//nullify existing shit
 		$(".post .repost.active").removeClass("active");
@@ -1177,7 +1221,7 @@ $(window).resize(function() {
 }
 
 //edit
-$('.subscribed_channels').jScrollPane();
+//$('.subscribed_channels').jScrollPane();
 /*medplus acc added functionality*/
 /*error formatting in forms*//*
 if($("form #error_explanation").length>0){//buggy-basically i want to make the errors presented better to end user

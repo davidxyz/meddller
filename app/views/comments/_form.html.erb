@@ -1,7 +1,5 @@
 
-<div class="user_comment_image "><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%><div class="user"><%=current_user.name%></div></div>
-<!--<div class="dialog2">
-</div> make compliant for crappy browsers-->
+<div class="user_comment_image "><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%></div>
 
 <div class="new_comment">
 	<%= text_area_tag :comment,"", class: "comment_form_content"%>

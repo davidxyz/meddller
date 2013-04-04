@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20130403124748) do
     t.string   "preview_url"
     t.integer  "medchannel_id"
     t.string   "medtype",         :default => "self_post"
+    t.string   "image"
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"

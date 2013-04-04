@@ -38,6 +38,13 @@ class Micropost < ActiveRecord::Base
     followed_user_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
     where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user.id)
   end
+  def self.search(search)
+  if search
+  where('title LIKE ?', "%#{search}%")  
+  else
+  all
+  end
+  end
   def self.default_feed
     #must improve
    Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
@@ -50,6 +57,11 @@ class Micropost < ActiveRecord::Base
 
   def prev#should refine to model it out of users feed
     Micropost.where("id < ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id ASC").first
+  end
+def image=(obj)
+    super(obj)
+    # Put your callbacks here, e.g.
+    self.moderated = false  
   end
   def comments
     comments=[]
@@ -123,7 +135,7 @@ class Micropost < ActiveRecord::Base
     elsif medtype!="desc"
       errors[:base]<<("Something, went wrong with your post and we're tearing out our heads trying to find why")
     end
-    unless medtype=="self_post" or medtype=="desc"
+    if medtype!="self_post" and  medtype!="desc"
     errors[:base]<<("Your title is very important, please be a bit more expressive") if title.nil? or title.length <4
     errors[:base]<<("Woah your title is way too long") if title.length >90
     matchdata=/[a-zA-z0-9\s]+/.match(title)

@@ -94,6 +94,11 @@ class MedchannelsController < ApplicationController
 	result=determine_pagination(Micropost.calculate_feed(current_user,@orig,:rising),if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
    @feed_items =result[:feed]
    @medfeed_height=result[:medfeed_height]
+	begin#not logged in
+        @subscribe=current_user.subscribed?(@medchannel)
+        rescue
+        @subscribe=nil
+                end
 	respond_to do |format|
      format.json {
         @channels=[]
@@ -120,7 +125,13 @@ class MedchannelsController < ApplicationController
 	result=determine_pagination(Micropost.calculate_feed(current_user,@orig,:new),if params[:page].to_i<1 or params[:page].to_i.to_s=="0" then 1 else params[:page].to_i end)
    @feed_items =result[:feed]
    @medfeed_height=result[:medfeed_height]
+	begin#not logged in
+        @subscribe=current_user.subscribed?(@medchannel)
+        rescue
+        @subscribe=nil
+                end
 	respond_to do |format|
+
      format.json {
         @channels=[]
         @current_users=[]

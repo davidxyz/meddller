@@ -12,8 +12,8 @@
 		<%= render 'follow_form' if signed_in?%>
 		</div>
 		<% if @user.microposts.any?%>
-		<div class="microposts"> <%= render partial:'shared/feed',:locals => { :@feed_items => @microposts, :@controller=>"users_show", :@medfeed_height=>@medfeed_height}%></div>
-		<%= will_paginate @microposts%>
+		 <%= render partial:'shared/feed',:locals => { :@feed_items => @microposts, :@controller=>"users_show", :@medfeed_height=>@medfeed_height}%>
+
 		<%else%>
 		<div class="nothing">*Crickets*</div>
 		<% end %>

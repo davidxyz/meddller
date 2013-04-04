@@ -3,7 +3,6 @@ class Medchannel < ActiveRecord::Base
   #medchannel has description decided by top comment
   attr_accessible :name, :description
   before_save {|channel| channel.name=name.downcase}
-  before_save :make_description
   has_many :microposts
   has_many :reverse_relationshipms,foreign_key: "subscribed_id",class_name:"Relationshipm", dependent: :destroy
   has_many :subscribers, through: :reverse_relationshipms,source: :subscriber
@@ -28,9 +27,8 @@ def desc(key=0)
   end
 end
 def make_description#the id of the post goes in the description
-  desc_post=Micropost.create(:medtype=>"desc")
+desc_post=Micropost.new(:medtype=>"desc")
   desc_post.save
   self.update_attribute(:description,desc_post.id.to_s)
-  return desc_post
 end
 end

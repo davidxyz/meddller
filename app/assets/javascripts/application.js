@@ -12,10 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap 
 //= require jquery-ui
 //= require_tree .
-//= require bootstrap 
-
 /* ===================================================
  * bootstrap-transition.js v2.2.2
  * http://twitter.github.com/bootstrap/javascript.html#transitions
