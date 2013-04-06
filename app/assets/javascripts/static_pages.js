@@ -254,8 +254,8 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 
 }
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
-	
 	var $this=$(this);
+	if($this.parent().hasClass("mega-disabled")){return false;}//if disabled
 	var $parent=$(".new_comment");
 	var $parent2=$(".comment_form_container");
 	var user_teller=$(".user_comment_info .user_contstaint");
@@ -287,7 +287,12 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   	}).done(function(response){
   		
 	if(response.valid==true){//animate a DIY bounce effect
-	 var parent=$(".comment_form_container");parent.css({"z-index":500});parent.animate({top:"+=800"},4000);parent.animate({top:"-=350"},2000);parent.animate({top:"+=350"},1500);parent.animate({top:"-=100"},800);parent.animate({top:"+=100"},500);
+	var comment=constructComment($(".comment_form_container"),false);
+	$(".comment_form_container").remove();
+	$(".comment_wrapper").animate({top:"+="+comment.height()+50});
+	comment.prependTo($("ol.comments"));
+	comment.hide();
+	comment.fadeIn(500);
 	}
 	else{
 		var dialog=$(document.createElement('div'));//dafuq dus this work bro?
@@ -298,6 +303,7 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
   	});
 }
 });
+
 function dec(){
 	var time=$(".custom-disabled .time");
 	if(parseInt(time.text())<=0){return false;}
@@ -306,25 +312,70 @@ function dec(){
 window.setInterval(dec, 1000);
 
 //reply user interface
+var comment_form_key=false;//can only comment reply once
+function constructComment(comment_form,side_effects){
+	side_effects=side_effects==undefined?true:side_effects
+	var comment_wrapper=$(document.createElement('li'));
+	var user_img=comment_form.find(".user_comment_image");
+	var offset=comment_form.offset();
+	var name=$(document.createElement('p'));
+	var body=$(document.createElement('p'));
+	var med_container=$(document.createElement('span'));
+	var meds=$(document.createElement('span'));
+	var commentz=$(document.createElement('span'));
+	var number=$(document.createElement('span'));
+	var timestamp=$(document.createElement('span'));
+	comment_wrapper.addClass("comment_wrapper");
+	name.addClass("name");
+	name.text(user_img.find(".user").text());user_img.find(".user").remove();
+	med_container.addClass("med_container");
+	meds.addClass("meds");meds.text(1);
+	commentz.addClass("commentz");
+	number.addClass("number");number.text("0");
+	timestamp.addClass("timestamp");timestamp.text("Posted 1 seconds ago");
+	body.addClass("body");
+	body.text(comment_form.find("textarea").val());
+	comment_wrapper.append(user_img);
+	comment_wrapper.append(body);
+	comment_wrapper.append(name);
+	comment_wrapper.append(med_container);
+	comment_wrapper.append(meds);
+	comment_wrapper.append(commentz);
+	comment_wrapper.append(number);
+	comment_wrapper.append(timestamp);
+	if(side_effects){
+	comment_wrapper.appendTo(comment_form.parent());
+	comment_wrapper.css({position:"absolute",top:offset.top-comment_form.parent().offset().top,left:offset.left-comment_form.parent().offset().left});
+	$(".added-info").fadeTo(500,1);
+	$(".comment_wrapper").fadeTo(500,1);
+	comment_form.fadeOut(600);
+	}else{
+	return comment_wrapper;
+	}
+}
 $(document).on("keypress",".comment_reply textarea",function(e){
 		//make a diminishing bounce effect with the comment	
 	$this=$(this);
 if(e.type=="keypress" && e.which==13){
+	if(comment_form_key){return false;}
+	comment_form_key=true;
 	var id=$(".micropost_show").attr('id');
-	var p_id=$(".comment.replying_to").attr('id');//attach listeners on comments who have their replied button clicked
+	var p_id=$(".comment.replying_to").length>0?$(".comment.replying_to").attr('id'):undefined;//attach listeners on comments who have their replied button clicked
 		$.ajax({
 		type: "post",
 		dataType: "json",
   		url: '/commands/create_a_comment',
   		data: {micropost_id:$(".micropost_show").attr("id"),parent_id:p_id,body:$this.val()},
   	}).done(function(response){
-  		alert("done");
+  		//constuct reply comment directly under post
+  		if(response.valid){
+  			constructComment($this.parent().parent());
+  		}else{
+
+  		}
   	});
 	}
 });
-
-
-
 /*form validations for submit1 page*/
 $('#urls').on('blur',function(){
 var url_message=$('.url_message p');
@@ -436,16 +487,16 @@ $(document).on('click',".nav_right",function(event){
 //checks to see if the name and email are already taken using ajax
 $('form#new_user input').on('blur',function(){
 	$this=$(this);
-	$(".error").remove();
 if($this.attr("name")=="user[name]"){
-	$(".wrong-info").remove();
+	$(".wrong-info.name").remove();
 var img=$(document.createElement('img'));
 var div=$(document.createElement('div'));
 img.attr("src","/assets/ajax-loader.gif");
 img.appendTo(div);
 img.width(25);img.height(25);
-div.prependTo($this.parent());
-div.css({position:"relative",left:"500px",top:"63px"});
+var offset=$this.offset();
+div.appendTo($(document.body));
+div.css({position:"absolute",left:offset.left+$this.outerWidth()+100+'px',top:offset.top+'px'});
 setTimeout(function(){
 $.ajax({
 		type: "post",
@@ -457,26 +508,41 @@ $.ajax({
   			console.log(response);
   			 if (response.user){
   			 	img.attr("src","/assets/cross.png");
-  			 	div.addClass("wrong-info");
   			 	span.text("Name taken");
   			 }
   			 else{
+  			 	 var pattern=/^[a-zA-Z0-9_]+$/;
+  			 	if($this.val()=="" || $this.val()==" "){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Name is blank");
+  			 	}else if(!pattern.test($this.val())){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Not a vaild name");
+  			 	}else if($this.val().length>30){
+				img.attr("src","/assets/cross.png");
+  			 	span.text("Name is too long");
+  			 	}else if($this.val().length<3){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Name is too short");
+  			 	}else{
   			 	img.attr("src","/assets/check.png");
-				if($this.val()==""){span.text("Name is empty");
-                                div.addClass("wrong-info2");img.attr("src","/assets/cross.png");}else{      span.text("Name is okay");}
-  			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
+  			 	span.text("Name is okay");
+  			 	}
+  			 	div.addClass("wrong-info");
+  			 	div.addClass("name");
   			 }
   		});
   		},1000);
 }else if($this.attr("name")=="user[email]"){
-	$(".wrong-info2").remove();
+	$(".wrong-info.email").remove();
 var img=$(document.createElement('img'));
 var div=$(document.createElement('div'));
 img.attr("src","/assets/ajax-loader.gif");
 img.width(25);img.height(25);
 img.appendTo(div);
-div.prependTo($this.parent());
-div.css({position:"relative",left:"450px",top:"123px"});
+var offset=$this.offset();
+div.appendTo($(document.body));
+div.css({position:"absolute",left:offset.left+$this.outerWidth()+100+'px',top:offset.top+'px'});
 setTimeout(function(){
 $.ajax({
 		type: "post",
@@ -489,18 +555,25 @@ $.ajax({
   			if (response.email){
   			 	img.attr("src","/assets/cross.png");
   			 	span.text("Email is taken");
-  			 	div.addClass("wrong-info2");
   			 }
   			 else{
+  			 	var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+  			 	if($this.val()=="" || $this.val()==" "){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Email is blank");
+  			 	}else if(!pattern.test($this.val())){
+  			 	img.attr("src","/assets/cross.png");
+  			 	span.text("Not a valid email");
+  			 	}else{
   			 	img.attr("src","/assets/check.png");
-  			 if($this.val()==""){span.text("Email is empty");
-                                div.addClass("wrong-info2");img.attr("src","/assets/cross.png");}else{	span.text("Email is okay");}
-  			 	div.fadeOut(5000);setTimeout(function(){div.remove();},6000);
+  			 	span.text("Email is okay");
+  			 	}
+  			 	div.addClass("wrong-info");
+  			 	div.addClass("email");
   			 }
   		});},1000);
 }
 });
-
 $('.form_title').on('blur',function(){
 var title_message=$('.title_message p');
 $this=$(this);
@@ -791,12 +864,23 @@ switch (event.which) {
     }
 	}else if($this.hasClass("upvote") && event.which==3){//neutalized
 	$this.removeClass("upvote");
+	       $.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/inc',
+  		data: {id:mid,type:"downvote"},
+  	});
 	meds.text(parseInt(meds.text())-1);
 	}else if($this.hasClass("downvote") && event.which==1){//neutralized
 	meds.text(parseInt(meds.text())+1);
 		$this.removeClass("downvote");
+		       $.ajax({
+		type: "post",
+		dataType: "json",
+  		url: '/commands/inc',
+  		data: {id:mid,type:"upvote"},
+  	});
 	}
-	
 });
 
 //tabs:
@@ -1066,7 +1150,7 @@ $(".added-info").fadeTo(1000,0.6);
 $this.parent().addClass("active");
 $(".comment_wrapper").each(function(index,value){
 if (!$(value).hasClass("active") && $(value).offset().top>$this.parent().offset().top){
-$(value).animate({top:"+=150px",opacity:0.6},1000)
+$(value).animate({top:"+=170px",opacity:0.6},1000)
 }
 });
 new_new.insertAfter($this.parent());
@@ -1075,7 +1159,7 @@ new_new.css({position:"absolute",right:"200px"});
 }else{
 	$(".comment_wrapper").each(function(index, value){
 if (!$(value).hasClass("active")&& $(value).offset().top>$this.parent().offset().top){
-$(value).animate({top:"-=150px",opacity:1},1000)
+$(value).animate({top:"-=170px",opacity:1},1000)
 }
 });
 	console.log("hiyo")

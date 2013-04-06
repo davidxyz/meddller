@@ -90,11 +90,11 @@ class User < ActiveRecord::Base
     relationshipls.create!(liked_id: post.id,posttype: post_type,uptype: "downvote")
   end
   def neutral!(post,post_type)
-  relationshipls.find(liked_id: post.id,posttype: post_type).destroy
+	relationshipls.where(liked_id: post.id,posttype: post_type).first.destroy
   end
   def have_I_liked_or_not?(post,post_type)
     begin
-    relationshipls.find(:first,:conditions=>{liked_id: post.id,posttype: post_type}).uptype
+	relationshipls.where(liked_id: post.id,posttype: post_type).first.uptype
     rescue
       false
     end

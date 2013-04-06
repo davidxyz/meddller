@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%=yield(:title)%></title>
+  <title>see whats popular on the internet </title>
 
   <%= stylesheet_link_tag    "custom", media: "all" %>
 <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" %>
@@ -31,5 +31,6 @@
 </script>
 <%=javascript_include_tag "static_pages"%>
 </div>
+<%= render partial:'layouts/footer',:locals => {:@medfeed_height=>yield(:medfeed_height)} unless yield(:medfeed_height)=="nah"%> 
 </body>
 </html>

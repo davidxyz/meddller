@@ -15,15 +15,15 @@
 	</span>
 	<span class="content hide"><%= feed_item.content%></span>
 		<div class="options"><a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
-		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
-		</div>
+		</span>
 		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<span class="onav_left hide"><i class="icon-white icon-chevron-left "></i></span>
 		<span class="onav_right hide"><i class="icon-white icon-chevron-right "></i></span>
 		<ul class="channels">
 		<%feed_item.channels.each do |channel|%>
-		<li class="channel-cont"><a rel="<%=channel%>"href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
+		<li class="channel-cont"><a rel="<%=channel.name%>"href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
 		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>	
@@ -45,9 +45,9 @@
 		<%end%>
 	</span>
 		<a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
-		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
-		</div>
+		</span>
 		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div>
 		<ul class="channels">
 		<%feed_item.channels.each do |channel|%>
@@ -72,13 +72,13 @@
 	</span>
 	<p class="content "><%=parseShit(feed_item.content)%></p>
 		<div class="options"><a rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/medpost'%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
-		<div class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
-		</div>
+		</span>
 		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<ul class="channels">
 		<%feed_item.channels.each do |channel|%>
-		<li class="channel-cont"><a rel="<%=channel%>" href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
+		<li class="channel-cont"><a rel="<%=channel.name%>" href="<%='/medchannel/'+channel.name%>"class="medchannel" style="background-color:<%=popularity(channel)%>"data-description="<%=channel.desc(1)%>"><%=channel.name%></a></li>
 		<%end%>
 		</ul>
 		<span class="timestamp">Posted <%=time_ago_in_words(feed_item.created_at)%> ago.</span>	

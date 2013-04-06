@@ -29,6 +29,7 @@ class MicropostsController < ApplicationController
     channel=Medchannel.find_by_name(params[:medchannel])
     begin
     channel=Medchannel.create(name: params[:medchannel]) if channel.nil?
+    channel.make_description
     cond1=micropost.in_channel?(channel)
     cond2=current_user.reposted_this?(micropost)
     if !cond1 and !cond2
@@ -66,12 +67,12 @@ class MicropostsController < ApplicationController
       @type=current_user.have_I_liked_or_not?(@micropost,"micropost")
       if @type==false #make a new relationship
         current_user.like!(@micropost,"micropost")
-        @micropost.user.inc
+       User.increment_counter :meds, @micropost.user
         @micropost.inc
       elsif @type=="downvote"
         current_user.neutral!(@micropost,"micropost")
-        @micropost.user.dec
-        @micropost.dec
+	User.increment_counter :meds, @micropost.user
+        @micropost.inc
       elsif @type=="upvote"
         #do nothing
       end
@@ -80,24 +81,24 @@ class MicropostsController < ApplicationController
       @type=current_user.have_I_liked_or_not?(@micropost,"micropost")
       if @type==false#make a new relationship
         current_user.hate!(@micropost,"micropost")
-        @micropost.user.dec
+	User.decrement_counter :meds, @micropost.user
         @micropost.dec
       elsif @type=="upvote"
         current_user.neutral!(@micropost,"micropost")
-        @micropost.user.inc
-        @micropost.inc
+	User.decrement_counter :meds, @micropost.user
+        @micropost.dec
       elsif @type=="downvote"
         # do nothing
       end
     end#else someone is tamepring with he app and nothing happens
   respond_to do |format|
-    format.json { render :json => { user_meds: @micropost.user.meds,micro_meds: @micropost.meds, type: @type} }
+    format.json { render :json => { } }
   end
   end
   def show
     @micropost=Micropost.find(params[:id])
     not_found if @micropost.nil?
-    @comments=@micropost.comments.paginate(page: params[:page])
+    @comments=@micropost.comment_threads.paginate(page: params[:page])
     @next=@micropost.next
     @prev=@micropost.prev
     if signed_in? 

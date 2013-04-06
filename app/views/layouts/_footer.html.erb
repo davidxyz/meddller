@@ -1,13 +1,5 @@
-<footer class="footer <%=yield(:page_size)%>">
+<footer style="<%=calcfooter(@medfeed_height.to_i)%>">
 	<small>
-		<a href="/">Meddler</a> by MeddlerCo
+		<a href="/">Meddler.com ©</a> by Wiresky
 		</small>
-	<nav>
-		<ul>
-			<li><i class="icon-list-alt"></i><%= link_to "About",  about_path%></li>
-			<li><i class="icon-envelope"></i> <%= link_to "Contact", contact_path%></li>
-			<li><i class="icon-glass"></i><%= link_to "Ask the MedTeam", "/AskTheMedTeam"%></li>
-		</ul>
-	</nav>
 </footer>
-		

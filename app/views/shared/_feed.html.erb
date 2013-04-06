@@ -1,3 +1,4 @@
+<%provide(:medfeed_height,if @controller!="users_show" then @medfeed_height.to_s else "nah" end)%>
 <div class="medfeed_box <%=@controller%> " style="height:<%=@medfeed_height.to_s+'px'%>;">
 		<div class="header">
 			<span class="text"><%=@name%></span>

@@ -25,6 +25,23 @@ a:active {
 text-decoration:none;
 }
 
+footer {
+height: 35px;
+border-top:1px solid #BBB;
+color: #fff;
+width:100%;
+position: absolute;
+background-color:black;
+}
+footer small{
+position:absolute;
+top:10px;
+left:20px;
+}
+
+footer a:hover{
+color:#fff;
+}
 body {
 padding-top: 60px;
 padding-bottom: 50px;
@@ -778,43 +795,6 @@ color:black;
   cursor:pointer;
 }
 }
-/*footer*/
-footer {
-  bottom: 0px;
-  display:none;/*will look into*/
-position:relative;
-height:50px;
-padding-top:5px;
-border-top:1px solid #BBB;
-color: #999;
-background-color:#fff;
-}
-footer.large{
-  margin-top:1395px;
-}
-footer.large2{
-  bottom: 0px;
-}
-footer.home{
-  margin-top:2995px;
-}
-footer a{
-color:#555;
-}
-footer a:hover{
-color:#222;
-}
-footer small{
-float: left;
-}
-footer ul{
-float:right;
-list-style: none;
-}
-footer ul li {
-float: left;
-margin-left:10px;
-}
 .debug_dump{
 	clear:both;
 	float: left;
@@ -1154,10 +1134,10 @@ cursor: pointer
   .medchannel{
     display: inline;
     float: right;
-      width:50px; 
+
       height:20px;
         font-size:15px;
-        padding:2px 5px 2px 5px;
+        padding:2px 8px 2px 8px;
         margin-left:10px; 
         color:#fff;
         border-radius: 3px;
@@ -2170,10 +2150,10 @@ border-bottom-top-radius: 5px;
   .medchannel{
     display: inline;
     float: right;
-      width:50px; 
+	text-align:center;
       height:20px;
         font-size:15px;
-        padding:2px 5px 2px 5px;
+        padding:2px 8px 2px 8px;
         margin-left:10px; 
         color:#fff;
         border-radius: 3px;
@@ -2378,11 +2358,11 @@ span{
   position: relative;
   top:-13px;
   left: 15px;
-  font-size:14px;
+  font-size:10px;
 }
 .meddals{
   position: absolute;
-  left:20px;
+  left:10px;
   top:20px;
 }
     }
@@ -3171,6 +3151,7 @@ color:#b94a48;
   text-align: center;
   width:100%;
 z-index:1000;
+text-transform:capitalize;
 }
 
 

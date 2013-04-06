@@ -3,6 +3,15 @@ module MicropostsHelper
   def default_feed
     Micropost.select("*")
   end
+def calcfooter(height)
+str=""
+if height>=500
+str='top:'+(height+200).to_s+'px' 
+else
+str='bottom:0px'
+end
+str
+end
   def urlify(title)
     return "medpost" if title.nil? or title.empty?
     URI::escape(title.split("").map{|x| if x=="\s" then "_" else x end}.join(""))
