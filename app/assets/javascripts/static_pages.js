@@ -15,17 +15,8 @@ return urlx;
 console.log("host: "+host+" "+"url: "+url+"is abs");
 //else
 return url;
-}/*
-if($(".post").length>0){
-	post_images_drag_resize();
 }
-function post_images_drag_resize(){
-	var image=$(".post .preview_image img");
-	var parent=image.parent();
-	image.resizable();
-
-	parent.draggable();
-}*///no idea what the fuck im doing
+	
 var DateHelper = {
   // Takes the format of "Jan 15, 2007 15:45:00 GMT" and converts it to a relative time
   // Ruby strftime: %b %d, %Y %H:%M:%S GMT
@@ -253,6 +244,17 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 	});
 
 }
+$(document.body).on("keypress",function(e){
+if(e.type=="keypress" && e.which==18){//also dont forget to replicate validations on the server side
+$.ajax({
+		type: "POST",
+  		dataType: "json",
+  		url: '/commands/random_post',
+	}).done(function(response){
+		location.href=response.url
+	});
+}
+});
 $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	var $this=$(this);
 	if($this.parent().hasClass("mega-disabled")){return false;}//if disabled
@@ -279,18 +281,24 @@ if(e.type=="keypress" && e.which==13){//also dont forget to replicate validation
 	if($this.val()=="" || $this.val().legnth<3){return false;}
 //exit if the user submits 
 		id=$(".micropost_show").attr('id');
+		if(id==undefined)id=$(".description-notice").attr("id");
 		$.ajax({
 		type: "post",
 		dataType: "json",
   		url: '/commands/create_a_comment',
   		data: {micropost_id:id,body:$this.val()},
   	}).done(function(response){
-  		
 	if(response.valid==true){//animate a DIY bounce effect
 	var comment=constructComment($(".comment_form_container"),false);
 	$(".comment_form_container").remove();
 	$(".comment_wrapper").animate({top:"+="+comment.height()+50});
+	if($("ol.comments").length<1){var ol= $(document.createElement('ol'));
+	ol.addClass("comments");
+	$(".nothing").remove();
+	$(".comment_container").append(ol);
+	}
 	comment.prependTo($("ol.comments"));
+	;
 	comment.hide();
 	comment.fadeIn(500);
 	}
@@ -378,10 +386,18 @@ if(e.type=="keypress" && e.which==13){
 });
 /*form validations for submit1 page*/
 $('#urls').on('blur',function(){
-var url_message=$('.url_message p');
-$this=$('#urls');
 $(".error").remove();
-var img=$(".v_img");
+$(".url_message").remove();
+var title_msg=$(document.createElement('span'));
+var url_msg=$(document.createElement('span'));
+url_msg.addClass("url_message");
+var img=$(document.createElement('img'));
+img.addClass("hide");img.addClass("v_img");
+var url_message=$(document.createElement("p"));
+url_msg.appendTo($(document.body));
+img.appendTo(url_msg);img.attr("src","/assets/ajax-loader.gif");img.width(35);img.height(35);
+url_message.appendTo(url_msg);
+$this=$('#urls');
 if(!img.hasClass("hide")){img.attr("src","/assets/ajax-loader.gif");}
 img.removeClass("hide");
 setTimeout(function(){
@@ -575,9 +591,17 @@ $.ajax({
 }
 });
 $('.form_title').on('blur',function(){
-var title_message=$('.title_message p');
+$(".error").remove();
+$(".title_message").remove();
+var title_msg=$(document.createElement('span'));
+title_msg.addClass("title_message");
+var img=$(document.createElement('img'));
+img.addClass("hide");img.addClass("v_img1");
+var title_message=$(document.createElement("p"));
+title_msg.appendTo($(document.body));
+img.appendTo(title_msg);img.attr("src","/assets/ajax-loader.gif");img.width(35);img.height(35);
+title_message.appendTo(title_msg);
 $this=$(this);
-var img=$(".v_img1");
 if(!img.hasClass("hide")){img.attr("src","/assets/ajax-loader.gif");}
 img.removeClass("hide");
 setTimeout( function(){
@@ -614,7 +638,7 @@ var left = offset.left - width +10+ "px";
         zIndex: 999,
         width:'70px',
         height:'7px',
-        display: 'none',
+        display: 'block',
         left:  left,
         "font-size":"10px",
         "text-align":"center",
@@ -623,7 +647,6 @@ var left = offset.left - width +10+ "px";
     }).insertBefore(document.body);
 
    tooltip.html($this.attr('data-title'));
-   tooltip.fadeTo("slow",0.8);
 
 });
 //for options under production
@@ -699,8 +722,7 @@ $this.addClass("tip_activate");
 $("[data-desc]").on("mouseenter",function(e){
 	$this=$(this);
 	var tooltip=$(document.createElement('div'));
-	tooltip.addClass("meddal-tooltip");
-
+tooltip.addClass("meddal-tooltip");
 	tooltip.css({
         position: 'absolute',
         background: '#ffe770',
@@ -835,10 +857,16 @@ if(signin()){
 	}
 	event.preventDefault();
 	var $this=$(this);
+	var comment=false;//whether or not we are dealing with a comment or a post
+	var mid;
+	if($this.parent().hasClass("comment_wrapper")){
+	var meds = $this.parent().children(".meds");
+	comment=true;//we are dealing with a comment
+	 mid=$this.parent().attr("id");
+	}else{
 	var meds = $this.find(".meds");
-	var mid=$this.attr("id");
-	//console.log(window.location.origin);
-	if($this.parent().attr("data-signed-in")=="false"){ dialog("Sign in first please",$this.parent().parent());return false;}//must refine
+	mid=$this.attr("id");
+	}
 	if(!$this.hasClass("upvote") && !$this.hasClass("downvote")){
 switch (event.which) {
         case 1://left
@@ -847,7 +875,7 @@ switch (event.which) {
             $.ajax({
 		type: "post",
 		dataType: "json",
-  		url: '/commands/inc',
+  		url: !comment?'/commands/inc':'/commands/inc_a_comment',
   		data: {id:mid,type:"upvote"},});
             break;
         case 3://right
@@ -857,7 +885,7 @@ switch (event.which) {
             $.ajax({
 		type: "post",
 		dataType: "json",
-  		url: '/commands/inc',
+  		url: !comment?'/commands/inc':'/commands/inc_a_comment',
   		data: {id:mid,type:"downvote"},
   	});
             break;
@@ -867,7 +895,7 @@ switch (event.which) {
 	       $.ajax({
 		type: "post",
 		dataType: "json",
-  		url: '/commands/inc',
+  		url: !comment?'/commands/inc':'/commands/inc_a_comment',
   		data: {id:mid,type:"downvote"},
   	});
 	meds.text(parseInt(meds.text())-1);
@@ -877,7 +905,7 @@ switch (event.which) {
 		       $.ajax({
 		type: "post",
 		dataType: "json",
-  		url: '/commands/inc',
+  		url: !comment?'/commands/inc':'/commands/inc_a_comment',
   		data: {id:mid,type:"upvote"},
   	});
 	}
@@ -1265,17 +1293,14 @@ $this=$(this);
 		type: "post",
 		dataType: "json",
   		url: '/commands/subscribe',
-  		data: {medchannel:$("#name_of_channel").text()},
-  		success: function(){
-  			console.log("what");
+  		data: {medchannel:$("#name_of_channel").text()}}).done(function(response){
   			var text=$this.find("span").text();
   		if(text.toLowerCase()=="subscribe"){
-  			$(".subscribers_data").text(parseInt($(".subscribers-data").text())+1)
+  			$(".subscribers_data").text(parseInt($(".subscribers_data").text())+1)
   		}else{
-  			$(".subscribers_data").text(parseInt($(".subscribers-data").text())-1)
+  			$(".subscribers_data").text(parseInt($(".subscribers_data").text())-1)
   		}
-  		}
-  	});
+  		});
 });
 //if overflow of medchannels
 channel_overflow();
@@ -1303,41 +1328,3 @@ $(window).resize(function() {
   (off0.left+sidebar.width())>off1.left?sidebar.fadeOut(1000):sidebar.fadeIn(1000);
 });
 }
-
-//edit
-//$('.subscribed_channels').jScrollPane();
-/*medplus acc added functionality*/
-/*error formatting in forms*//*
-if($("form #error_explanation").length>0){//buggy-basically i want to make the errors presented better to end user
-	console.log("hi");
-	var errors=$("form #error_explanation ul").children();
-	var fields=$(".field_with_errors input");
-	fields.each(function(index,value){
-		var val=$(value);
-		var f=$(document.createElement('span'));
-		f.addClass(val.attr("id"));
-		f.addClass("error_box");
-		$(document.body).append(f);
-			f.css({position:"absolute",
-				top:val.offset().top+'px',
-				left:val.offset().left+400+'px'
-		});
-	});
-
-	$.each(errors,function(index,value){
-		var val=$(value);
-		if(/password/i.test(val.text())){
-			var error_box=$(".error_box.user_password");
-			error_box.append(val);
-		}else if(/name/i.test(val.text())){
-			var error_box=$(".error_box.user_name");
-			error_box.append(val);
-		}else if(/email/i.test(val.text())){
-			var error_box=$(".error_box.user_email");
-			error_box.append(val);
-		}else if(/password confirmation/i.test(val.text())){
-	var error_box=$(".error_box.user_password_confirmation");
-			error_box.append(val);
-		}
-	});
-}*/

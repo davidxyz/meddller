@@ -1,5 +1,7 @@
 module UsersHelper
-  
+ def user_path(user)
+ '/users/'+user.name
+ end 
   def calculateRank(user)
     rank=""
     #first part of rank algorithm

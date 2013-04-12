@@ -1,12 +1,12 @@
 <li id="<%=comments.id%>" data-hide="<%=comments.hide?%>"class="comment_wrapper <%= 'child' unless comments.parent_id.nil?%>">
 	
-<div class="user_comment_image"><%=image_tag(comments.user.image_url,width: 30, height:30, title: comments.user.name)%>
+<div class="user_comment_image"><%=image_tag(comments.user.image_url_h,width: 30, height:30, title: comments.user.name,class:"userimage")%>
 </div><p class="name"><%=comments.user.name%></p>
 
 
 <p class="body"><%=parseShit(comments.body)%></p>
 
-		<span class="med_container"></span>
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(@micropost,'micropost') end%>"></span>
 		<span class="meds"><%=comments.meds%></span>
 		<span class="commentz"></span>
 		<span class="number"><%=comments.children.size%></span>

@@ -19,8 +19,8 @@ def desc(key=0)
   desccription_post=Micropost.find(self.description.to_i)
   else
     begin
-     desccription_post=Micropost.find(self.description.to_i).topcomment.body
-     desccription_post+" - "+desccription_post.user.name
+     desccription_post=Micropost.find(self.description.to_i).top_comment
+     desccription_post.body+" - "+desccription_post.user.name
    rescue
     "*crickets* - meddler"
    end

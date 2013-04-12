@@ -95,6 +95,12 @@ class MicropostsController < ApplicationController
     format.json { render :json => { } }
   end
   end
+ def random
+    feed_item=Micropost.random
+    respond_to do |format|
+      format.json { render :json => { :url=>'http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)} }
+      end
+  end
   def show
     @micropost=Micropost.find(params[:id])
     not_found if @micropost.nil?

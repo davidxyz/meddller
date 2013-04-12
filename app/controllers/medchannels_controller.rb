@@ -41,8 +41,9 @@ class MedchannelsController < ApplicationController
     not_found if @medchannel.nil?
 		 #doesnt find a page give it an empty array
 		@micropost=@medchannel.desc
+		@id=@micropost.id
 			begin
-			@comments=@micropost.comment_threads
+			@comments=@micropost.comment_threads.paginate(page: params[:page])
 			rescue
 			@comments=[]
 			end		

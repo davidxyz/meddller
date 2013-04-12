@@ -1,5 +1,5 @@
 SampleApp::Application.routes.draw do
-  resources :users, only: [:destroy,:create]
+  resources :users, only: [:destroy,:create,:edit,:update]
   resources :sessions, only: [:new, :create, :destroy]
  # resources :microposts, only: [:create, :destroy]
  resources :microposts, only: [:create,:destroy,:edit]
@@ -14,7 +14,8 @@ SampleApp::Application.routes.draw do
   match '/contact', to: 'static_pages#contact'
   match '/AskTheMedTeam', to: 'static_pages#ask'
   match '/users/:name'=> 'users#show',:name => /[a-z0-9_]+/i
-  match '/users/:id/edit'=> 'users#edit'
+ match '/users/:id/edit'=> 'users#edit',:id => /[0-9]+/
+ match '/users/:id/update'=> 'users#update',:id => /[0-9]+/
   match '/GodCommands/index_that_shit', to: 'Users#index'
   match '/signup', to: 'users#new'
   match '/submit', to: 'microposts#new'
@@ -42,6 +43,7 @@ SampleApp::Application.routes.draw do
   match '/medchannel/:name/rising', to: "medchannels#risingposts",:name => /[a-z_]+/i
   match '/m/:name/hall_of_fame', to: "medchannels#hall_of_fame",:name => /[a-z_]+/i
   match '/m/:name/new', to: "medchannels#newposts",:name => /[a-z_]+/i
+match '/commands/random_post', to: 'microposts#random'
   match '/m/:name/popular', to: "medchannels#popularposts",:name => /[a-z_]+/i
   match '/m/:name/rising', to: "medchannels#risingposts",:name => /[a-z_]+/i
   #routes

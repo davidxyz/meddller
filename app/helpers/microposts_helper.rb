@@ -29,9 +29,11 @@ end
       if x.medtype=="image_post"
         counters+=430
       elsif x.medtype=="self_post"
-        counters+=(((x.content.length/60).ceil*40)+200)
+	acc=(x.content.length/60).ceil
+	if acc>4 then acc=((acc-4)*40) else acc=0  end
+        counters+=(acc+270)
       elsif x.medtype=="link_post"
-        counters+=250
+        counters+=270
       end
     }
     result={feed:feed.paginate(page:page,per_page: per_page),medfeed_height: if counters<min_height then min_height else counters end}

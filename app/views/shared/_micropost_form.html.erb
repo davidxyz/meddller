@@ -1,7 +1,3 @@
-<span class="url_message"><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img")%><p></p></span>
-<div class="title_message"><img src=""><%=image_tag("ajax-loader.gif", width: 35, height: 35, title: "loading", class:"hide v_img1")%><p></p></div>
-<span class="previewslider_wrapper">
-</span>
 <%= form_for(@micropost,class: "form-url") do |f|%>
 		<%= render 'shared/error_messages', object: f.object%>
 		<h1 id="micropost_form_title">Link Post</h1>

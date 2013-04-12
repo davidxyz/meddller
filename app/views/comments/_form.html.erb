@@ -1,5 +1,5 @@
 
-<div class="user_comment_image "><%=image_tag(current_user.image_url,width: 25, height:25, title: current_user.name)%></div>
+<div class="user_comment_image "><%=image_tag(current_user.image_url_h,width: 25, height:25, title: current_user.name,class:"userimage")%></div>
 
 <div class="new_comment">
 	<%= text_area_tag :comment,"", class: "comment_form_content"%>

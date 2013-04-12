@@ -1,5 +1,5 @@
 <%provide(:medfeed_height,'nah')%>
-<div class="description-notice"><p>What Should the Description of <%=@medchannel.name%> be?</p></div>
+<div id="<%=@id%>" class="description-notice"><p>What Should the Description of <%=@medchannel.name%> be?</p></div>
 <div class="mid_page">
 	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">
 			<%if signed_in?%>

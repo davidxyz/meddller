@@ -54,7 +54,10 @@ class Micropost < ActiveRecord::Base
    def next#should refine to model it out of users feed
     Micropost.where("id > ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id DESC").first
   end
-
+def self.random#returns a random post
+    posts=Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
+    posts[Random.rand(posts.count)]
+  end
   def prev#should refine to model it out of users feed
     Micropost.where("id < ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id ASC").first
   end

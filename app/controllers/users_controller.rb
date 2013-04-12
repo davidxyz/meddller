@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   end
   def edit
     @user=User.find(params[:id])
-
   end
   def show
     @user=User.find_by_name(params[:name]) unless params[:name].nil?
@@ -49,7 +48,6 @@ class UsersController < ApplicationController
     end
   end
   def update
-    #No other user check
     @user =User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:success]="Profile updated"

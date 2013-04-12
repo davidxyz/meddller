@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
   def increment
     if params[:type]=="upvote"
       @comment=Comment.find(params[:id])
+	not_found if @comment.nil?
       @type=current_user.have_I_liked_or_not?(@comment,"comment")
       if @type==false #make a new relationship
         current_user.like!(@comment,"comment")
