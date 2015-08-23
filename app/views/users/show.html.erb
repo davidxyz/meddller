@@ -1,0 +1,28 @@
+<% provide(:title, @user.name)%>
+<div class="other_user">
+<div class="other_user_info">
+			<h1>
+				<%= @user.name%>
+			</h1>
+			<section class="rank">rank: <%=calculateRank(@user)%></section>
+			<div class="timestamp">User for: <%=time_ago_in_words(@user.created_at)%></div>
+			<%= render 'shared/stats'%>
+		</div>
+		<% if @user.microposts.any?%>
+		 <%= render partial:'shared/feed',:locals => { :@feed_items => @microposts, :@controller=>"users_show", :@medfeed_height=>@medfeed_height}%>
+
+		<%else%>
+		<div class="nothing">*Crickets*</div>
+		<% end %>
+		
+		<!--<div class="medchannels">
+			<div class="header">meddals
+				<div class="after"></div>
+				<div class="before"></div>
+			</div>
+			uhh medchannels
+		</div>-->
+		<div class="meddals">
+		
+		</div>
+</div>

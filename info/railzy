@@ -1,0 +1,11 @@
+#!/bin/bash
+            if [ $1 = "-d" ]; then
+		echo "development ...\n"
+		export RAILS_ENV=development
+		/etc/init.d/nginx stop
+		rails s -p 80
+	    else
+		echo "production ...\n"
+                 export RAILS_ENV=production
+                 /etc/init.d/nginx start
+            fi

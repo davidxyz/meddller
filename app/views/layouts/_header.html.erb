@@ -1,0 +1,28 @@
+<header class="navbar navbar-fixed-top">
+ <div class="navbar-inner">
+	<div class="container">
+		<%= image_tag("sloth.png", :alt => "home image", :width => 45, :height => 65, class: "logo sloth")%>
+	<a href="<%=root_path%>" class="logo font">Meddller</a>
+	<nav>
+	<ul class="nav pull-right">
+	<li><%= link_to "Search", '#',id:"search" %></li>
+	<li><%= link_to "Help", help_path %></li>
+	<%if signed_in?%>
+	<li><%= link_to "Users", site('/GodCommands/'+'index_that_shit') if current_user?(User.find_by_name("fag"))%></li>
+	<li class="dropdown">
+		<p class="huser dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"><%=current_user.name%></p>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#"><%= link_to "Profile", site('/users/'+current_user.name)%></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#"><%= link_to "Settings", site('/users/'+current_user.id.to_s+'/edit')%></li>
+				<li role="presentation" class="divider"></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#"><%= link_to "Sign out", signout_path, method: "delete"%></li>
+			</ul>
+</li>
+	<%else%>
+	<li><%= link_to "Sign in", signin_path %></li>
+	<%end%>
+	</ul>
+	 </nav>
+	        </div>
+	      </div>
+	</header>

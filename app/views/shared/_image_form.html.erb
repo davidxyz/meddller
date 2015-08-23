@@ -1,0 +1,15 @@
+<%provide(:title,'Submit your post')%>
+<section class="image_form alone">
+<%= form_for(@micropost, :html => {:multipart => true}) do |f|%>
+	<%= render 'shared/error_messages', object: f.object%>
+
+		<h1 id="micropost_form_title">Drag upload</h1>
+		<%=f.label :title%>
+		<%=f.text_field :title%>
+		 
+		<noscript><%=f.file_field :image_url%></noscript>
+		
+		<%= f.submit "Post",class: "btn btn-large btn-primary"%>
+		<%= link_to "self post?",submit_path,class:"btn btn-large btn-primary",id: "link_post"%>
+		<%end%>
+</section>

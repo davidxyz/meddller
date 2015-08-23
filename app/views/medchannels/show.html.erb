@@ -1,0 +1,37 @@
+<%provide(:page_size,'large')%>
+<%provide(:title,'See what\'s popular on '+@name)%>
+<div id="name_of_channel"class="hide"><%=@orig%></div>
+<% if signed_in?%>
+<div id="sidebar">
+	
+	<!-- uhh put in the user page show action><section class="name"><%= render 'shared/user_info'%></section>-->
+	
+		<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
+		<div class="divider"></div>
+		<div class="header">Medchannels</div>
+		<div class="subscribed_channels">
+			<%if current_user.medchannels.any?%>
+			<ul>
+				<%current_user.medchannels.each do |medchannel|%>
+				<a href="<%='/medchannel/'+medchannel.name%>"><li class="<%=@name==medchannel.name%>"><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li></a><%end%>				
+			</ul>
+			<%end%>
+		</div>
+	</div>
+	<%end%>
+<div class="subscribe-box">
+	<div class="header"><div class="close"><i class="icon-white icon-remove"></i></div></div>
+	<div class="subscribers">subscribers<div class="subscribers_data"><%=@medchannel.subscribers.count%></div></div>
+	<%unless @subscribe.nil?%><%if @subscribe%><a href="/commands/subscribe?medchannel=<%=@name%>" class="btn sub-btn"><span>Unsubscribe </span></a><%else%><a href="/commands/subscribe?medchannel=<%=@name%>" class="btn sub-btn"> <span>Subscribe</span></a><%end%><%end%>
+</div>
+<a class="description-vote" href="<%=site('/m/'+@name+'/description')%>"><span class="close"><i class="icon-white icon-remove"></i></span><span class="desc">Description</span><div class="count"></div></a>
+<!--<div class="recent_channels">
+
+	Ehh will implement later<div>Related Channels</div>
+	<ul>
+		<li class="active">random <span class="data"></span></li>
+		<li>funny <span class="data"></span></li>
+		<li>gaming <span class="data"></span></li>
+	</ul>
+</div>-->
+<%= render 'shared/feed'%>

@@ -1,0 +1,29 @@
+
+<span class="user_image"><%=link_to image_tag(micropost.user.image_url,width: 35, height:35, title: micropost.user.name),micropost.user%></span>
+<!--<div class="dialog">
+</div> make compliant for crappy browsers-->
+<li >
+	<% if !micropost.image_url.nil?%>
+	<span class="preview"><%=link_to image_tag(micropost.image_url, :width => 50, :height => 50, :title => "Originating site"), micropost.urls%></span>
+	<%else%>
+	<%#nothing%>
+	<%end%>
+
+<div class="micro_top">
+		<% if current_user?(micropost.user)%>
+		<%= link_to image_tag("edit.png", :width => 16, :height => 23, :title => "edit"), micropost, method: :update, title: micropost.content,class:"edit"%>
+		<%= link_to image_tag("delete2.png", :width => 16, :height => 22, :title => "delete"), micropost, method: :delete, confirm: "You 	sure?", title: micropost.content,class:"delete"%>
+		<%end%>
+		<span class="user"><%=link_to micropost.user.name, micropost.user%><span class="posted"> posted:</span> </span>
+	</div>
+	<span class="title"><%=link_to micropost.title, micropost%></span>
+	<span class="content hide"><%= micropost.content%></span>
+	<span class="comments"><div class="number">7</div><div class="text">comments</div></span>
+	<%= image_tag("anon.png" , :width => 35, :height => 35, :title => "author", class: "author hide")%>
+			<span class="med_container <%=current_user.have_I_liked_or_not?(micropost,'micropost')%>" id="<%=micropost.id%>">
+		<span class="meds"><%=micropost.meds%></span>
+		</span>
+		<span class="medchannel" data-description="<%=micropost.medchannel.description%>"><%=micropost.medchannel.name%></span>
+		<span class="timestamp">Posted <%=time_ago_in_words(micropost.created_at)%> ago.</span>
+		
+</li>

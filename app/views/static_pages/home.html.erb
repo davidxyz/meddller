@@ -1,0 +1,39 @@
+
+<%provide(:title,'see what\' popular on meddler')%>
+
+<!-- Micropost feed-->
+	<div id="name_of_channel"class="hide"><%=@orig%></div>
+	<%= render 'shared/feed'%>
+<% if signed_in?%>
+<div id="sidebar">
+	
+	<!-- uhh put in the user page show action><section class="name"><%= render 'shared/user_info'%></section>-->
+	
+		<a id="submit_post" class="btn btn-custom2" href="/submit">post</a>
+		<div class="divider"></div>
+		<div class="header">Medchannels</div>
+		<div class="subscribed_channels">
+			<%if current_user.medchannels.any?%>
+			<ul class="channels">
+				<%current_user.medchannels.each do |medchannel|%>
+				<a href="<%='/medchannel/'+medchannel.name%>"><li><span class="popularity" style="background-color:<%=popularity(medchannel)%>"></span><span class="name"><%=medchannel.name%></span><span class="data"><%=medchannel.subscribers.count%></span></li></a>
+				<%end%>				
+			</ul>
+			<%end%>
+		</div>
+	</div>
+	<%else%>
+	<div class="welcome-message">
+		<h2>Welcome to Meddler</h2>
+	</div>
+<%end%>
+<script type="text/javascript">
+google_ad_client = "ca-pub-1001049750681517";
+/* homepage&#42;120&#42;240 */
+google_ad_slot = "9142608589";
+google_ad_width = 120;
+google_ad_height = 240;
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>

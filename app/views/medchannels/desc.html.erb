@@ -1,0 +1,22 @@
+<%provide(:medfeed_height,'nah')%>
+<div id="<%=@id%>" class="description-notice"><p>What Should the Description of <%=@medchannel.name%> be?</p></div>
+<div class="mid_page">
+	<div class="comment_form_container <%='custom-disabled' unless user_ready?%>">
+			<%if signed_in?%>
+				<%= render 'comments/form'%>
+			<%else%>
+			<div class="signin-notice"><h2>You need to signin to comment <span class="signin"> sign in</span><h2></div>
+			<%end%>
+	</div>
+	<div class="comment_container">
+		<div class="added-info"></div>
+		<%if @comments.any?%>
+			<ol class="comments">
+				<%= render partial: 'comments/comments', collection: @comments%>
+			</ol>
+			<%= will_paginate @comments%>
+		<%else%>
+			<div class="nothing">*Crickets*</div>
+		<%end%>
+	</div>
+</div>

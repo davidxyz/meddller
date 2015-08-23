@@ -1,0 +1,5 @@
+/etc/nginx/logs/access.log
+/etc/nginx/logs/error.log
+/www/meddller.com/sample_app/log/production.log
+/www/meddller.com/sample_app/log/passenger.3000.log
+/www/meddller.com/sample_app/log/passenger.80.log

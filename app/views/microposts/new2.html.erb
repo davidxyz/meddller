@@ -1,0 +1,17 @@
+<%provide(:title,'Submit your post')%>
+<section class="micropost_form selfpost">
+<%= form_for(@micropost) do |f|%>
+	<%= render 'shared/error_messages', object: f.object%>
+		<h1 id="micropost_form_title">Self Post</h1>
+		
+		<%=f.hidden_field :medtype, :value=>"self_post"%>
+		<%=f.label :medchannel%>
+		<%=f.text_field :medchannel%>
+<div class="self_outlook">
+		<%= f.text_area :content, placeholder: "Compose new self post..."%>
+	</div>
+		<%= f.submit "Submit",class: "btn btn-large btn-primary"%>
+		<%= link_to "object post",submit3_path,class:"btn btn-large btn-success link_post2"%>
+		<%= link_to "link post",submit_path,class:"btn btn-large btn-warning link_post"%>
+		<%end%>
+</section>

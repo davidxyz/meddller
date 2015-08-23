@@ -1,0 +1,5 @@
+
+	<h1 class="center"><%= current_user.name%></h1>
+	<span><%=link_to "view my profile", site('/users/'+current_user.name)%></span>
+	<span><%= pluralize(current_user.microposts.count,"micropost")%></span>
+	
