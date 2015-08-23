@@ -125,10 +125,16 @@ class MicropostsController < ApplicationController
       @medchannel.make_description
       end
       current_user.repost!(@medchannel,@micropost)
-      flash[:success]= "Micropost created!"
+      flash[:success]= "post created!"
       redirect_to root_path
     else
-      render 'new'
+      if params[:micropost][:medtype]=='object_post'
+        render 'new3'
+      elsif params[:micropost][:medtype]=='link_post'
+        render 'new'
+      else 
+        render 'new2'
+      end
     end
   end
   def destroy

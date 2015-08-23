@@ -19,18 +19,8 @@
 	<div class= "alert alert-<%= key%>"><%= value%></div>
 	<%end%>
 <%= yield %>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-39724353-1', 'meddller.com');
-  ga('send', 'pageview');
-
-</script>
 <%=javascript_include_tag "static_pages"%>
 </div>
 <%= render partial:'layouts/footer',:locals => {:@medfeed_height=>yield(:medfeed_height)} unless yield(:medfeed_height)=="nah"%> 
-</body>
+</body> 
 </html>

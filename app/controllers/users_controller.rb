@@ -44,7 +44,7 @@ class UsersController < ApplicationController
       flash[:success]="welcome to the Meddler"
 	redirect_to '/users/'+@user.name
     else
-      render 'new'
+      redirect_to signup_path, notice: "You had incorrect data"
     end
   end
   def update

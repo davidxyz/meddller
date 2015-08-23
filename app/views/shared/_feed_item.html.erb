@@ -2,7 +2,6 @@
 <%if feed_item.medtype=="link_post"%>
 
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" data-signed-in="<%=signed_in?%>" >
-	<span class="user_image"><%=link_to image_tag(feed_item.user.image_url_h,width: 25, height:25, title: feed_item.user.name,alt:"user image",class:"userimage"),site('/users/'+feed_item.user.name)%></span>
 	<span class="preview"><%=link_to image_tag(feed_item.preview_url,width: 65, height:85,alt:feed_item.title),feed_item.urls%></span>
 
 	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", 'http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title))%><%else%><%=link_to( feed_item.title, 'http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title))%><%end%><% if current_user?(feed_item.user)%><%=image_tag("options.png",width: 25, height:25,alt:"user options", class: "user-options")%><span class="settings hide">
@@ -14,11 +13,11 @@
 		<%end%>
 	</span>
 	<span class="content hide"><%= feed_item.content%></span>
-		<div class="options"><a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
-		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
+		<div class="options"><a  rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title)%>" title="comment" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
+		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</span>
-		<div class="repost" title="repost it?"><span class="number"><%=feed_item.reposters.count%></span></div></div>
+		<div class="repost" title="repost"><span class="number"><%=feed_item.reposters.count%></span></div></div>
 		<span class="onav_left hide"><i class="icon-white icon-chevron-left "></i></span>
 		<span class="onav_right hide"><i class="icon-white icon-chevron-right "></i></span>
 		<ul class="channels">
@@ -31,9 +30,6 @@
 </div>
 <%elsif feed_item.medtype=="image_post"%>
 <div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
-	<span class="user_image"><%=link_to image_tag(feed_item.user.image_url_h,width: 25, height:25, title: feed_item.user.name,alt:"user image",class:"userimage"),site('/users/'+feed_item.user.name)%><div><%=feed_item.user.name%></div></span>
-
-
 	<div class="preview_image" style="display:inline-block"><%=image_tag(feed_item.image_url(:thumb),alt:feed_item.title) %></div>
 
 	<span class="title"><%if feed_item.title.size>40%><%=link_to( feed_item.title[0..40]+"...", 'http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title))%><%else%><%=link_to( feed_item.title, 'http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/'+urlify(feed_item.title))%><%end%><%if current_user?(feed_item.user)%><%=image_tag("options.png",width: 25, height:25, alt:"user options",class: "user-options")%><span class="settings hide ">
@@ -58,9 +54,7 @@
 
 </div>
 <%elsif feed_item.medtype=="self_post"%>
-<div id="<%= feed_item.id%>" class="<%=feed_item.medtype%> post" >
-	<span class="user_image"><%=link_to image_tag(feed_item.user.image_url_h,width: 25, height:25, title: feed_item.user.name,alt:"user image",class:"userimage"),site('/users/'+feed_item.user.name)%></span>
-
+<div id="<%=feed_item.id%>" class="<%=feed_item.medtype%> post" >
 
 	<span class="title"><% if current_user?(feed_item.user)%><%=image_tag("options.png",width: 25, height:25, alt:"user options",class: "user-options")%><span class="settings hide">
 		<i class="icon-white icon-wrench icon-2x"></i>
@@ -70,8 +64,8 @@
 		<div><!--user settings--></div>
 		<%end%>
 	</span>
-	<p class="content "><%=parseShit(feed_item.content)%></p>
-		<div class="options"><a rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/medpost'%>" title="comment on it?" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
+	<div class="content "><%=parseShit(feed_item.content)%></div>
+		<div class="options"><a rel="comments" href="<%='http://'+request.host_with_port+'/posts/'+feed_item.id.to_s+'/medpost'%>" title="comment" class="comments"><div class="number"><%=feed_item.comment_threads.count%></div></a>
 		<span class="med_container <%= if signed_in? then current_user.have_I_liked_or_not?(feed_item,'micropost') end%>" title="like it?"id="<%=feed_item.id%>">
 		<span class="meds"><%=feed_item.meds%></span>
 		</span>

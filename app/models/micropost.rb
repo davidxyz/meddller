@@ -34,10 +34,6 @@ class Micropost < ActiveRecord::Base
   #3medtypes of microposts medimage, medself, medlink and repost quivalents
   mount_uploader :image, ImageUploader
   validate :ultra_val
-  def self.from_users_followed_by(user)
-    followed_user_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
-    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user.id)
-  end
   def self.search(search)
   if search
   where('title LIKE ?', "%#{search}%")  
@@ -47,24 +43,19 @@ class Micropost < ActiveRecord::Base
   end
   def self.default_feed
     #must improve
-   Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
+   Micropost.select("*").where(:medtype=>['object_post','link_post','self_post'])
   end
   #takes the user, takes the channel the user is currently in and the popularity
   #and returns a feed ordered by the meds
    def next#should refine to model it out of users feed
-    Micropost.where("id > ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id DESC").first
+    Micropost.where("id > ?", id).where(:medtype=>['object_post','link_post','self_post']).order("id DESC").first
   end
 def self.random#returns a random post
-    posts=Micropost.select("*").where(:medtype=>['image_post','link_post','self_post'])
+    posts=Micropost.select("*").where(:medtype=>['object_post','link_post','self_post'])
     posts[Random.rand(posts.count)]
   end
   def prev#should refine to model it out of users feed
-    Micropost.where("id < ?", id).where(:medtype=>['image_post','link_post','self_post']).order("id ASC").first
-  end
-def image=(obj)
-    super(obj)
-    # Put your callbacks here, e.g.
-    self.moderated = false  
+    Micropost.where("id < ?", id).where(:medtype=>['object_post','link_post','self_post']).order("id ASC").first
   end
   def comments
     comments=[]
@@ -74,6 +65,7 @@ def image=(obj)
   }
   comments.flatten
   end
+  #must implement the recommendation algo
   def self.calculate_feed(user,medchannel,popularity,default=false)
     microposts=[]
     id=[]
@@ -82,7 +74,6 @@ def image=(obj)
       return microposts
     end
     microposts=medchannel.posts unless medchannel.nil? #get posts from the medchannel if we are in one
-    user.followed_users.each{|user| microposts<<user.microposts } unless user.nil? #if the user is logged in get posts from users he's following
     user.medchannels.each{|channel| microposts<<channel.posts } if default
     microposts.flatten.each{|post| id<<post.id}
     case popularity
@@ -131,10 +122,10 @@ def image=(obj)
     if medtype=="link_post"
      errors[:base]<<("Uhh, you sure that's a website?")  if urls.nil? or !URI::DEFAULT_PARSER.regexp[:ABS_URI].match(urls) 
     elsif medtype=="self_post"
-      errors[:base]<<("Woah say something")  if content.nil? or content.length <4 
+      errors[:base]<<("Woah, you have to have more to say")  if content.nil? or content.length <4 
       errors[:base]<<("Woah you're saying way too much in your post") if content.length > 1000
-    elsif medtype=="image_post"
-      errors[:base]<<("Hey, can you upload something already") if image.nil?
+    #elsif medtype=="object_post"
+      #errors[:base]<<("Hey, can you upload something already") if image.nil?
     elsif medtype!="desc"
       errors[:base]<<("Something, went wrong with your post and we're tearing out our heads trying to find why")
     end

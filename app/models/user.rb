@@ -15,13 +15,7 @@
 
 class User < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation, :image, :remote_image_url
-  mount_uploader :image, ProfileimageUploader
   has_many :microposts, dependent: :destroy
-  #relationships
-  has_many :relationships, foreign_key: "follower_id", dependent: :destroy
-  has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
-  has_many :followers, through: :reverse_relationships, source: :follower
-  has_many :followed_users, through: :relationships, source: :followed
   #relationships_m
   has_many :relationshipms, foreign_key: "subscriber_id", dependent: :destroy
   has_many :medchannels, through: :relationshipms, source: :subscribed
@@ -35,8 +29,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_secure_password
   before_save :create_remember_token
-  before_save{|user| user.email=email.downcase}
-  
+  before_save{|user| user.email=email.downcase} 
   validates :name, presence:true, length: {minimum:3,maximum: 12},format: {with: /\A[a-zA-Z0-9_]+\z/},uniqueness: {case_sensitive: false}
   VALID_EMAIL_REGEX=/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence:true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403124748) do
+ActiveRecord::Schema.define(:version => 20130331125035) do
 
   create_table "comments", :force => true do |t|
     t.integer  "commentable_id",   :default => 0
@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(:version => 20130403124748) do
     t.string   "preview_url"
     t.integer  "medchannel_id"
     t.string   "medtype",         :default => "self_post"
-    t.string   "image"
   end
 
   add_index "microposts", ["user_id", "created_at"], :name => "index_microposts_on_user_id_and_created_at"
@@ -154,7 +153,6 @@ ActiveRecord::Schema.define(:version => 20130403124748) do
     t.string   "remember_token"
     t.boolean  "admin",           :default => false
     t.integer  "meds",            :default => 0
-    t.string   "image"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

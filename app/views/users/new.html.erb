@@ -3,7 +3,6 @@
  <div class="login">
  	<h1>Sign up</h1>
 		<%= form_for(@user) do |f|%>
-		<%= render 'shared/error_messages', object: f.object%>
 			<%= f.label :name%>
 			<%= f.text_field :name,class:"textcustom"%>
 			
@@ -16,7 +15,7 @@
 			<%= f.label :password_confirmation, "Confirmation"%>
 			<%= f.text_field :password_confirmation,class:"passcustom"%>
 			
-			<%= f.submit "Create my account", class: "btn btn-large btn-primary"%>
+			<%= f.submit "Create my account", class: "btn btn-large btn-primary", style:"position:relative;top:20px;left:50px"%>
 			<% end%>
 	</div>
 </div>

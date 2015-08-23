@@ -8,7 +8,6 @@ var getLocation = function(href) {
 function conv(host, url){
 if(!/^(http:\/\/)/.test(url)){//its relative
 var urlx= "http://"+host+url;
-
 console.log("host: "+host+" "+"url: "+url+" rel and is now abs: "+urlx);
 return urlx;
 }
@@ -30,7 +29,7 @@ var DateHelper = {
   time_ago_in_words: function(from) {
     return this.distance_of_time_in_words(new Date, from);
   },
- 
+ //this function is a helper function for time_ago_in_words
   distance_of_time_in_words: function(to, from) {
     var distance_in_seconds = ((to - from) / 1000);
     var distance_in_minutes = Math.floor(distance_in_seconds / 60);
@@ -46,62 +45,11 @@ var DateHelper = {
     if (distance_in_minutes < 86400) { return 'about a month'+tense; }
     if (distance_in_minutes < 525960) { return Math.floor(distance_in_minutes / 43200) + ' months'+tense; }
     if (distance_in_minutes < 1051199) { return 'about a year'+tense; }
- 
-    return 'over ' + Math.floor(distance_in_minutes / 525960) + ' years';
+  	return 'over ' + Math.floor(distance_in_minutes / 525960) + ' years';
   }
 };
-function addMask(thing,classname){
-	if(typeof thing ==='undefined'){
-		//then its obviously a dialog
-		thing=$(document.createElement('div'))
-		thing.addClass(classname);
-		thing.appendTo($("body"));
-	}
-	 var maskHeight = $(document).height();
-      var maskWidth = $(window).width();
-     //make the mask
-     var mask=$(document.createElement('div'));
-     var close=$(document.createElement('div'));
-     mask.attr('id','mask');close.addClass('close');
-     close.appendTo(mask);
-     thing.addClass('window');
-     mask.appendTo($("body"));
-        //Set height and width to mask to fill up the whole screen
-        $('#mask').css({'width':maskWidth,'height':maskHeight});
-        //transition effect     
-        $('#mask').fadeIn(1000);    
-        $('#mask').fadeTo("slow",0.8);  
-     
-        //Get the window height and width
-        var winH = $(window).height();
-        var winW = $(window).width();
-               
-        //Set the popup window to center
-        thing.css('top',  winH/2-thing.height()/2);
-        thing.css('left', winW/2-thing.width()/2);
-     
-        //transition effect
-        thing.fadeIn(2000); 
-     
-    //if close button is clicked
-    $('.window .close').click(function (e) {
-        //Cancel the link behavior
-        $this=$(this)
-        e.preventDefault();
-        $('#mask, .window').hide();
-        $($this).removeAttr("disabled");
-    });     
-     
-    //if mask is clicked
-    $('#mask').click(function () {
-    	$this=$(this)
-        $(this).hide();
-        $('.window').hide();
-        $($this).removeAttr("disabled");
-    });
-
-}
-//doesnt reutrn anything and is all side effects
+//doesnt reuturn anything and is all side effects
+//it constructs posts wih ajax and adds them to the medfeed
 function constructPosts(posts,medfeed_container,channelz,current_users,names,comments,reposts,height,add){//takes a posts array, helpers with other shite, and a medfeed container, or whether we should apped to medfeed or switch
 	add = typeof add !== 'undefined'? add : false;//makeshift default arg-if nil then false we switch out the medfeed container
 	if(!add){
@@ -213,7 +161,7 @@ function constructPosts(posts,medfeed_container,channelz,current_users,names,com
 		channel_link.css({"background-color":"#5bc0de"});
 	});
 
-	//determin if its the current user or if signed in or not
+	//determine if its the current user or if signed in or not
 	if(post.medtype=="link_post"){
 		var preview=$(document.createElement('span'));
 		var outside_link=$(document.createElement('a'));
@@ -264,7 +212,6 @@ $("textarea.comment_form_content").on('keydown input paste change',function(e){
 	var info=$(".user_comment_info");
 	var max_constraint=400;//max number of characters
 	var length=$this.val().length;
-	
 	var diff=Math.abs(max_constraint-$this.val().length);
 	if($parent2.hasClass("custom-disabled")){return false;}
 	if(length>=max_constraint){$this.val($this.val().slice(0,max_constraint-1));}//only takes 400 characters
@@ -386,7 +333,7 @@ if(e.type=="keypress" && e.which==13){
 });
 /*form validations for submit1 page*/
 $('#urls').on('blur',function(){
-$(".error").remove();
+$("#url-msg").remove();
 $(".url_message").remove();
 var title_msg=$(document.createElement('span'));
 var url_msg=$(document.createElement('span'));
@@ -442,15 +389,22 @@ setTimeout(function(){
 			}
 			slider.data({'urls':response.urls,'index':1});
 		}else{
-			img.attr("src","/assets/cross.png");
-			if ($this.val()==""){url_message.text("Got to link to something interesting?");}
-			else{url_message.text("Uhh you sure thats a website?");}
+			$("#url-msg").remove();
+			img.remove();
+			var div=$(document.createElement('div'));
+			var offset=$this.offset();
+			div.appendTo($(document.body));
+			div.attr('id','url-msg');
+			div.addClass("form-alert");
+			div.css({position:"absolute",width:'130px',"text-align":'center',"font-weight":'bold',height:'20px',"border-radius":'5px',left:offset.left+$this.outerWidth()+130+'px',top:offset.top+5+'px'});
+			div.addClass("alert-danger");
+			if ($this.val()==""){div.text("empty");}
+			else{div.text("Not Valid");}
 		}
 	});
-	},1000);
+	},600);
 });
 $("form").submit(function(event){
-
 var $input = $(this).find("input#urls");
    if ($input.val().length>1) {
    	alert("should work");
@@ -502,17 +456,19 @@ $(document).on('click',".nav_right",function(event){
 });
 //checks to see if the name and email are already taken using ajax
 $('form#new_user input').on('blur',function(){
-	$this=$(this);
+$this=$(this);
 if($this.attr("name")=="user[name]"){
-	$(".wrong-info.name").remove();
+$("#name-msg").remove();
 var img=$(document.createElement('img'));
 var div=$(document.createElement('div'));
 img.attr("src","/assets/ajax-loader.gif");
-img.appendTo(div);
 img.width(25);img.height(25);
 var offset=$this.offset();
 div.appendTo($(document.body));
-div.css({position:"absolute",left:offset.left+$this.outerWidth()+100+'px',top:offset.top+'px'});
+img.appendTo(div);
+div.attr('id','name-msg');
+div.addClass("form-alert");
+div.css({position:"absolute",width:'130px',"text-align":'center',"font-weight":'bold',height:'20px',"border-radius":'5px',left:offset.left+$this.outerWidth()+100+'px',top:offset.top+5+'px'});
 setTimeout(function(){
 $.ajax({
 		type: "post",
@@ -520,45 +476,45 @@ $.ajax({
   		url: '/commands/no_other_users',
   		data: {name:$this.val()},}).done(function(response){
   			var span=$(document.createElement('span'));
+  			div.children("img").remove();
   			span.appendTo(div);
-  			console.log(response);
   			 if (response.user){
-  			 	img.attr("src","/assets/cross.png");
+  			 	div.addClass("alert-danger");
   			 	span.text("Name taken");
   			 }
   			 else{
   			 	 var pattern=/^[a-zA-Z0-9_]+$/;
   			 	if($this.val()=="" || $this.val()==" "){
-  			 	img.attr("src","/assets/cross.png");
-  			 	span.text("Name is blank");
+  			 		div.addClass("alert-danger");
+  			 		span.text("Name is blank");
   			 	}else if(!pattern.test($this.val())){
-  			 	img.attr("src","/assets/cross.png");
-  			 	span.text("Not a vaild name");
-  			 	}else if($this.val().length>30){
-				img.attr("src","/assets/cross.png");
-  			 	span.text("Name is too long");
+  			 		div.addClass("alert-danger");
+  			 		span.text("Name not valid");
+  			 	}else if($this.val().length>20){
+  			 		div.addClass("alert-danger");
+  			 		span.text("Name is too long");
   			 	}else if($this.val().length<3){
-  			 	img.attr("src","/assets/cross.png");
-  			 	span.text("Name is too short");
+  			 		div.addClass("alert-danger");
+  			 		span.text("Name is too short");
   			 	}else{
-  			 	img.attr("src","/assets/check.png");
-  			 	span.text("Name is okay");
+  			 		div.addClass("alert-success");
+  			 		span.text("Name is okay");
   			 	}
-  			 	div.addClass("wrong-info");
-  			 	div.addClass("name");
   			 }
   		});
-  		},1000);
+  		},500);
 }else if($this.attr("name")=="user[email]"){
-	$(".wrong-info.email").remove();
+$("#email-msg").remove();
 var img=$(document.createElement('img'));
 var div=$(document.createElement('div'));
 img.attr("src","/assets/ajax-loader.gif");
 img.width(25);img.height(25);
-img.appendTo(div);
 var offset=$this.offset();
 div.appendTo($(document.body));
-div.css({position:"absolute",left:offset.left+$this.outerWidth()+100+'px',top:offset.top+'px'});
+img.appendTo(div);
+div.attr('id','email-msg');
+div.addClass("form-alert");
+div.css({position:"absolute",width:'130px',"text-align":'center',"font-weight":'bold',height:'20px',"border-radius":'5px',left:offset.left+$this.outerWidth()+100+'px',top:offset.top+5+'px'});
 setTimeout(function(){
 $.ajax({
 		type: "post",
@@ -566,54 +522,52 @@ $.ajax({
   		url: '/commands/no_other_emails',
   		data: {email:$this.val()},}).done(function(response){
   			var span=$(document.createElement('span'));
+  			div.children("img").remove();
   			span.appendTo(div);
   			console.log(response);
   			if (response.email){
-  			 	img.attr("src","/assets/cross.png");
+  			 	div.addClass("alert-danger");
   			 	span.text("Email is taken");
   			 }
   			 else{
   			 	var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   			 	if($this.val()=="" || $this.val()==" "){
-  			 	img.attr("src","/assets/cross.png");
-  			 	span.text("Email is blank");
+  			 		div.addClass("alert-danger");
+  			 		span.text("Email is blank");
   			 	}else if(!pattern.test($this.val())){
-  			 	img.attr("src","/assets/cross.png");
-  			 	span.text("Not a valid email");
+  			 		div.addClass("alert-danger");
+  			 		span.text("Email not valid");
   			 	}else{
-  			 	img.attr("src","/assets/check.png");
-  			 	span.text("Email is okay");
+  			 		div.addClass("alert-success");
+  			 		span.text("Email is okay");
   			 	}
-  			 	div.addClass("wrong-info");
-  			 	div.addClass("email");
   			 }
   		});},1000);
 }
 });
 $('.form_title').on('blur',function(){
-$(".error").remove();
-$(".title_message").remove();
-var title_msg=$(document.createElement('span'));
-title_msg.addClass("title_message");
-var img=$(document.createElement('img'));
-img.addClass("hide");img.addClass("v_img1");
-var title_message=$(document.createElement("p"));
-title_msg.appendTo($(document.body));
-img.appendTo(title_msg);img.attr("src","/assets/ajax-loader.gif");img.width(35);img.height(35);
-title_message.appendTo(title_msg);
 $this=$(this);
-if(!img.hasClass("hide")){img.attr("src","/assets/ajax-loader.gif");}
-img.removeClass("hide");
+$("#name-msg").remove();
+var img=$(document.createElement('img'));
+var div=$(document.createElement('div'));
+img.attr("src","/assets/ajax-loader.gif");
+img.width(25);img.height(25);
+var offset=$this.offset();
+div.appendTo($(document.body));
+img.appendTo(div);
+div.attr('id','name-msg');
+div.addClass("form-alert");
+div.css({position:"absolute",width:'130px',"text-align":'center',"font-weight":'bold',height:'20px',"border-radius":'5px',left:offset.left+$this.outerWidth()+130+'px',top:offset.top+5+'px'});
 setTimeout( function(){
 	if($this.val().length<4){
-		img.attr("src","/assets/cross.png");
-		title_message.text("C'mon your title is important");
+		div.addClass("alert-danger");
+		div.text("Bad Title");
 	}else{
-		img.attr("src","/assets/check.png");
 		if($this.is("#upload-title")){$("#upload-title").trigger("valid-title");}
-		title_message.text("nice");
+		div.addClass("alert-success");
+		div.text("Nice Title");
 	}
-},1000);
+},600);
 
 });
 $("[title]").each(function(index,value){
@@ -640,14 +594,14 @@ var left = offset.left - width +10+ "px";
         height:'7px',
         display: 'block',
         left:  left,
-        "font-size":"10px",
         "text-align":"center",
+        "vertical-align": "super",
         top:top,
         color:'white'
     }).insertBefore(document.body);
 
    tooltip.html($this.attr('data-title'));
-
+   tooltip.fadeTo("slow",0.7);
 });
 //for options under production
 $(document).on("mouseleave","[data-title]",function(event){
@@ -796,55 +750,6 @@ sidebar.show();
 }else{
 sidebar.hide();
 }
-});
-
-/*fucking people who have javascript disabled*/
-/* until i can get it to work
-$("#file").load(function(){
-	$(this).hide();
-});
-$("#file").trigger('load');
-*/
-$('#upload-title').bind('valid-title',function(){
-        //Get the A tag
-        var dropbox= $('#dropbox');
-        $this=$(this);
-$($this).attr("autocomplete", "off");
-//Get the screen height and width
-        var maskHeight = $(document).height();
-        var maskWidth = $(window).width();
-     
-        //Set height and width to mask to fill up the whole screen
-        $('#mask').css({'width':maskWidth,'height':maskHeight});
-        //transition effect     
-        $('#mask').fadeIn(1000);    
-        $('#mask').fadeTo("slow",0.8);  
-     
-        //Get the window height and width
-        var winH = $(window).height();
-        var winW = $(window).width();
-               
-        //Set the popup window to center
-        dropbox.css('top',  winH/2-dropbox.height()/2);
-        dropbox.css('left', winW/2-dropbox.width()/2);
-     
-        //transition effect
-        dropbox.fadeIn(2000); 
-     
-    //if close button is clicked
-    $('.window .close').click(function (e) {
-        //Cancel the link behavior
-        e.preventDefault();
-        $('#mask, .window').hide();
-        $($this).removeAttr("disabled");
-    });     
-     
-    //if mask is clicked
-    $('#mask').click(function () {
-        $(this).hide();
-        $('.window').hide();
-        $($this).removeAttr("disabled");
-    });       
 });
 //stop regular right clicking context menu
  $("span.med_container").bind("contextmenu",function(e){
