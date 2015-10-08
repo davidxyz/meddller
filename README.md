@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## meddller website
 ruby on rails app that has users recommend content to other users
 
