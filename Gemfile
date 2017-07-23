@@ -13,6 +13,7 @@ gem "font-awesome-rails"
 gem 'acts_as_commentable_with_threading'
 gem 'execjs'
 gem 'therubyracer'
+gem 'json','1.8.2'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 group :development,:test do
