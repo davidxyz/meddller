@@ -21,9 +21,9 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: meddller
+  database: ds0310rc1jcg2
   timeout: 5000
   pool: 5
-  username: postgres
-  password: 4804david
+  username: icdprhpltpcrdj
+  password: ba08ce0e3b763079de69b7a4aa646366e9d61769450a22c192a55a96b8a907e3
 
