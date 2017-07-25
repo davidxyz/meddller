@@ -28,17 +28,19 @@ text-decoration:none;
 
 footer {
 height: 35px;
-border-top:1px solid #BBB;
+border-top:2px solid #BBB;
 color: #fff;
 width:100%;
 bottom:0px;
+margin:0;
 position: absolute;
 background-color:black;
-}
-footer small{
-position:absolute;
-top:10px;
-left:20px;
+	small{
+		position:absolute;
+		top:10px;
+		left:20px;
+		text-align:center;
+	}
 }
 
 footer a:hover{
